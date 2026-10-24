@@ -31,12 +31,15 @@ class ProfileModePreview extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Tek cihazda rol testi',
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 16)),
                     const SizedBox(height: 12),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: Icon(controller.isProducer
-                          ? Icons.radio_button_checked : Icons.radio_button_off,
+                      leading: Icon(
+                          controller.isProducer
+                              ? Icons.radio_button_checked
+                              : Icons.radio_button_off,
                           color: FarmColors.forest),
                       title: const Text('Üretici'),
                       subtitle: const Text('İlan ve çiftlik yönetimi görünümü'),
@@ -44,15 +47,18 @@ class ProfileModePreview extends StatelessWidget {
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      leading: Icon(!controller.isProducer
-                          ? Icons.radio_button_checked : Icons.radio_button_off,
+                      leading: Icon(
+                          !controller.isProducer
+                              ? Icons.radio_button_checked
+                              : Icons.radio_button_off,
                           color: FarmColors.forest),
                       title: const Text('Tüketici'),
                       subtitle: const Text('Pazar keşfi ve teklif görünümü'),
                       onTap: () => controller.setRole(UserRole.consumer),
                     ),
                     const SizedBox(height: 8),
-                    const Text('Bu bir demo tercihidir; gerçek kullanıcı hesabı veya '
+                    const Text(
+                        'Bu bir demo tercihidir; gerçek kullanıcı hesabı veya '
                         'kimlik doğrulaması değildir.'),
                   ],
                 ),

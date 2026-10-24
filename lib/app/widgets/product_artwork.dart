@@ -16,7 +16,8 @@ class ProductArtwork extends StatelessWidget {
     if (imagePath.startsWith('assets/')) {
       image = Image.asset(imagePath, fit: BoxFit.cover, errorBuilder: fallback);
     } else if (imagePath.isNotEmpty) {
-      image = Image.file(File(imagePath), fit: BoxFit.cover, errorBuilder: fallback);
+      image = Image.file(File(imagePath),
+          fit: BoxFit.cover, errorBuilder: fallback);
     } else {
       image = fallback(context, Object(), null);
     }
@@ -26,6 +27,7 @@ class ProductArtwork extends StatelessWidget {
   Widget fallback(BuildContext context, Object error, StackTrace? stack) =>
       Container(
         color: const Color(0xFFE5EBD8),
-        child: const Center(child: Icon(Icons.eco_outlined, size: 50, color: FarmColors.olive)),
+        child: const Center(
+            child: Icon(Icons.eco_outlined, size: 50, color: FarmColors.olive)),
       );
 }

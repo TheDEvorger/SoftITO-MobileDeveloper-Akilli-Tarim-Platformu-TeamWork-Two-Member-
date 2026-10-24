@@ -24,9 +24,12 @@ void main() {
     final products = await Hive.openBox<String>('products_test');
     final settings = await Hive.openBox<String>('settings_test');
     final data = {
-      'products': [ {'id':'demo1', 'title':'Eski buğday'} ],
+      'products': [
+        {'id': 'demo1', 'title': 'Eski buğday'}
+      ],
     };
-    await products.put('demo1', jsonEncode({'id':'demo1','title':'Benim ilanım'}));
+    await products.put(
+        'demo1', jsonEncode({'id': 'demo1', 'title': 'Benim ilanım'}));
     final boxes = <String, Box<String>>{'products': products};
     for (final key in SeedLoader.collectionKeys) {
       if (key == 'products') continue;

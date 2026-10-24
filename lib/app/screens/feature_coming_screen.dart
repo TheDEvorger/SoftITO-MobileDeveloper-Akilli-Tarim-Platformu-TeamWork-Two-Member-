@@ -29,10 +29,12 @@ class FeatureComingScreen extends StatelessWidget {
                   children: [
                     Icon(icon, size: 64, color: FarmColors.olive),
                     const SizedBox(height: 14),
-                    Text(title, style: Theme.of(context).textTheme.headlineSmall,
+                    Text(title,
+                        style: Theme.of(context).textTheme.headlineSmall,
                         textAlign: TextAlign.center),
                     const SizedBox(height: 10),
-                    Text('$owner tarafından geliştirilecek özellik ekranı. '
+                    Text(
+                        '$owner tarafından geliştirilecek özellik ekranı. '
                         'Ortak main temeli hazır, bu bölüm geçici olarak gösteriliyor.',
                         textAlign: TextAlign.center),
                     const SizedBox(height: 20),

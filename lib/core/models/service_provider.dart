@@ -19,23 +19,24 @@ class ServiceProvider {
     required this.description,
   });
 
-  factory ServiceProvider.fromJson(Map<String, dynamic> json) => ServiceProvider(
-    id: jsonText(json, 'id'),
-    name: jsonText(json, 'name'),
-    type: jsonText(json, 'type'),
-    city: jsonText(json, 'city'),
-    district: jsonText(json, 'district'),
-    phone: jsonText(json, 'phone'),
-    description: jsonText(json, 'description'),
-  );
+  factory ServiceProvider.fromJson(Map<String, dynamic> json) =>
+      ServiceProvider(
+        id: jsonText(json, 'id'),
+        name: jsonText(json, 'name'),
+        type: jsonText(json, 'type'),
+        city: jsonText(json, 'city'),
+        district: jsonText(json, 'district'),
+        phone: jsonText(json, 'phone'),
+        description: jsonText(json, 'description'),
+      );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'type': type,
-    'city': city,
-    'district': district,
-    'phone': phone,
-    'description': description,
-  };
+        'id': id,
+        'name': name,
+        'type': type,
+        'city': city,
+        'district': district,
+        'phone': phone,
+        'description': description,
+      };
 }

@@ -44,7 +44,8 @@ abstract final class FarmTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: FarmColors.milk,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: Color(0xFF9FAE9D)),
@@ -59,7 +60,8 @@ abstract final class FarmTheme {
           backgroundColor: FarmColors.forest,
           foregroundColor: Colors.white,
           minimumSize: const Size(48, 48),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
@@ -67,7 +69,8 @@ abstract final class FarmTheme {
           foregroundColor: FarmColors.forest,
           minimumSize: const Size(48, 48),
           side: const BorderSide(color: FarmColors.forest),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
       ),
       chipTheme: base.chipTheme.copyWith(

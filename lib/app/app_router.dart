@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../features/marketplace/presentation/screens/add_product_screen.dart';
+import '../features/marketplace/presentation/screens/marketplace_screen.dart';
+import '../features/marketplace/presentation/screens/product_detail_screen.dart';
 import 'screens/feature_coming_screen.dart';
-import 'screens/marketplace_preview_screen.dart';
-import 'screens/product_detail_preview_screen.dart';
 import 'screens/profile_mode_preview.dart';
 
 /// Tek rota merkezi. Gerçek feature ekranları bu switch'e bağlanacak.
@@ -21,30 +22,41 @@ abstract final class AppRoutes {
     Widget page;
     switch (settings.name) {
       case marketplace:
-        page = const MarketplacePreviewScreen();
+        page = const MarketplaceScreen();
       case productDetail:
-        page = ProductDetailPreviewScreen(
-            productId: settings.arguments is String ? settings.arguments! as String : '');
+        page = ProductDetailScreen(
+            productId: settings.arguments is String
+                ? settings.arguments! as String
+                : '');
       case addProduct:
-        page = const FeatureComingScreen(
-            title: 'İlan ekleme', owner: 'Ayberk', icon: Icons.add_photo_alternate_outlined);
+        page = const AddProductScreen();
       case farm:
         page = const FeatureComingScreen(
-            title: 'Hayvan ve sera takibi', owner: 'Emirhan', icon: Icons.pets_outlined);
+            title: 'Hayvan ve sera takibi',
+            owner: 'Emirhan',
+            icon: Icons.pets_outlined);
       case services:
         page = const FeatureComingScreen(
-            title: 'Hizmet rehberi', owner: 'Emirhan', icon: Icons.local_shipping_outlined);
+            title: 'Hizmet rehberi',
+            owner: 'Emirhan',
+            icon: Icons.local_shipping_outlined);
       case offers:
         page = const FeatureComingScreen(
-            title: 'Gelen teklifler', owner: 'Emirhan', icon: Icons.mail_outline);
+            title: 'Gelen teklifler',
+            owner: 'Emirhan',
+            icon: Icons.mail_outline);
       case offerForm:
         page = const FeatureComingScreen(
-            title: 'Teklif gönderme', owner: 'Emirhan', icon: Icons.send_outlined);
+            title: 'Teklif gönderme',
+            owner: 'Emirhan',
+            icon: Icons.send_outlined);
       case profile:
         page = const ProfileModePreview();
       default:
         page = const FeatureComingScreen(
-            title: 'Sayfa bulunamadı', owner: 'Ortak ekip', icon: Icons.search_off);
+            title: 'Sayfa bulunamadı',
+            owner: 'Ortak ekip',
+            icon: Icons.search_off);
     }
     return MaterialPageRoute<void>(builder: (_) => page, settings: settings);
   }
