@@ -64,83 +64,89 @@ class ProfileActionTile extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-      decoration: BoxDecoration(
+      child: Material(
         color: FarmColors.milk,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(
-          color:
-              isRestricted ? const Color(0xFFE2DDD1) : const Color(0xFFD9D6C8),
-        ),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-        onTap: () => _handleTap(context),
-        leading: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: BorderSide(
             color: isRestricted
-                ? const Color(0xFFEAE5DA)
-                : FarmColors.forest.withAlpha(25),
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: Icon(
-            icon,
-            color: isRestricted
-                ? FarmColors.ink.withAlpha(120)
-                : FarmColors.forest,
-            size: 22,
+                ? const Color(0xFFE2DDD1)
+                : const Color(0xFFD9D6C8),
           ),
         ),
-        title: Row(
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.w800,
-                fontSize: 15,
-                color: isRestricted
-                    ? FarmColors.ink.withAlpha(160)
-                    : FarmColors.ink,
-              ),
+        clipBehavior: Clip.antiAlias,
+        child: ListTile(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          onTap: () => _handleTap(context),
+          leading: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isRestricted
+                  ? const Color(0xFFEAE5DA)
+                  : FarmColors.forest.withAlpha(25),
+              borderRadius: BorderRadius.circular(14),
             ),
-            if (requiredRole != null) ...[
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
+            child: Icon(
+              icon,
+              color: isRestricted
+                  ? FarmColors.ink.withAlpha(120)
+                  : FarmColors.forest,
+              size: 22,
+            ),
+          ),
+          title: Row(
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
                   color: isRestricted
-                      ? const Color(0xFFE2DDD1)
-                      : (requiredRole == UserRole.producer
-                          ? FarmColors.forest.withAlpha(25)
-                          : FarmColors.gold.withAlpha(35)),
-                  borderRadius: BorderRadius.circular(6),
+                      ? FarmColors.ink.withAlpha(160)
+                      : FarmColors.ink,
                 ),
-                child: Text(
-                  requiredRole == UserRole.producer ? 'Üretici' : 'Tüketici',
-                  style: TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
+              ),
+              if (requiredRole != null) ...[
+                const SizedBox(width: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
                     color: isRestricted
-                        ? FarmColors.ink.withAlpha(130)
+                        ? const Color(0xFFE2DDD1)
                         : (requiredRole == UserRole.producer
-                            ? FarmColors.forest
-                            : const Color(0xFF8A6216)),
+                            ? FarmColors.forest.withAlpha(25)
+                            : FarmColors.gold.withAlpha(35)),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    requiredRole == UserRole.producer ? 'Üretici' : 'Tüketici',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: isRestricted
+                          ? FarmColors.ink.withAlpha(130)
+                          : (requiredRole == UserRole.producer
+                              ? FarmColors.forest
+                              : const Color(0xFF8A6216)),
+                    ),
                   ),
                 ),
-              ),
+              ],
             ],
-          ],
-        ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(
-            fontSize: 12,
-            color: FarmColors.ink.withAlpha(150),
           ),
-        ),
-        trailing: Icon(
-          Icons.chevron_right_rounded,
-          color: isRestricted ? const Color(0xFFB5AF9F) : FarmColors.forest,
+          subtitle: Text(
+            subtitle,
+            style: TextStyle(
+              fontSize: 12,
+              color: FarmColors.ink.withAlpha(150),
+            ),
+          ),
+          trailing: Icon(
+            Icons.chevron_right_rounded,
+            color: isRestricted ? const Color(0xFFB5AF9F) : FarmColors.forest,
+          ),
         ),
       ),
     );

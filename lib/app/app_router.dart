@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../features/farm_management/farm_management.dart';
 import '../features/marketplace/presentation/screens/add_product_screen.dart';
 import '../features/marketplace/presentation/screens/marketplace_screen.dart';
 import '../features/marketplace/presentation/screens/product_detail_screen.dart';
+import '../features/offers/offers.dart';
+import '../features/profile/profile.dart';
+import '../features/services/services.dart';
 import 'screens/feature_coming_screen.dart';
-import 'screens/profile_mode_preview.dart';
 
-/// Tek rota merkezi. Gerçek feature ekranları bu switch'e bağlanacak.
-/// Emirhan kendi feature dosyalarını yazacak; router'ı Ayberk güncelleyecek.
+/// Tek rota merkezi. Gerçek feature ekranları bu switch'e bağlandı.
 abstract final class AppRoutes {
   static const marketplace = '/marketplace';
   static const productDetail = '/product-detail';
@@ -31,27 +33,18 @@ abstract final class AppRoutes {
       case addProduct:
         page = const AddProductScreen();
       case farm:
-        page = const FeatureComingScreen(
-            title: 'Hayvan ve sera takibi',
-            owner: 'Emirhan',
-            icon: Icons.pets_outlined);
+        page = const FarmDashboardScreen();
       case services:
-        page = const FeatureComingScreen(
-            title: 'Hizmet rehberi',
-            owner: 'Emirhan',
-            icon: Icons.local_shipping_outlined);
+        page = const ServiceProvidersScreen();
       case offers:
-        page = const FeatureComingScreen(
-            title: 'Gelen teklifler',
-            owner: 'Emirhan',
-            icon: Icons.mail_outline);
+        page = const OffersScreen();
       case offerForm:
-        page = const FeatureComingScreen(
-            title: 'Teklif gönderme',
-            owner: 'Emirhan',
-            icon: Icons.send_outlined);
+        page = OfferFormScreen(
+            productId: settings.arguments is String
+                ? settings.arguments! as String
+                : '');
       case profile:
-        page = const ProfileModePreview();
+        page = const ProfileScreen();
       default:
         page = const FeatureComingScreen(
             title: 'Sayfa bulunamadı',

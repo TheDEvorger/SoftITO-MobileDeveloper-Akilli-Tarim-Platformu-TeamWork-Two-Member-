@@ -69,10 +69,17 @@ void main() {
     });
 
     test('dispose() çağrıldığında timer kapatılır', () {
-      controller.startSimulation();
-      expect(controller.isRunning, isTrue);
-      controller.dispose();
-      expect(controller.isRunning, isFalse);
+      final localController = GreenhouseSimulatorController(
+        repository: createFakeRepository<Greenhouse>(
+          decoder: Greenhouse.fromJson,
+          encoder: (g) => g.toJson(),
+          idOf: (g) => g.id,
+        ),
+        autoStart: true,
+      );
+      expect(localController.isRunning, isTrue);
+      localController.dispose();
+      expect(localController.isRunning, isFalse);
     });
   });
 }
