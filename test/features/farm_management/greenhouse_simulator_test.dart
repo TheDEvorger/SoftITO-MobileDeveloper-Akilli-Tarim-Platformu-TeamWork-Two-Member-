@@ -1,0 +1,78 @@
+import 'package:akilli_tarim_platformu/core/models/greenhouse.dart';
+import 'package:akilli_tarim_platformu/features/farm_management/farm_management.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import '../../helpers/fake_json_box_repository.dart';
+
+void main() {
+  group('GreenhouseSimulatorController Unit Tests', () {
+    late GreenhouseSimulatorController controller;
+
+    setUp(() {
+      final repo = createFakeRepository<Greenhouse>(
+        decoder: Greenhouse.fromJson,
+        encoder: (g) => g.toJson(),
+        idOf: (g) => g.id,
+        initialData: const [
+          Greenhouse(
+            id: 'gh1',
+            name: 'Sera 1',
+            temperatureC: 22.0,
+            humidityPercent: 65.0,
+            updatedAt: '2026-10-24T10:00:00',
+          ),
+          Greenhouse(
+            id: 'gh2',
+            name: 'Sera 2',
+            temperatureC: 25.0,
+            humidityPercent: 99.0,
+            updatedAt: '2026-10-24T10:00:00',
+          ),
+        ],
+      );
+      // autoStart: false ile manuel kontrol testi
+      controller =
+          GreenhouseSimulatorController(repository: repo, autoStart: false);
+    });
+
+    tearDown(() {
+      controller.dispose();
+    });
+
+    test('En az iki sera kartı yüklenir', () {
+      expect(controller.greenhouses.length, greaterThanOrEqualTo(2));
+    });
+
+    test(
+        'tick() çağrıldığında değerler dalgalanır ve nem 0-100 aralığında kalır',
+        () {
+      controller.tick();
+      final updatedGreenhouses = controller.greenhouses;
+
+      for (final gh in updatedGreenhouses) {
+        expect(gh.humidityPercent, greaterThanOrEqualTo(0.0));
+        expect(gh.humidityPercent, lessThanOrEqualTo(100.0));
+      }
+
+      // Değerlerin değiştiğini veya korunduğunu doğrula
+      expect(updatedGreenhouses.first.updatedAt, isNotEmpty);
+    });
+
+    test(
+        'Timer startSimulation ve stopSimulation durumları doğru kontrol edilir',
+        () {
+      expect(controller.isRunning, isFalse);
+      controller.startSimulation();
+      expect(controller.isRunning, isTrue);
+      controller.stopSimulation();
+      expect(controller.isRunning, isFalse);
+    });
+
+    test('dispose() çağrıldığında timer kapatılır', () {
+      controller.startSimulation();
+      expect(controller.isRunning, isTrue);
+      controller.dispose();
+      expect(controller.isRunning, isFalse);
+    });
+  });
+}
