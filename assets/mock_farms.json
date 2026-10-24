@@ -1,0 +1,111 @@
+{
+  "products": [
+    {
+      "id": "product_001",
+      "sellerId": "demo_producer_001",
+      "title": "Altın Başak Buğday",
+      "category": "Tahıl",
+      "quantity": 500.0,
+      "unit": "kg",
+      "unitPrice": 19.5,
+      "city": "Konya",
+      "district": "Çumra",
+      "imagePath": "assets/images/wheat.png",
+      "sellerPhone": "",
+      "description": "Demo amaçlı hasat ürünü. Gerçek satış veya stok ilanı değildir.",
+      "createdAt": "2026-10-24T09:00:00"
+    },
+    {
+      "id": "product_002",
+      "sellerId": "demo_producer_001",
+      "title": "Bahçe Elması",
+      "category": "Meyve",
+      "quantity": 750.0,
+      "unit": "kg",
+      "unitPrice": 34.0,
+      "city": "Isparta",
+      "district": "Eğirdir",
+      "imagePath": "assets/images/apples.png",
+      "sellerPhone": "",
+      "description": "Örnek bahçe elması ilanı; görsel ve bilgiler gösterim amaçlıdır.",
+      "createdAt": "2026-10-24T09:01:00"
+    },
+    {
+      "id": "product_003",
+      "sellerId": "demo_producer_001",
+      "title": "Çiftlik Sütü",
+      "category": "Hayvansal Ürün",
+      "quantity": 350.0,
+      "unit": "litre",
+      "unitPrice": 29.0,
+      "city": "Balıkesir",
+      "district": "Gönen",
+      "imagePath": "assets/images/milk.png",
+      "sellerPhone": "",
+      "description": "Demo amacıyla oluşturulmuş örnek ürün kaydı.",
+      "createdAt": "2026-10-24T09:02:00"
+    }
+  ],
+  "offers": [],
+  "animals": [
+    {
+      "id": "animal_001",
+      "earTag": "TR-DEMO-001",
+      "species": "İnek",
+      "lastVaccinationDate": "2026-09-15",
+      "pregnancyStatus": "unknown"
+    },
+    {
+      "id": "animal_002",
+      "earTag": "TR-DEMO-002",
+      "species": "Koyun",
+      "lastVaccinationDate": "2026-09-01",
+      "pregnancyStatus": "not_pregnant"
+    }
+  ],
+  "greenhouses": [
+    {
+      "id": "greenhouse_001",
+      "name": "Fidanlık Serası",
+      "temperatureC": 24.5,
+      "humidityPercent": 61.0,
+      "updatedAt": "2026-10-24T09:00:00"
+    },
+    {
+      "id": "greenhouse_002",
+      "name": "Sebze Serası",
+      "temperatureC": 23.1,
+      "humidityPercent": 65.0,
+      "updatedAt": "2026-10-24T09:00:00"
+    }
+  ],
+  "serviceProviders": [
+    {
+      "id": "provider_001",
+      "name": "Demo Veterinerlik Hizmeti",
+      "type": "veterinary",
+      "city": "İstanbul",
+      "district": "Şile",
+      "phone": "",
+      "description": "Gerçek işletme bilgisi değil, sunum amaçlı örnek kayıttır."
+    },
+    {
+      "id": "provider_002",
+      "name": "Demo Hasat Makinesi",
+      "type": "harvester",
+      "city": "Konya",
+      "district": "Çumra",
+      "phone": "",
+      "description": "Örnek biçerdöver kiralama sağlayıcısı."
+    },
+    {
+      "id": "provider_003",
+      "name": "Demo Tarla Lojistik",
+      "type": "logistics",
+      "city": "Balıkesir",
+      "district": "Gönen",
+      "phone": "",
+      "description": "Örnek nakliye sağlayıcısı."
+    }
+  ]
+}
