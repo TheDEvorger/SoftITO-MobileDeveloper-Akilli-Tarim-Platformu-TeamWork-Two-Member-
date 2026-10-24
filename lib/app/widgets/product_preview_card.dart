@@ -15,7 +15,9 @@ class ProductPreviewCard extends StatelessWidget {
         label: '${product.title}, ${product.unitPrice.toStringAsFixed(2)} TL',
         child: InkWell(
           onTap: () => Navigator.pushNamed(
-            context, '/product-detail', arguments: product.id,
+            context,
+            '/product-detail',
+            arguments: product.id,
           ),
           borderRadius: BorderRadius.circular(20),
           child: FarmCard(
@@ -33,14 +35,18 @@ class ProductPreviewCard extends StatelessWidget {
                       children: [
                         Text(product.title,
                             style: const TextStyle(fontWeight: FontWeight.w700),
-                            maxLines: 1, overflow: TextOverflow.ellipsis),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
                         const SizedBox(height: 5),
-                        Text('${product.quantity.toStringAsFixed(0)} ${product.unit} · '
+                        Text(
+                            '${product.quantity.toStringAsFixed(0)} ${product.unit} · '
                             '${product.city}',
                             style: Theme.of(context).textTheme.bodySmall,
-                            maxLines: 1, overflow: TextOverflow.ellipsis),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis),
                         const SizedBox(height: 6),
-                        Text('${product.unitPrice.toStringAsFixed(2)} ₺ / ${product.unit}',
+                        Text(
+                            '${product.unitPrice.toStringAsFixed(2)} ₺ / ${product.unit}',
                             style: const TextStyle(
                                 color: FarmColors.forest,
                                 fontWeight: FontWeight.w800)),

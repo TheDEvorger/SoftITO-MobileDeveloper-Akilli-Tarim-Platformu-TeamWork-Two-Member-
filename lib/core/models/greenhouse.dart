@@ -16,18 +16,18 @@ class Greenhouse {
   });
 
   factory Greenhouse.fromJson(Map<String, dynamic> json) => Greenhouse(
-    id: jsonText(json, 'id'),
-    name: jsonText(json, 'name'),
-    temperatureC: jsonNumber(json, 'temperatureC'),
-    humidityPercent: jsonNumber(json, 'humidityPercent'),
-    updatedAt: jsonText(json, 'updatedAt'),
-  );
+        id: jsonText(json, 'id'),
+        name: jsonText(json, 'name'),
+        temperatureC: jsonNumber(json, 'temperatureC'),
+        humidityPercent: jsonNumber(json, 'humidityPercent'),
+        updatedAt: jsonText(json, 'updatedAt'),
+      );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'temperatureC': temperatureC,
-    'humidityPercent': humidityPercent,
-    'updatedAt': updatedAt,
-  };
+        'id': id,
+        'name': name,
+        'temperatureC': temperatureC,
+        'humidityPercent': humidityPercent,
+        'updatedAt': updatedAt,
+      };
 }

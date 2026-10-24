@@ -23,5 +23,6 @@ class AppScope extends InheritedWidget {
 
   @override
   bool updateShouldNotify(AppScope oldWidget) =>
-      storage != oldWidget.storage || roleController != oldWidget.roleController;
+      storage != oldWidget.storage ||
+      roleController != oldWidget.roleController;
 }

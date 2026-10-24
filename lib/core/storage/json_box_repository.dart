@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-/// Ortak veri sözleşmesi: Hive Box<String> içinde JSON kaydı; key = id.
+/// Ortak veri sözleşmesi: Hive `Box<String>` içinde JSON kaydı; key = id.
 /// Gerçek backend eklendiğinde UI bu arayüzün yerine yeni repository kullanabilir.
 class JsonBoxRepository<T> {
   const JsonBoxRepository({

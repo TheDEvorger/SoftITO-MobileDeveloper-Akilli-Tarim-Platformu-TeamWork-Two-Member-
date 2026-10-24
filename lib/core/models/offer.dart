@@ -22,24 +22,24 @@ class Offer {
   });
 
   factory Offer.fromJson(Map<String, dynamic> json) => Offer(
-    id: jsonText(json, 'id'),
-    productId: jsonText(json, 'productId'),
-    buyerName: jsonText(json, 'buyerName'),
-    buyerPhone: jsonText(json, 'buyerPhone'),
-    requestedQuantity: jsonNumber(json, 'requestedQuantity'),
-    note: jsonText(json, 'note'),
-    status: jsonText(json, 'status'),
-    createdAt: jsonText(json, 'createdAt'),
-  );
+        id: jsonText(json, 'id'),
+        productId: jsonText(json, 'productId'),
+        buyerName: jsonText(json, 'buyerName'),
+        buyerPhone: jsonText(json, 'buyerPhone'),
+        requestedQuantity: jsonNumber(json, 'requestedQuantity'),
+        note: jsonText(json, 'note'),
+        status: jsonText(json, 'status'),
+        createdAt: jsonText(json, 'createdAt'),
+      );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'productId': productId,
-    'buyerName': buyerName,
-    'buyerPhone': buyerPhone,
-    'requestedQuantity': requestedQuantity,
-    'note': note,
-    'status': status,
-    'createdAt': createdAt,
-  };
+        'id': id,
+        'productId': productId,
+        'buyerName': buyerName,
+        'buyerPhone': buyerPhone,
+        'requestedQuantity': requestedQuantity,
+        'note': note,
+        'status': status,
+        'createdAt': createdAt,
+      };
 }

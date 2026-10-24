@@ -16,18 +16,18 @@ class Animal {
   });
 
   factory Animal.fromJson(Map<String, dynamic> json) => Animal(
-    id: jsonText(json, 'id'),
-    earTag: jsonText(json, 'earTag'),
-    species: jsonText(json, 'species'),
-    lastVaccinationDate: jsonText(json, 'lastVaccinationDate'),
-    pregnancyStatus: jsonText(json, 'pregnancyStatus'),
-  );
+        id: jsonText(json, 'id'),
+        earTag: jsonText(json, 'earTag'),
+        species: jsonText(json, 'species'),
+        lastVaccinationDate: jsonText(json, 'lastVaccinationDate'),
+        pregnancyStatus: jsonText(json, 'pregnancyStatus'),
+      );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'earTag': earTag,
-    'species': species,
-    'lastVaccinationDate': lastVaccinationDate,
-    'pregnancyStatus': pregnancyStatus,
-  };
+        'id': id,
+        'earTag': earTag,
+        'species': species,
+        'lastVaccinationDate': lastVaccinationDate,
+        'pregnancyStatus': pregnancyStatus,
+      };
 }
