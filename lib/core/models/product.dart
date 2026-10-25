@@ -62,4 +62,35 @@ class Product {
         'description': description,
         'createdAt': createdAt,
       };
+
+  Product copyWith({
+    String? id,
+    String? sellerId,
+    String? title,
+    String? category,
+    double? quantity,
+    String? unit,
+    double? unitPrice,
+    String? city,
+    String? district,
+    String? imagePath,
+    String? sellerPhone,
+    String? description,
+    String? createdAt,
+  }) =>
+      Product(
+        id: id ?? this.id,
+        sellerId: sellerId ?? this.sellerId,
+        title: title ?? this.title,
+        category: category ?? this.category,
+        quantity: quantity ?? this.quantity,
+        unit: unit ?? this.unit,
+        unitPrice: unitPrice ?? this.unitPrice,
+        city: city ?? this.city,
+        district: district ?? this.district,
+        imagePath: imagePath ?? this.imagePath,
+        sellerPhone: sellerPhone ?? this.sellerPhone,
+        description: description ?? this.description,
+        createdAt: createdAt ?? this.createdAt,
+      );
 }

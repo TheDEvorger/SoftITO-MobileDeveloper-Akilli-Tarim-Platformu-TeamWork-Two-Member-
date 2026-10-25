@@ -65,6 +65,9 @@ class AddProductController extends ChangeNotifier {
         'Tahıl' => 'assets/images/wheat.png',
         'Meyve' => 'assets/images/apples.png',
         'Süt ve Hayvancılık' => 'assets/images/milk.png',
+        'Sebze' => 'assets/images/tomatoes.jpg',
+        'Arıcılık' => 'assets/images/honey.jpg',
+        'Zeytinyağı' => 'assets/images/olive_oil.jpg',
         _ => 'assets/images/harvest_hero.png',
       };
 

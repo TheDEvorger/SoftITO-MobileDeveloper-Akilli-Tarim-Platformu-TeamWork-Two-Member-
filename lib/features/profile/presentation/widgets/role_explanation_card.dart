@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
 import '../../../farm_management/presentation/widgets/rustic_ornament.dart';
 
 class RoleExplanationCard extends StatelessWidget {
@@ -8,6 +9,8 @@ class RoleExplanationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       padding: const EdgeInsets.all(18),
@@ -31,19 +34,23 @@ class RoleExplanationCard extends StatelessWidget {
                     color: Color(0xFF8A6216), size: 18),
               ),
               const SizedBox(width: 10),
-              const Text(
-                'Yerel Demo & Veri Kapsamı',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w800,
-                  color: FarmColors.ink,
+              Expanded(
+                child: Text(
+                  tr.roleExplanationHeader,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: FarmColors.ink,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 10),
           Text(
-            'Bu mobil uygulama MVP aşamasında tek cihaz üzerinde Hive veritabanı ile çalışır. İnternet bağlantısı olmadan da verileriniz cihazınızda güvenle saklanır.',
+            tr.roleExplanationBody,
             style: TextStyle(
               fontSize: 12,
               color: FarmColors.ink.withAlpha(190),
@@ -52,7 +59,7 @@ class RoleExplanationCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            '• Üretici kimliği demo_producer_001 olarak temsil edilir.\n• Rol değişimi simülasyon amaçlıdır, anında aktif görünüm filtrelerini uyarlar.',
+            tr.roleExplanationBullet,
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,

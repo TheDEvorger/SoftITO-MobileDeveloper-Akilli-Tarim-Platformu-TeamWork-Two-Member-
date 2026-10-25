@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_translations.dart';
 import '../../../../app/app_theme.dart';
 import '../../../../app/widgets/farm_card.dart';
 import '../../../../core/models/service_provider.dart';
@@ -13,40 +14,26 @@ class ServiceProviderCard extends StatelessWidget {
 
   final ServiceProvider provider;
 
-  (String, IconData, Color) _getTypeInfo(String type) {
+  (String, IconData, Color) _getTypeInfo(String type, AppTranslations tr) {
+    final label = tr.serviceTypeLabel(type);
     switch (type.toLowerCase()) {
       case 'veterinary':
-        return (
-          'Veteriner Hekim',
-          Icons.medical_services_rounded,
-          const Color(0xFF2E7D32)
-        );
+        return (label, Icons.medical_services_rounded, const Color(0xFF2E7D32));
       case 'tractor':
-        return (
-          'Traktör Kiralama',
-          Icons.agriculture_rounded,
-          const Color(0xFFB88422)
-        );
+        return (label, Icons.agriculture_rounded, const Color(0xFFB88422));
       case 'harvester':
-        return (
-          'Biçerdöver',
-          Icons.precision_manufacturing_rounded,
-          const Color(0xFF75503B)
-        );
+        return (label, Icons.precision_manufacturing_rounded, const Color(0xFF75503B));
       case 'logistics':
-        return (
-          'Ürün Nakliyesi',
-          Icons.local_shipping_rounded,
-          const Color(0xFF1565C0)
-        );
+        return (label, Icons.local_shipping_rounded, const Color(0xFF1565C0));
       default:
-        return ('Tarım Desteği', Icons.build_circle_rounded, FarmColors.forest);
+        return (label, Icons.build_circle_rounded, FarmColors.forest);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final (typeLabel, typeIcon, typeColor) = _getTypeInfo(provider.type);
+    final tr = AppTranslations.of(context);
+    final (typeLabel, typeIcon, typeColor) = _getTypeInfo(provider.type, tr);
     final hasPhone = provider.phone.trim().isNotEmpty;
 
     return FarmCard(
@@ -77,6 +64,8 @@ class ServiceProviderCard extends StatelessWidget {
                         children: [
                           Text(
                             provider.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
@@ -92,6 +81,8 @@ class ServiceProviderCard extends StatelessWidget {
                               Expanded(
                                 child: Text(
                                   '${provider.city} / ${provider.district}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                     fontSize: 12,
                                     color: FarmColors.earth,
@@ -107,6 +98,7 @@ class ServiceProviderCard extends StatelessWidget {
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -139,45 +131,55 @@ class ServiceProviderCard extends StatelessWidget {
           ],
           const SizedBox(height: 14),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.phone_outlined,
-                    size: 15,
-                    color: hasPhone
-                        ? FarmColors.forest
-                        : FarmColors.ink.withAlpha(120),
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    hasPhone ? provider.phone : 'Telefon belirtilmemiş',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.phone_outlined,
+                      size: 15,
                       color: hasPhone
-                          ? FarmColors.ink
+                          ? FarmColors.forest
                           : FarmColors.ink.withAlpha(120),
                     ),
-                  ),
-                ],
-              ),
-              FilledButton.icon(
-                onPressed: hasPhone
-                    ? () => ServiceCallHelper.callPhone(context, provider.phone)
-                    : null,
-                style: FilledButton.styleFrom(
-                  backgroundColor: FarmColors.forest,
-                  disabledBackgroundColor: const Color(0xFFD4CEC1),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  minimumSize: const Size(40, 38),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        hasPhone ? provider.phone : tr.servicesNoPhone,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w600,
+                          color: hasPhone
+                              ? FarmColors.ink
+                              : FarmColors.ink.withAlpha(120),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                icon: const Icon(Icons.call_rounded, size: 16),
-                label: const Text(
-                  'Hemen Ara',
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(width: 8),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: FilledButton.icon(
+                  onPressed: hasPhone
+                      ? () =>
+                          ServiceCallHelper.callPhone(context, provider.phone)
+                      : null,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: FarmColors.forest,
+                    disabledBackgroundColor: const Color(0xFFD4CEC1),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 8),
+                    minimumSize: const Size(40, 36),
+                  ),
+                  icon: const Icon(Icons.call_rounded, size: 15),
+                  label: Text(
+                    tr.servicesCallNow,
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+                  ),
                 ),
               ),
             ],

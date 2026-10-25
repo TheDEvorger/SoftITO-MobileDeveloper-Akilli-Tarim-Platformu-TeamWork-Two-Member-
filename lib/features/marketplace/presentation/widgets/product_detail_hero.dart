@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:akilli_tarim_platformu/app/app_theme.dart';
+import 'package:akilli_tarim_platformu/app/app_translations.dart';
 import 'package:akilli_tarim_platformu/app/widgets/product_artwork.dart';
 import 'package:akilli_tarim_platformu/core/models/product.dart';
 
@@ -16,6 +17,8 @@ class ProductDetailHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     return Stack(
       children: [
         SizedBox(
@@ -54,7 +57,7 @@ class ProductDetailHero extends StatelessWidget {
               ],
             ),
             child: Text(
-              product.category,
+              tr.translateCategory(product.category),
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,

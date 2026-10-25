@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:akilli_tarim_platformu/app/app_theme.dart';
+import 'package:akilli_tarim_platformu/app/app_translations.dart';
 
 class AddProductForm extends StatefulWidget {
   const AddProductForm({
@@ -35,7 +36,7 @@ class _AddProductFormState extends State<AddProductForm> {
   final _unitPriceController = TextEditingController();
   final _cityController = TextEditingController(text: 'Konya');
   final _districtController = TextEditingController(text: 'Çumra');
-  final _phoneController = TextEditingController(text: '05551234567');
+  final _phoneController = TextEditingController(text: '05550123456');
   final _descriptionController = TextEditingController();
 
   String _category = 'Tahıl';
@@ -87,6 +88,8 @@ class _AddProductFormState extends State<AddProductForm> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     return Form(
       key: _formKey,
       child: Column(
@@ -94,16 +97,16 @@ class _AddProductFormState extends State<AddProductForm> {
         children: [
           TextFormField(
             controller: _titleController,
-            decoration: const InputDecoration(labelText: 'İlan Başlığı *'),
+            decoration: InputDecoration(labelText: tr.productTitleLabel),
             validator: (v) =>
-                (v == null || v.trim().isEmpty) ? 'Başlık zorunludur' : null,
+                (v == null || v.trim().isEmpty) ? tr.titleRequiredMsg : null,
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             initialValue: _category,
-            decoration: const InputDecoration(labelText: 'Kategori *'),
+            decoration: InputDecoration(labelText: '${tr.categoryTitle} *'),
             items: _categories
-                .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                .map((c) => DropdownMenuItem(value: c, child: Text(tr.translateCategory(c))))
                 .toList(),
             onChanged: (v) => setState(() => _category = v!),
           ),
@@ -119,11 +122,11 @@ class _AddProductFormState extends State<AddProductForm> {
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
                   ],
-                  decoration: const InputDecoration(labelText: 'Miktar *'),
+                  decoration: InputDecoration(labelText: tr.quantityLabel),
                   validator: (v) {
                     final n = double.tryParse((v ?? '').replaceAll(',', '.'));
                     return (n == null || n <= 0)
-                        ? 'Pozitif miktar girin'
+                        ? '1+'
                         : null;
                   },
                 ),
@@ -133,9 +136,9 @@ class _AddProductFormState extends State<AddProductForm> {
                 flex: 2,
                 child: DropdownButtonFormField<String>(
                   initialValue: _unit,
-                  decoration: const InputDecoration(labelText: 'Birim'),
+                  decoration: InputDecoration(labelText: tr.unitLabel),
                   items: _units
-                      .map((u) => DropdownMenuItem(value: u, child: Text(u)))
+                      .map((u) => DropdownMenuItem(value: u, child: Text(tr.translateUnit(u))))
                       .toList(),
                   onChanged: (v) => setState(() => _unit = v!),
                 ),
@@ -149,13 +152,13 @@ class _AddProductFormState extends State<AddProductForm> {
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))
             ],
-            decoration: const InputDecoration(
-              labelText: 'Birim Fiyat (₺) *',
+            decoration: InputDecoration(
+              labelText: tr.unitPriceLabel,
               prefixText: '₺ ',
             ),
             validator: (v) {
               final n = double.tryParse((v ?? '').replaceAll(',', '.'));
-              return (n == null || n <= 0) ? 'Pozitif birim fiyat girin' : null;
+              return (n == null || n <= 0) ? '1+' : null;
             },
           ),
           const SizedBox(height: 12),
@@ -164,18 +167,18 @@ class _AddProductFormState extends State<AddProductForm> {
               Expanded(
                 child: TextFormField(
                   controller: _cityController,
-                  decoration: const InputDecoration(labelText: 'İl *'),
+                  decoration: InputDecoration(labelText: tr.cityLabel),
                   validator: (v) =>
-                      (v == null || v.trim().isEmpty) ? 'İl zorunludur' : null,
+                      (v == null || v.trim().isEmpty) ? '*' : null,
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: TextFormField(
                   controller: _districtController,
-                  decoration: const InputDecoration(labelText: 'İlçe *'),
+                  decoration: InputDecoration(labelText: tr.districtLabel),
                   validator: (v) => (v == null || v.trim().isEmpty)
-                      ? 'İlçe zorunludur'
+                      ? '*'
                       : null,
                 ),
               ),
@@ -185,17 +188,17 @@ class _AddProductFormState extends State<AddProductForm> {
           TextFormField(
             controller: _phoneController,
             keyboardType: TextInputType.phone,
-            decoration: const InputDecoration(labelText: 'İletişim Telefonu *'),
-            validator: (v) => (v == null || v.trim().length < 10)
-                ? 'Geçerli telefon girin'
+            decoration: InputDecoration(labelText: tr.contactPhoneLabel),
+            validator: (v) => (v == null || v.trim().length < 5)
+                ? '*'
                 : null,
           ),
           const SizedBox(height: 12),
           TextFormField(
             controller: _descriptionController,
             maxLines: 3,
-            decoration: const InputDecoration(
-                labelText: 'Açıklama (Hasat tarihi, kalite vb.)'),
+            decoration: InputDecoration(
+                labelText: tr.descriptionLabel),
           ),
           const SizedBox(height: 20),
           FilledButton(
@@ -211,8 +214,8 @@ class _AddProductFormState extends State<AddProductForm> {
                     child: CircularProgressIndicator(
                         color: Colors.white, strokeWidth: 2),
                   )
-                : const Text('İlanı Yayınla',
-                    style: TextStyle(fontWeight: FontWeight.w700)),
+                : Text(tr.publishListingBtn,
+                    style: const TextStyle(fontWeight: FontWeight.w700)),
           ),
         ],
       ),

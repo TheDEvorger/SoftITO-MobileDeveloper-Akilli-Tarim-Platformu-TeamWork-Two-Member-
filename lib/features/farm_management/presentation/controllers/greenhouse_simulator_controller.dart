@@ -92,6 +92,81 @@ class GreenhouseSimulatorController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Yeni sera ünitesi kaydı oluşturur ve depoya yazar.
+  Future<void> addGreenhouse({
+    required String name,
+    double initialTemp = 24.0,
+    double initialHumidity = 65.0,
+  }) async {
+    final cleanName = name.trim();
+    if (cleanName.isEmpty) return;
+
+    final newGh = Greenhouse(
+      id: 'gh_${DateTime.now().millisecondsSinceEpoch}',
+      name: cleanName,
+      temperatureC: double.parse(initialTemp.toStringAsFixed(1)),
+      humidityPercent: double.parse(initialHumidity.toStringAsFixed(1)),
+      updatedAt: DateTime.now().toIso8601String(),
+    );
+
+    _liveGreenhouses.add(newGh);
+    await _repository.put(newGh);
+    notifyListeners();
+  }
+
+  /// Mevcut seranın adını veya sıcaklık/nem kalibrasyonunu günceller.
+  Future<void> updateGreenhouse({
+    required String id,
+    required String name,
+    double? temperatureC,
+    double? humidityPercent,
+  }) async {
+    final index = _liveGreenhouses.indexWhere((g) => g.id == id);
+    if (index == -1) return;
+
+    final existing = _liveGreenhouses[index];
+    final updated = Greenhouse(
+      id: id,
+      name: name.trim().isEmpty ? existing.name : name.trim(),
+      temperatureC: temperatureC != null
+          ? double.parse(temperatureC.toStringAsFixed(1))
+          : existing.temperatureC,
+      humidityPercent: humidityPercent != null
+          ? double.parse(humidityPercent.toStringAsFixed(1))
+          : existing.humidityPercent,
+      updatedAt: DateTime.now().toIso8601String(),
+    );
+
+    _liveGreenhouses[index] = updated;
+    await _repository.put(updated);
+    notifyListeners();
+  }
+
+  /// Serayı listeden ve depodan kaldırır.
+  Future<void> removeGreenhouse(String id) async {
+    _liveGreenhouses.removeWhere((g) => g.id == id);
+    await _repository.delete(id);
+    notifyListeners();
+  }
+
+  /// Canlı sera sensör verilerine göre genel iklim sağlığı skoru (%0-%100)
+  int get healthPercentage {
+    if (_liveGreenhouses.isEmpty) return 100;
+    int points = 0;
+    for (final gh in _liveGreenhouses) {
+      final isTempOk = gh.temperatureC >= 18.0 && gh.temperatureC <= 28.0;
+      final isHumOk = gh.humidityPercent >= 55.0 && gh.humidityPercent <= 80.0;
+      if (isTempOk && isHumOk) {
+        points += 100;
+      } else if (isTempOk || isHumOk) {
+        points += 75;
+      } else {
+        points += 45;
+      }
+    }
+    return (points / _liveGreenhouses.length).round();
+  }
+
   @override
   void dispose() {
     _isDisposed = true;

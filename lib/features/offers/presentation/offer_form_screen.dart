@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/app_scope.dart';
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
 import '../../../../app/widgets/farm_card.dart';
 import '../../../../core/storage/app_storage.dart';
 import 'controllers/offer_form_controller.dart';
@@ -34,7 +35,16 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_controller == null) {
-      final storage = widget.storage ?? AppScope.of(context).storage;
+      final appScope = AppScope.of(context);
+      final storage = widget.storage ?? appScope.storage;
+
+      if (_nameController.text.isEmpty) {
+        _nameController.text = 'Demo User';
+      }
+      if (_phoneController.text.isEmpty) {
+        _phoneController.text = '05550123456';
+      }
+
       _controller = OfferFormController(
         productId: widget.productId,
         productRepository: storage.products,
@@ -71,9 +81,10 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
     if (!mounted) return;
 
     if (result.isSuccess) {
+      final tr = AppTranslations.of(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Teklifiniz başarıyla üreticiye iletildi.'),
+        SnackBar(
+          content: Text(tr.offerSubmittedSuccess),
           backgroundColor: FarmColors.forest,
         ),
       );
@@ -94,11 +105,12 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
       );
     }
 
+    final tr = AppTranslations.of(context);
     final product = _controller!.product;
 
     if (product == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Teklif Oluştur')),
+        appBar: AppBar(title: Text(tr.createOfferTitle)),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(24),
@@ -108,23 +120,23 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                 const Icon(Icons.remove_shopping_cart_outlined,
                     size: 54, color: FarmColors.alert),
                 const SizedBox(height: 16),
-                const Text(
-                  'Ürün Bulunamadı',
-                  style: TextStyle(
+                Text(
+                  tr.productNotFoundTitle,
+                  style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                       color: FarmColors.ink),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Teklif vermek istediğiniz ürün satıştan kaldırılmış veya sistemde kayıtlı değil.',
+                Text(
+                  tr.productNotFoundDesc,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: FarmColors.ink),
+                  style: const TextStyle(color: FarmColors.ink),
                 ),
                 const SizedBox(height: 20),
                 FilledButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text('Pazara Geri Dön'),
+                  child: Text(tr.backToMarketBtn),
                 ),
               ],
             ),
@@ -141,9 +153,9 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Alım Teklifi Gönder',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          tr.sendOfferTitle,
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
       ),
       body: SafeArea(
@@ -180,7 +192,7 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Mevcut Stok: ${product.quantity.toStringAsFixed(1)} ${product.unit} · ₺${product.unitPrice.toStringAsFixed(2)}/${product.unit}',
+                            '${tr.availableStockLabel} ${product.quantity.toStringAsFixed(1)} ${tr.translateUnit(product.unit)} · ₺${product.unitPrice.toStringAsFixed(2)}/${tr.translateUnit(product.unit)}',
                             style: const TextStyle(
                               fontSize: 12,
                               color: FarmColors.earth,
@@ -209,7 +221,7 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          _errorMessage!,
+                          tr.translateValidationError(_errorMessage!),
                           style: const TextStyle(
                             color: FarmColors.alert,
                             fontWeight: FontWeight.w600,
@@ -222,9 +234,9 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                 ),
                 const SizedBox(height: 16),
               ],
-              const Text(
-                'Adınız / Ticari Unvanınız *',
-                style: TextStyle(
+              Text(
+                tr.buyerNameLabel,
+                style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: FarmColors.ink),
@@ -232,16 +244,20 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
               const SizedBox(height: 6),
               TextField(
                 controller: _nameController,
+                onChanged: (_) {
+                  if (_errorMessage != null) {
+                    setState(() => _errorMessage = null);
+                  }
+                },
                 decoration: const InputDecoration(
-                  hintText: 'Örn: Anadolu Gurme Gıda Ltd.',
                   prefixIcon: Icon(Icons.person_outline_rounded,
                       color: FarmColors.forest),
                 ),
               ),
               const SizedBox(height: 14),
-              const Text(
-                'İletişim Telefonu',
-                style: TextStyle(
+              Text(
+                tr.buyerPhoneLabel,
+                style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: FarmColors.ink),
@@ -250,15 +266,19 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
               TextField(
                 controller: _phoneController,
                 keyboardType: TextInputType.phone,
+                onChanged: (_) {
+                  if (_errorMessage != null) {
+                    setState(() => _errorMessage = null);
+                  }
+                },
                 decoration: const InputDecoration(
-                  hintText: 'Örn: 0532 000 00 00',
                   prefixIcon:
                       Icon(Icons.phone_outlined, color: FarmColors.forest),
                 ),
               ),
               const SizedBox(height: 14),
               Text(
-                'Talep Edilen Miktar (${product.unit}) *',
+                '${tr.offerQtyLabel} (${tr.translateUnit(product.unit)})',
                 style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
@@ -269,10 +289,14 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                 controller: _quantityController,
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                onChanged: (_) => setState(() {}),
+                onChanged: (_) {
+                  setState(() {
+                    if (_errorMessage != null) _errorMessage = null;
+                  });
+                },
                 decoration: InputDecoration(
                   hintText:
-                      'En fazla ${product.quantity.toStringAsFixed(1)} ${product.unit}',
+                      'max. ${product.quantity.toStringAsFixed(1)} ${tr.translateUnit(product.unit)}',
                   prefixIcon:
                       const Icon(Icons.scale_rounded, color: FarmColors.forest),
                 ),
@@ -282,7 +306,7 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 4),
                   child: Text(
-                    'Tahmini Toplam Bedel: ₺${estimatedTotal.toStringAsFixed(2)}',
+                    '${tr.estimatedTotalLabel}: ₺${estimatedTotal.toStringAsFixed(2)}',
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
@@ -292,9 +316,9 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                 ),
               ],
               const SizedBox(height: 14),
-              const Text(
-                'Teklif / Talep Notu',
-                style: TextStyle(
+              Text(
+                tr.offerNoteLabel,
+                style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: FarmColors.ink),
@@ -303,10 +327,7 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
               TextField(
                 controller: _noteController,
                 maxLines: 3,
-                decoration: const InputDecoration(
-                  hintText:
-                      'Örn: Nakliye bize aittir, ürünleri haftaya cuma günü teslim alabiliriz.',
-                ),
+                decoration: const InputDecoration(),
               ),
               const SizedBox(height: 24),
               SizedBox(
@@ -320,7 +341,7 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                           child: CircularProgressIndicator(
                               strokeWidth: 2, color: Colors.white),
                         )
-                      : const Text('Teklifi Üreticiye İlet'),
+                      : Text(tr.submitOfferBtn),
                 ),
               ),
             ],

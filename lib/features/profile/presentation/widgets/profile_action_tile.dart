@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_router.dart';
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
 import '../../../../app/role_controller.dart';
+import '../../../../app/widgets/main_tab_scope.dart';
 import '../../../../core/models/user_role.dart';
 
 class ProfileActionTile extends StatelessWidget {
@@ -22,31 +25,60 @@ class ProfileActionTile extends StatelessWidget {
   final UserRole? requiredRole;
   final RoleController roleController;
 
+  void _dispatchNavigation(BuildContext context) {
+    final tabScope = MainTabScope.of(context);
+    if (tabScope != null) {
+      if (routeName == AppRoutes.marketplace) {
+        tabScope.switchTab(1);
+        return;
+      }
+      if (routeName == AppRoutes.farm && roleController.isProducer) {
+        tabScope.switchTab(2);
+        return;
+      }
+      if (routeName == AppRoutes.offers) {
+        tabScope.switchTab(roleController.isProducer ? 3 : 2);
+        return;
+      }
+      if (routeName == AppRoutes.services && !roleController.isProducer) {
+        tabScope.switchTab(3);
+        return;
+      }
+      if (routeName == AppRoutes.profile) {
+        tabScope.switchTab(4);
+        return;
+      }
+    }
+    Navigator.of(context).pushNamed(routeName);
+  }
+
   void _handleTap(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     if (requiredRole != null && roleController.role != requiredRole) {
       final roleText =
-          requiredRole == UserRole.producer ? 'Üretici' : 'Tüketici';
+          requiredRole == UserRole.producer ? tr.roleProducer : tr.roleConsumer;
       showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('$roleText Modu Gerekli'),
+          title: Text(tr.roleRequiredTitle(roleText)),
           content: Text(
-            '"$title" özelliğine erişebilmek için aktif modunuzun $roleText olması gerekmektedir. Şimdi bu moda geçiş yapmak ister misiniz?',
+            tr.roleSwitchPrompt(title, roleText),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              child: const Text('Vazgeç'),
+              child: Text(tr.cancel),
             ),
             FilledButton(
               onPressed: () async {
                 Navigator.of(ctx).pop();
                 await roleController.setRole(requiredRole!);
                 if (context.mounted) {
-                  Navigator.of(context).pushNamed(routeName);
+                  _dispatchNavigation(context);
                 }
               },
-              child: Text('$roleText Moduna Geç'),
+              child: Text(tr.switchToRoleBtn(roleText)),
             ),
           ],
         ),
@@ -54,11 +86,12 @@ class ProfileActionTile extends StatelessWidget {
       return;
     }
 
-    Navigator.of(context).pushNamed(routeName);
+    _dispatchNavigation(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
     final isRestricted =
         requiredRole != null && roleController.role != requiredRole;
 
@@ -97,14 +130,17 @@ class ProfileActionTile extends StatelessWidget {
           ),
           title: Row(
             children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  fontSize: 15,
-                  color: isRestricted
-                      ? FarmColors.ink.withAlpha(160)
-                      : FarmColors.ink,
+              Flexible(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    color:
+                        isRestricted ? const Color(0xFF6B7280) : FarmColors.ink,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
               if (requiredRole != null) ...[
@@ -121,12 +157,12 @@ class ProfileActionTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    requiredRole == UserRole.producer ? 'Üretici' : 'Tüketici',
+                    requiredRole == UserRole.producer ? tr.roleProducer : tr.roleConsumer,
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       color: isRestricted
-                          ? FarmColors.ink.withAlpha(130)
+                          ? const Color(0xFF6B7280)
                           : (requiredRole == UserRole.producer
                               ? FarmColors.forest
                               : const Color(0xFF8A6216)),
@@ -138,9 +174,9 @@ class ProfileActionTile extends StatelessWidget {
           ),
           subtitle: Text(
             subtitle,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
-              color: FarmColors.ink.withAlpha(150),
+              color: Color(0xFF4B5563),
             ),
           ),
           trailing: Icon(

@@ -153,9 +153,13 @@ void main() {
       expect(producerOffers.first.productId, 'p1');
     });
 
-    test('Tüketici moduna geçilince tüm teklifler görünür', () async {
+    test(
+        'Tüketici moduna geçilince diğer üreticilere verilen / tüketici teklifleri filtrelenir',
+        () async {
       await roleController.setRole(UserRole.consumer);
-      expect(offersController.roleSpecificOffers.length, 2);
+      final consumerOffers = offersController.roleSpecificOffers;
+      expect(consumerOffers.length, 1);
+      expect(consumerOffers.first.productId, 'p2');
     });
 
     test('Teklif durumu accepted veya rejected olarak güncellenebilir',

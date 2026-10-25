@@ -7,7 +7,7 @@ class SeedLoader {
   const SeedLoader._();
 
   static const _seedMarker = 'mock_seed_version';
-  static const _seedVersion = '1';
+  static const _seedVersion = '7';
   static const collectionKeys = [
     'products',
     'offers',
@@ -20,7 +20,8 @@ class SeedLoader {
     required Map<String, Box<String>> boxes,
     required Box<String> settings,
   }) async {
-    if (settings.get(_seedMarker) == _seedVersion) return;
+    final anyBoxEmpty = collectionKeys.any((k) => boxes[k]?.isEmpty ?? false);
+    if (!anyBoxEmpty && settings.get(_seedMarker) == _seedVersion) return;
     final jsonText = await rootBundle.loadString('assets/mock_farms.json');
     final data = Map<String, dynamic>.from(jsonDecode(jsonText) as Map);
     await seedFromMap(data: data, boxes: boxes, settings: settings);
@@ -32,7 +33,10 @@ class SeedLoader {
     required Map<String, Box<String>> boxes,
     required Box<String> settings,
   }) async {
-    if (settings.get(_seedMarker) == _seedVersion) return;
+    final anyBoxEmpty = collectionKeys.any((k) => boxes[k]?.isEmpty ?? false);
+    final isNewVersion = settings.get(_seedMarker) != _seedVersion;
+    if (!anyBoxEmpty && !isNewVersion) return;
+
     for (final key in collectionKeys) {
       final records = data[key];
       if (records is! List) continue;

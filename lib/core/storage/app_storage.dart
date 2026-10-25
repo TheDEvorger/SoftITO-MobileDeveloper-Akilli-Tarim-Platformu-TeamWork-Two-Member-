@@ -79,4 +79,46 @@ class AppStorage {
       settings: settings,
     );
   }
+
+  factory AppStorage.fromBoxes({
+    required Box<String> productBox,
+    required Box<String> offerBox,
+    required Box<String> animalBox,
+    required Box<String> greenhouseBox,
+    required Box<String> serviceBox,
+    required Box<String> settingsBox,
+  }) =>
+      AppStorage._(
+        products: JsonBoxRepository(
+          box: productBox,
+          decoder: Product.fromJson,
+          encoder: (p) => p.toJson(),
+          idOf: (p) => p.id,
+        ),
+        offers: JsonBoxRepository(
+          box: offerBox,
+          decoder: Offer.fromJson,
+          encoder: (p) => p.toJson(),
+          idOf: (p) => p.id,
+        ),
+        animals: JsonBoxRepository(
+          box: animalBox,
+          decoder: Animal.fromJson,
+          encoder: (p) => p.toJson(),
+          idOf: (p) => p.id,
+        ),
+        greenhouses: JsonBoxRepository(
+          box: greenhouseBox,
+          decoder: Greenhouse.fromJson,
+          encoder: (p) => p.toJson(),
+          idOf: (p) => p.id,
+        ),
+        serviceProviders: JsonBoxRepository(
+          box: serviceBox,
+          decoder: ServiceProvider.fromJson,
+          encoder: (p) => p.toJson(),
+          idOf: (p) => p.id,
+        ),
+        settings: settingsBox,
+      );
 }

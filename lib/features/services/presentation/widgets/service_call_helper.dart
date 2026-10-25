@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
 
 abstract final class ServiceCallHelper {
   static Future<void> callPhone(BuildContext context, String? rawPhone) async {
+    final tr = AppTranslations.of(context);
     final phone = rawPhone?.trim() ?? '';
     if (phone.isEmpty) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-                'Bu sağlayıcı için kayıtlı bir telefon numarası bulunmuyor.'),
+          SnackBar(
+            content: Text(tr.noPhoneProvided),
             backgroundColor: FarmColors.alert,
           ),
         );
@@ -28,8 +29,7 @@ abstract final class ServiceCallHelper {
       if (!launched && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Arama başlatılamadı ($phone). Cihazınız telefon aramasını desteklemiyor olabilir.'),
+            content: Text(tr.callFailedWithPhone(phone)),
             backgroundColor: FarmColors.alert,
           ),
         );
@@ -38,7 +38,7 @@ abstract final class ServiceCallHelper {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Arama başlatılamadı ($phone).'),
+            content: Text(tr.callFailedWithPhone(phone)),
             backgroundColor: FarmColors.alert,
           ),
         );

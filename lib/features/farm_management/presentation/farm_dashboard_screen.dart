@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/app_scope.dart';
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
+import '../../../../core/models/user_role.dart';
 import '../../../../core/storage/app_storage.dart';
 import 'controllers/animal_controller.dart';
 import 'controllers/greenhouse_simulator_controller.dart';
 import 'widgets/add_animal_sheet.dart';
+import 'widgets/add_greenhouse_sheet.dart';
 import 'widgets/animal_list_section.dart';
 import 'widgets/farm_summary_header.dart';
 import 'widgets/greenhouse_section.dart';
@@ -47,12 +50,80 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
 
   void _openAddAnimalSheet() {
     if (_animalController == null) return;
+    final scope = AppScope.of(context);
+    final tr = AppTranslations.of(context);
+    if (!scope.roleController.isProducer) {
+      showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(tr.producerModeRequiredTitle),
+          content: Text(tr.producerModeRequiredDesc),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(),
+              child: Text(tr.cancel),
+            ),
+            FilledButton(
+              onPressed: () async {
+                Navigator.of(ctx).pop();
+                await scope.roleController.setRole(UserRole.producer);
+                if (mounted) {
+                  _openAddAnimalSheet();
+                }
+              },
+              child: Text(tr.switchToProducerAction),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => AddAnimalSheet(
         controller: _animalController!,
+        onSaved: () => setState(() {}),
+      ),
+    );
+  }
+
+  void _openAddGreenhouseSheet() {
+    final roleController = AppScope.of(context).roleController;
+    final tr = AppTranslations.of(context);
+    if (!roleController.isProducer) {
+      showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(tr.producerModeRequiredTitle),
+          content: Text(tr.producerModeRequiredDesc),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(tr.cancel),
+            ),
+            FilledButton(
+              onPressed: () async {
+                Navigator.pop(ctx);
+                await roleController.setRole(UserRole.producer);
+                if (mounted) _openAddGreenhouseSheet();
+              },
+              child: Text(tr.switchToProducerAction),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => AddGreenhouseSheet(
+        controller: _greenhouseController!,
         onSaved: () => setState(() {}),
       ),
     );
@@ -66,19 +137,30 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
       );
     }
 
+    final tr = AppTranslations.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Çiftlik & Üretim Paneli',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          tr.farmDashboardTitle,
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         actions: [
-          IconButton(
-            tooltip: 'Yeni Hayvan Ekle',
-            icon: const Icon(Icons.add_circle_outline_rounded,
-                color: FarmColors.forest),
-            onPressed: _openAddAnimalSheet,
-          ),
+          if (_selectedTabIndex == 2)
+            IconButton(
+              tooltip: tr.tooltipAddGreenhouse,
+              icon: const Icon(Icons.add_business_rounded,
+                  color: FarmColors.forest),
+              onPressed: _openAddGreenhouseSheet,
+            )
+          else ...[
+            IconButton(
+              tooltip: tr.tooltipAddAnimal,
+              icon: const Icon(Icons.add_circle_outline_rounded,
+                  color: FarmColors.forest),
+              onPressed: _openAddAnimalSheet,
+            ),
+          ],
         ],
       ),
       body: SafeArea(
@@ -92,6 +174,42 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                AnimatedBuilder(
+                  animation: AppScope.of(context).roleController,
+                  builder: (context, _) {
+                    final isProducer =
+                        AppScope.of(context).roleController.isProducer;
+                    if (isProducer) return const SizedBox.shrink();
+
+                    return Container(
+                      margin: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF9ED),
+                        borderRadius: BorderRadius.circular(14),
+                        border:
+                            Border.all(color: FarmColors.gold.withAlpha(90)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.info_outline_rounded,
+                              color: Color(0xFF8A6216), size: 20),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              tr.consumerFarmNotice,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: FarmColors.ink,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
                 ListenableBuilder(
                   listenable: Listenable.merge(
                       [_animalController!, _greenhouseController!]),
@@ -117,9 +235,9 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
                     ),
                     child: Row(
                       children: [
-                        _buildTabButton(0, 'Tüm Tesis'),
-                        _buildTabButton(1, 'Sürü Takibi'),
-                        _buildTabButton(2, 'Sera Sensörleri'),
+                        _buildTabButton(0, tr.farmTabOverview),
+                        _buildTabButton(1, tr.farmTabHerd),
+                        _buildTabButton(2, tr.farmTabGreenhouse),
                       ],
                     ),
                   ),
@@ -133,7 +251,10 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
                   const SizedBox(height: 20),
                 ],
                 if (_selectedTabIndex == 0 || _selectedTabIndex == 2) ...[
-                  GreenhouseSection(controller: _greenhouseController!),
+                  GreenhouseSection(
+                    controller: _greenhouseController!,
+                    onAddPressed: _openAddGreenhouseSheet,
+                  ),
                   const SizedBox(height: 24),
                 ],
               ],
@@ -157,12 +278,19 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
             borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: isSelected ? Colors.white : FarmColors.ink,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Text(
+                title,
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: isSelected ? Colors.white : FarmColors.ink,
+                ),
+              ),
             ),
           ),
         ),

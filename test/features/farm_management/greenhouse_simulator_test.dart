@@ -81,5 +81,48 @@ void main() {
       localController.dispose();
       expect(localController.isRunning, isFalse);
     });
+
+    test('Yeni sera başarıyla eklenir ve listeye dahil edilir', () async {
+      final initialCount = controller.greenhouses.length;
+      await controller.addGreenhouse(
+        name: 'Topraksız Çilek Serası',
+        initialTemp: 23.5,
+        initialHumidity: 65.0,
+      );
+
+      expect(controller.greenhouses.length, initialCount + 1);
+      final added = controller.greenhouses.last;
+      expect(added.name, 'Topraksız Çilek Serası');
+      expect(added.temperatureC, 23.5);
+      expect(added.humidityPercent, 65.0);
+    });
+
+    test('Sera bilgileri başarıyla güncellenir ve kalibre edilir', () async {
+      await controller.updateGreenhouse(
+        id: 'gh1',
+        name: 'Modernize Edilmiş Sera 1',
+        temperatureC: 24.0,
+        humidityPercent: 62.0,
+      );
+
+      final updated = controller.greenhouses.firstWhere((g) => g.id == 'gh1');
+      expect(updated.name, 'Modernize Edilmiş Sera 1');
+      expect(updated.temperatureC, 24.0);
+      expect(updated.humidityPercent, 62.0);
+    });
+
+    test('Sera başarıyla silinir', () async {
+      final initialCount = controller.greenhouses.length;
+      await controller.removeGreenhouse('gh1');
+
+      expect(controller.greenhouses.length, initialCount - 1);
+      expect(controller.greenhouses.any((g) => g.id == 'gh1'), isFalse);
+    });
+
+    test('Canlı iklim koşullarına göre sağlık skoru hesaplanır', () {
+      final health = controller.healthPercentage;
+      expect(health, greaterThanOrEqualTo(0));
+      expect(health, lessThanOrEqualTo(100));
+    });
   });
 }

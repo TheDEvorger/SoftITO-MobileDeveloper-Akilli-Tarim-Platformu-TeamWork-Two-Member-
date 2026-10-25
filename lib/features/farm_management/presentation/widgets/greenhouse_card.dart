@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
 import '../../../../app/widgets/farm_card.dart';
 import '../../../../core/models/greenhouse.dart';
 
@@ -9,10 +10,12 @@ class GreenhouseCard extends StatelessWidget {
     super.key,
     required this.greenhouse,
     this.isLiveUpdating = true,
+    this.onEdit,
   });
 
   final Greenhouse greenhouse;
   final bool isLiveUpdating;
+  final VoidCallback? onEdit;
 
   String _formatTime(String isoTime) {
     try {
@@ -28,6 +31,7 @@ class GreenhouseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
     final temp = greenhouse.temperatureC;
     final hum = greenhouse.humidityPercent;
 
@@ -93,12 +97,16 @@ class GreenhouseCard extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(width: 5),
-                              Text(
-                                'Son Güncelleme: ${_formatTime(greenhouse.updatedAt)}',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: FarmColors.ink.withAlpha(160),
-                                  fontWeight: FontWeight.w500,
+                              Expanded(
+                                child: Text(
+                                  '${tr.lastUpdateLabel} ${_formatTime(greenhouse.updatedAt)}',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: FarmColors.ink.withAlpha(160),
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
                             ],
@@ -109,6 +117,13 @@ class GreenhouseCard extends StatelessWidget {
                   ],
                 ),
               ),
+              if (onEdit != null)
+                IconButton(
+                  icon: const Icon(Icons.edit_outlined,
+                      size: 20, color: FarmColors.forest),
+                  tooltip: tr.editDeleteGreenhouseTooltip,
+                  onPressed: onEdit,
+                ),
             ],
           ),
           const SizedBox(height: 12),
@@ -120,17 +135,21 @@ class GreenhouseCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
               border: Border.all(color: FarmColors.gold.withAlpha(120)),
             ),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.sensors_rounded, size: 14, color: Color(0xFF8C6400)),
-                SizedBox(width: 6),
-                Text(
-                  'Simüle sensör verisi (5 sn döngülü)',
-                  style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF8C6400),
+                const Icon(Icons.sensors_rounded, size: 14, color: Color(0xFF8C6400)),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Text(
+                    tr.simulatedSensorNotice,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF8C6400),
+                    ),
                   ),
                 ),
               ],
@@ -156,9 +175,9 @@ class GreenhouseCard extends StatelessWidget {
                           Icon(Icons.thermostat_rounded,
                               size: 18, color: tempColor),
                           const SizedBox(width: 4),
-                          const Text(
-                            'Sıcaklık',
-                            style: TextStyle(
+                          Text(
+                            tr.temperatureLabel,
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: FarmColors.ink,
@@ -177,7 +196,7 @@ class GreenhouseCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        isTempOptimal ? 'Optimal İklim' : 'Limit Dışı',
+                        isTempOptimal ? tr.optimalClimate : tr.outOfRange,
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
@@ -206,9 +225,9 @@ class GreenhouseCard extends StatelessWidget {
                           Icon(Icons.water_drop_rounded,
                               size: 18, color: humColor),
                           const SizedBox(width: 4),
-                          const Text(
-                            'Hava Nemi',
-                            style: TextStyle(
+                          Text(
+                            tr.humidityLabel,
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: FarmColors.ink,
@@ -227,7 +246,7 @@ class GreenhouseCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        isHumOptimal ? 'Dengeli Nem' : 'Ayarlama Gerekli',
+                        isHumOptimal ? tr.balancedHumidity : tr.adjustmentNeeded,
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,

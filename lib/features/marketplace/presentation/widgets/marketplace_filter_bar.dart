@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:akilli_tarim_platformu/app/app_theme.dart';
+import 'package:akilli_tarim_platformu/app/app_translations.dart';
 import '../../domain/marketplace_filter.dart';
 
-class MarketplaceFilterBar extends StatelessWidget {
+class MarketplaceFilterBar extends StatefulWidget {
   const MarketplaceFilterBar({
     super.key,
     required this.filter,
@@ -26,23 +27,64 @@ class MarketplaceFilterBar extends StatelessWidget {
   final int resultCount;
 
   @override
+  State<MarketplaceFilterBar> createState() => _MarketplaceFilterBarState();
+}
+
+class _MarketplaceFilterBarState extends State<MarketplaceFilterBar> {
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController(text: widget.filter.searchQuery);
+  }
+
+  @override
+  void didUpdateWidget(covariant MarketplaceFilterBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.filter.searchQuery != _searchController.text) {
+      _searchController.text = widget.filter.searchQuery;
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _handleReset() {
+    _searchController.clear();
+    widget.onReset();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final hasActiveFilter = filter.category != 'Tümü' ||
-        filter.city != 'Tümü' ||
-        filter.searchQuery.isNotEmpty;
+    final tr = AppTranslations.of(context);
+    final hasActiveFilter = widget.filter.category != 'Tümü' ||
+        widget.filter.city != 'Tümü' ||
+        widget.filter.searchQuery.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
-          onChanged: onSearchChanged,
+          controller: _searchController,
+          onChanged: (val) {
+            setState(() {});
+            widget.onSearchChanged(val);
+          },
           decoration: InputDecoration(
-            hintText: 'Ürün, ilçe veya açıklama ara...',
+            hintText: tr.searchHint,
             prefixIcon: const Icon(Icons.search, color: FarmColors.forest),
-            suffixIcon: filter.searchQuery.isNotEmpty
+            suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
                     icon: const Icon(Icons.clear, size: 20),
-                    onPressed: () => onSearchChanged(''),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {});
+                      widget.onSearchChanged('');
+                    },
                   )
                 : null,
             filled: true,
@@ -56,19 +98,19 @@ class MarketplaceFilterBar extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              for (final cat in categories)
+              for (final cat in widget.categories)
                 Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: ChoiceChip(
-                    label: Text(cat),
-                    selected: filter.category == cat,
-                    onSelected: (_) => onCategorySelected(cat),
+                    label: Text(tr.translateCategory(cat)),
+                    selected: widget.filter.category == cat,
+                    onSelected: (_) => widget.onCategorySelected(cat),
                     selectedColor: const Color(0xFFD3E2CF),
                     labelStyle: TextStyle(
-                      color: filter.category == cat
+                      color: widget.filter.category == cat
                           ? FarmColors.forest
                           : FarmColors.ink,
-                      fontWeight: filter.category == cat
+                      fontWeight: widget.filter.category == cat
                           ? FontWeight.w700
                           : FontWeight.w500,
                     ),
@@ -93,20 +135,22 @@ class MarketplaceFilterBar extends StatelessWidget {
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
-                    value: cities.contains(filter.city) ? filter.city : 'Tümü',
+                    value: widget.cities.contains(widget.filter.city)
+                        ? widget.filter.city
+                        : 'Tümü',
                     isExpanded: true,
                     items: [
-                      for (final city in cities)
+                      for (final city in widget.cities)
                         DropdownMenuItem(
                           value: city,
                           child: Text(
-                            city == 'Tümü' ? 'Tüm Şehirler' : city,
+                            city == 'Tümü' ? tr.allCitiesLabel : tr.translateCity(city),
                             style: const TextStyle(fontSize: 14),
                           ),
                         ),
                     ],
                     onChanged: (val) {
-                      if (val != null) onCitySelected(val);
+                      if (val != null) widget.onCitySelected(val);
                     },
                   ),
                 ),
@@ -115,11 +159,14 @@ class MarketplaceFilterBar extends StatelessWidget {
             const SizedBox(width: 12),
             if (hasActiveFilter)
               TextButton.icon(
-                onPressed: onReset,
-                icon: const Icon(Icons.filter_alt_off_outlined, size: 18),
-                label: const Text('Sıfırla'),
+                onPressed: _handleReset,
+                icon: const Icon(Icons.filter_alt_off_outlined, size: 16),
+                label: Text(tr.filterResetBtn),
                 style: TextButton.styleFrom(
                   foregroundColor: FarmColors.alert,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  visualDensity: VisualDensity.compact,
                 ),
               ),
           ],
@@ -129,7 +176,7 @@ class MarketplaceFilterBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '$resultCount ürün listelendi',
+              tr.productsListed(widget.resultCount),
               style: const TextStyle(
                 fontWeight: FontWeight.w700,
                 color: FarmColors.earth,

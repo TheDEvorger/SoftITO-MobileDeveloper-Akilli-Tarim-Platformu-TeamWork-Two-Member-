@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:akilli_tarim_platformu/app/app_theme.dart';
+import 'package:akilli_tarim_platformu/app/app_translations.dart';
 import 'package:akilli_tarim_platformu/app/widgets/farm_card.dart';
 import 'package:akilli_tarim_platformu/app/widgets/product_artwork.dart';
 import 'package:akilli_tarim_platformu/core/models/product.dart';
@@ -10,13 +11,17 @@ class MarketplaceProductCard extends StatelessWidget {
     super.key,
     required this.product,
     required this.onTap,
+    this.isProducer = false,
   });
 
   final Product product;
   final VoidCallback onTap;
+  final bool isProducer;
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     return Semantics(
       button: true,
       label: '${product.title}, ${product.unitPrice.toStringAsFixed(2)} TL',
@@ -39,6 +44,82 @@ class MarketplaceProductCard extends StatelessWidget {
                       height: 140,
                     ),
                   ),
+                  if (isProducer)
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: FarmColors.forest,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x33000000),
+                              blurRadius: 6,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.verified_rounded,
+                                size: 13, color: Colors.white),
+                            const SizedBox(width: 4),
+                            Text(
+                              tr.badgeYourListing,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF2E7D32),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x33000000),
+                              blurRadius: 6,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.storefront_rounded,
+                                size: 13, color: Colors.white),
+                            const SizedBox(width: 4),
+                            Text(
+                              tr.badgeLocalProducer,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   Positioned(
                     top: 10,
                     right: 10,
@@ -48,18 +129,18 @@ class MarketplaceProductCard extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: FarmColors.milk.withValues(alpha: 0.92),
+                        color: const Color(0xDE1F2721),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: const Color(0xFFD9D6C8),
                         ),
                       ),
                       child: Text(
-                        product.category,
+                        tr.translateCategory(product.category),
                         style: const TextStyle(
                           fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          color: FarmColors.forest,
+                          fontWeight: FontWeight.w800,
+                          color: Color(0xFFF7F1E5),
                         ),
                       ),
                     ),
@@ -71,14 +152,35 @@ class MarketplaceProductCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      product.title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w800,
-                            color: FarmColors.ink,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            product.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  color: FarmColors.ink,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(width: 8),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '${product.unitPrice.toStringAsFixed(2)} ₺',
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w900,
+                              color: FarmColors.forest,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(height: 6),
                     Row(
@@ -91,41 +193,84 @@ class MarketplaceProductCard extends StatelessWidget {
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
-                            '${product.city}, ${product.district}',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                  color: FarmColors.ink.withValues(alpha: 0.8),
-                                ),
+                            '${tr.translateCity(product.city)}, ${product.district}',
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: const Color(0xFF4B5563),
+                                      fontWeight: FontWeight.w500,
+                                    ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
+                        const SizedBox(width: 8),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '${tr.stock}: ${product.quantity.toStringAsFixed(0)} ${tr.translateUnit(product.unit)}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: FarmColors.olive,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '${product.quantity.toStringAsFixed(0)} ${product.unit}',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600,
-                            color: FarmColors.olive,
-                          ),
+                    const SizedBox(height: 12),
+                    // Rol bazlı aksiyon şeridi
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isProducer
+                            ? const Color(0xFFEDF5EF)
+                            : const Color(0xFFFFF7E8),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: isProducer
+                              ? FarmColors.forest.withAlpha(60)
+                              : FarmColors.gold.withAlpha(90),
                         ),
-                        Text(
-                          '${product.unitPrice.toStringAsFixed(2)} ₺',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
-                            color: FarmColors.forest,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isProducer
+                                ? Icons.edit_note_rounded
+                                : Icons.handshake_outlined,
+                            size: 16,
+                            color: isProducer
+                                ? FarmColors.forest
+                                : const Color(0xFFB88422),
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              isProducer
+                                  ? tr.marketEditListing
+                                  : tr.marketMakeOffer,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                color: isProducer
+                                    ? FarmColors.forest
+                                    : const Color(0xFF8A5A00),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 13,
+                            color: isProducer
+                                ? FarmColors.forest
+                                : const Color(0xFFB88422),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

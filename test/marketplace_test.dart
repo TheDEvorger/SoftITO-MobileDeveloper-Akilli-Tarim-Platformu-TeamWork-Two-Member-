@@ -104,4 +104,12 @@ void main() {
     expect(repo.find(saved.id), isNotNull);
     expect(repo.find(saved.id)!.category, 'Meyve');
   });
+
+  test('Product copyWith alanları doğru günceller', () {
+    final updated = dummyProduct.copyWith(quantity: 1200, unitPrice: 20.0);
+    expect(updated.quantity, 1200);
+    expect(updated.unitPrice, 20.0);
+    expect(updated.title, dummyProduct.title);
+    expect(updated.sellerId, dummyProduct.sellerId);
+  });
 }

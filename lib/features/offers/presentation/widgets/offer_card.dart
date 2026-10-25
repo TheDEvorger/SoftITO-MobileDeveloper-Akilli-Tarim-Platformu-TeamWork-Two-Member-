@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_translations.dart';
 import '../../../../app/app_theme.dart';
 import '../../../../app/widgets/farm_card.dart';
 import '../../../../core/models/offer.dart';
@@ -33,8 +34,10 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final unit = product?.unit ?? 'Birim';
-    final price = product?.unitPrice;
+    final tr = AppTranslations.of(context);
+    final targetProduct = product;
+    final unit = targetProduct?.unit ?? 'Birim';
+    final price = targetProduct?.unitPrice;
     final totalEstimated =
         price != null ? (offer.requestedQuantity * price) : null;
 
@@ -51,19 +54,50 @@ class OfferCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      product != null
-                          ? product!.title
-                          : 'Kaldırılmış Ürün (#${offer.productId})',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                        color: FarmColors.ink,
+                    if (product != null)
+                      InkWell(
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          '/product-detail',
+                          arguments: offer.productId,
+                        ),
+                        borderRadius: BorderRadius.circular(6),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                product!.title,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w800,
+                                  color: FarmColors.forest,
+                                  decoration: TextDecoration.underline,
+                                  decorationColor: FarmColors.forest,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            const Icon(
+                              Icons.arrow_outward_rounded,
+                              size: 15,
+                              color: FarmColors.forest,
+                            ),
+                          ],
+                        ),
+                      )
+                    else
+                      Text(
+                        tr.offerRemovedProduct(offer.productId),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                          color: FarmColors.ink,
+                        ),
                       ),
-                    ),
                     const SizedBox(height: 2),
                     Text(
-                      'Teklif Tarihi: ${_formatDate(offer.createdAt)}',
+                      '${tr.offerDatePrefix} ${_formatDate(offer.createdAt)}',
                       style: TextStyle(
                         fontSize: 11,
                         color: FarmColors.ink.withAlpha(160),
@@ -87,34 +121,12 @@ class OfferCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Talep Edilen Miktar',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: FarmColors.ink.withAlpha(160),
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${offer.requestedQuantity.toStringAsFixed(1)} $unit',
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w800,
-                        color: FarmColors.forest,
-                      ),
-                    ),
-                  ],
-                ),
-                if (totalEstimated != null)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Tahmini Tutar',
+                        tr.offerRequestedQty,
                         style: TextStyle(
                           fontSize: 11,
                           color: FarmColors.ink.withAlpha(160),
@@ -122,44 +134,146 @@ class OfferCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 2),
-                      Text(
-                        '₺${totalEstimated.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w800,
-                          color: FarmColors.gold,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '${offer.requestedQuantity.toStringAsFixed(1)} $unit',
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            color: FarmColors.forest,
+                          ),
                         ),
                       ),
                     ],
                   ),
+                ),
+                if (totalEstimated != null) ...[
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          tr.offerEstimatedAmount,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: FarmColors.ink.withAlpha(160),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            '₺${totalEstimated.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: FarmColors.gold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
           const SizedBox(height: 12),
-          Row(
+          Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 12,
+            runSpacing: 6,
             children: [
-              const Icon(Icons.person_outline_rounded,
-                  size: 16, color: FarmColors.forest),
-              const SizedBox(width: 6),
-              Text(
-                offer.buyerName,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: FarmColors.ink,
+              if (isProducer) ...[
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.person_outline_rounded,
+                        size: 16, color: FarmColors.forest),
+                    const SizedBox(width: 6),
+                    Text(
+                      '${tr.offerBuyerPrefix} ${offer.buyerName}',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: FarmColors.ink,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              if (offer.buyerPhone.trim().isNotEmpty) ...[
-                const SizedBox(width: 12),
-                const Icon(Icons.phone_outlined,
-                    size: 14, color: FarmColors.earth),
-                const SizedBox(width: 4),
-                Text(
-                  offer.buyerPhone,
-                  style: const TextStyle(
-                      fontSize: 12,
-                      color: FarmColors.earth,
-                      fontWeight: FontWeight.w600),
+                if (offer.buyerPhone.trim().isNotEmpty)
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.phone_outlined,
+                          size: 14, color: FarmColors.earth),
+                      const SizedBox(width: 4),
+                      Text(
+                        offer.buyerPhone,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: FarmColors.earth,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+              ] else ...[
+                if (targetProduct != null) ...[
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.storefront_outlined,
+                          size: 15, color: FarmColors.forest),
+                      const SizedBox(width: 5),
+                      Text(
+                        '${tr.offerProducerPrefix} ${targetProduct.city} / ${targetProduct.district}',
+                        style: const TextStyle(
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: FarmColors.ink,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (targetProduct.sellerPhone.trim().isNotEmpty)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.phone_outlined,
+                            size: 14, color: FarmColors.earth),
+                        const SizedBox(width: 4),
+                        Text(
+                          targetProduct.sellerPhone,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: FarmColors.earth,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.account_circle_outlined,
+                        size: 15, color: Color(0xFF6B7280)),
+                    const SizedBox(width: 4),
+                    Text(
+                      tr.offerBuyerYou(offer.buyerName),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF6B7280),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ],
@@ -209,7 +323,11 @@ class OfferCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
                     icon: const Icon(Icons.close_rounded, size: 16),
-                    label: const Text('Reddet', style: TextStyle(fontSize: 12)),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(tr.offerActionReject,
+                          style: const TextStyle(fontSize: 12)),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -222,8 +340,11 @@ class OfferCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
                     icon: const Icon(Icons.check_rounded, size: 16),
-                    label:
-                        const Text('Kabul Et', style: TextStyle(fontSize: 12)),
+                    label: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(tr.offerActionAccept,
+                          style: const TextStyle(fontSize: 12)),
+                    ),
                   ),
                 ),
               ],

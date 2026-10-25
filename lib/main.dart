@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'app/app.dart';
+import 'app/language_controller.dart';
 import 'app/role_controller.dart';
 import 'core/storage/app_storage.dart';
 
@@ -9,7 +10,12 @@ Future<void> main() async {
   try {
     final storage = await AppStorage.initialize();
     final roleController = RoleController(storage.settings);
-    runApp(AkilliTarimApp(storage: storage, roleController: roleController));
+    final languageController = AppLanguageController(storage.settings);
+    runApp(AkilliTarimApp(
+      storage: storage,
+      roleController: roleController,
+      languageController: languageController,
+    ));
   } catch (error) {
     runApp(MaterialApp(
       home: Scaffold(

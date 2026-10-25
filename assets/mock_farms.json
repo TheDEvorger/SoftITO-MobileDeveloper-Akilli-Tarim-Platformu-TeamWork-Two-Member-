@@ -11,8 +11,8 @@
       "city": "Konya",
       "district": "Çumra",
       "imagePath": "assets/images/wheat.png",
-      "sellerPhone": "",
-      "description": "Demo amaçlı hasat ürünü. Gerçek satış veya stok ilanı değildir.",
+      "sellerPhone": "+90 555 012 34 56",
+      "description": "Konya Çumra ovasında doğal sulamayla yetiştirilen, protein oranı yüksek ekmeklik buğday hasadı.",
       "createdAt": "2026-10-24T09:00:00"
     },
     {
@@ -26,8 +26,8 @@
       "city": "Isparta",
       "district": "Eğirdir",
       "imagePath": "assets/images/apples.png",
-      "sellerPhone": "",
-      "description": "Örnek bahçe elması ilanı; görsel ve bilgiler gösterim amaçlıdır.",
+      "sellerPhone": "+90 555 012 34 56",
+      "description": "Eğirdir gölü kıyısında dalından yeni toplanmış, sulu, çıtır çıtır kırmızı elmalar.",
       "createdAt": "2026-10-24T09:01:00"
     },
     {
@@ -41,12 +41,223 @@
       "city": "Balıkesir",
       "district": "Gönen",
       "imagePath": "assets/images/milk.png",
-      "sellerPhone": "",
-      "description": "Demo amacıyla oluşturulmuş örnek ürün kaydı.",
+      "sellerPhone": "+90 555 012 34 56",
+      "description": "Doğal meralarda otlayan ineklerimizden sağılan taze, katkısız günlük yağlı çiftlik sütü.",
       "createdAt": "2026-10-24T09:02:00"
+    },
+    {
+      "id": "product_004",
+      "sellerId": "demo_producer_001",
+      "title": "Ayaş Sofralık Domates",
+      "category": "Sebze",
+      "quantity": 400.0,
+      "unit": "kg",
+      "unitPrice": 26.5,
+      "city": "Ankara",
+      "district": "Ayaş",
+      "imagePath": "assets/images/tomatoes.jpg",
+      "sellerPhone": "+90 555 012 34 56",
+      "description": "İnce kabuklu, kokusu üzerinde geleneksel yerli tohum Ayaş domatesi.",
+      "createdAt": "2026-10-24T09:03:00"
+    },
+    {
+      "id": "product_005",
+      "sellerId": "demo_producer_001",
+      "title": "Doğal Günkurusu Kayısı",
+      "category": "Kuru Meyve",
+      "quantity": 250.0,
+      "unit": "kg",
+      "unitPrice": 185.0,
+      "city": "Malatya",
+      "district": "Battalgazi",
+      "imagePath": "assets/images/apples.png",
+      "sellerPhone": "+90 555 012 34 56",
+      "description": "Kükürtsüz güneşte kurutulmuş organik Malatya kayısısı, yüksek lifli ve tatlı.",
+      "createdAt": "2026-10-24T09:04:00"
+    },
+    {
+      "id": "product_006",
+      "sellerId": "producer_002",
+      "title": "Marmaris Çam Balı",
+      "category": "Arıcılık",
+      "quantity": 120.0,
+      "unit": "kg",
+      "unitPrice": 340.0,
+      "city": "Muğla",
+      "district": "Marmaris",
+      "imagePath": "assets/images/honey.jpg",
+      "sellerPhone": "+90 532 999 88 77",
+      "description": "Marmaris çam ormanlarından saf, analiz raporlu coğrafi işaretli süzme çam balı.",
+      "createdAt": "2026-10-24T09:05:00"
+    },
+    {
+      "id": "product_007",
+      "sellerId": "producer_003",
+      "title": "Coğrafi İşaretli Taşköprü Sarımsağı",
+      "category": "Sebze",
+      "quantity": 300.0,
+      "unit": "kg",
+      "unitPrice": 145.0,
+      "city": "Kastamonu",
+      "district": "Taşköprü",
+      "imagePath": "assets/images/wheat.png",
+      "sellerPhone": "+90 533 111 22 33",
+      "description": "Yüksek selenyum oranına sahip, kokusu ve aromasıyla ünlü taze hasat Taşköprü sarımsağı.",
+      "createdAt": "2026-10-24T09:10:00"
+    },
+    {
+      "id": "product_008",
+      "sellerId": "producer_004",
+      "title": "Erken Hasat Soğuk Sıkım Zeytinyağı",
+      "category": "Zeytinyağı",
+      "quantity": 200.0,
+      "unit": "litre",
+      "unitPrice": 380.0,
+      "city": "Balıkesir",
+      "district": "Edremit",
+      "imagePath": "assets/images/olive_oil.jpg",
+      "sellerPhone": "+90 536 222 33 44",
+      "description": "Kazdağları eteklerinde asit oranı 0.4 dizem, yeşil zeytinlerden ilk gün soğuk sıkılmış taze zeytinyağı.",
+      "createdAt": "2026-10-24T09:15:00"
+    },
+    {
+      "id": "product_009",
+      "sellerId": "producer_005",
+      "title": "Kavrulmuş Giresun Yağlı Fındığı",
+      "category": "Kuruyemiş",
+      "quantity": 180.0,
+      "unit": "kg",
+      "unitPrice": 290.0,
+      "city": "Giresun",
+      "district": "Espiye",
+      "imagePath": "assets/images/wheat.png",
+      "sellerPhone": "+90 542 333 44 55",
+      "description": "Giresun tombul fındık hasadı, yeni mahsul çifte kavrulmuş çıtır lezzet.",
+      "createdAt": "2026-10-24T09:20:00"
+    },
+    {
+      "id": "product_010",
+      "sellerId": "producer_006",
+      "title": "Geleneksel Eski Kars Kaşarı",
+      "category": "Süt ve Hayvancılık",
+      "quantity": 95.0,
+      "unit": "kg",
+      "unitPrice": 420.0,
+      "city": "Kars",
+      "district": "Boğatepe",
+      "imagePath": "assets/images/milk.png",
+      "sellerPhone": "+90 538 444 55 66",
+      "description": "Yüksek rakımlı yayla sütlerinden 12 ay dinlendirilmiş, katkısız geleneksel eski kaşar.",
+      "createdAt": "2026-10-24T09:25:00"
+    },
+    {
+      "id": "product_011",
+      "sellerId": "producer_007",
+      "title": "Aydın Doğal Dağ İnciri",
+      "category": "Meyve",
+      "quantity": 160.0,
+      "unit": "kg",
+      "unitPrice": 210.0,
+      "city": "Aydın",
+      "district": "Nazilli",
+      "imagePath": "assets/images/apples.png",
+      "sellerPhone": "+90 539 666 77 88",
+      "description": "Güneşte kurutulmuş, unsuz ve ballı birinci sınıf Aydın kuru dağ inciri.",
+      "createdAt": "2026-10-24T09:30:00"
     }
   ],
-  "offers": [],
+  "offers": [
+    {
+      "id": "offer_001",
+      "productId": "product_001",
+      "buyerName": "Ahmet Yılmaz (Konya Değirmen A.Ş.)",
+      "buyerPhone": "+90 532 555 12 34",
+      "requestedQuantity": 200.0,
+      "note": "Fırınlık un üretimi için ilk parti alımı. Analiz raporu olumlu gelirse sezonluk sözleşme yapabiliriz.",
+      "status": "pending",
+      "createdAt": "2026-10-24T14:30:00"
+    },
+    {
+      "id": "offer_002",
+      "productId": "product_002",
+      "buyerName": "Selin Aksoy (Organik Meyve Suları)",
+      "buyerPhone": "+90 533 888 99 00",
+      "requestedQuantity": 350.0,
+      "note": "Soğuk sıkım meyve sularımız için haftalık düzenli sevkiyat planlıyoruz. Kasalı teslimat uygundur.",
+      "status": "pending",
+      "createdAt": "2026-10-24T15:10:00"
+    },
+    {
+      "id": "offer_003",
+      "productId": "product_003",
+      "buyerName": "Mahalle Şarküterisi (Emre Güneş)",
+      "buyerPhone": "+90 535 333 22 11",
+      "requestedQuantity": 50.0,
+      "note": "Günlük taze çiğ süt satışı ve deneme peynir üretimi için alım yapmak istiyoruz.",
+      "status": "pending",
+      "createdAt": "2026-10-24T16:00:00"
+    },
+    {
+      "id": "offer_004",
+      "productId": "product_001",
+      "buyerName": "Bursa Bereket Taş Fırınları",
+      "buyerPhone": "+90 544 222 33 44",
+      "requestedQuantity": 150.0,
+      "note": "Özel ekşi mayalı köy ekmeklerimiz için 150 kg sert buğday siparişi. İletişime geçilerek nakliye koordine edildi.",
+      "status": "accepted",
+      "createdAt": "2026-10-23T11:00:00"
+    },
+    {
+      "id": "offer_005",
+      "productId": "product_003",
+      "buyerName": "Ege Mandırası & Geleneksel Peynircilik",
+      "buyerPhone": "+90 530 444 55 66",
+      "requestedQuantity": 250.0,
+      "note": "Soğutmalı araçla çiftlikten teslim alındı, ödeme ve kantar fişi tamamlandı.",
+      "status": "accepted",
+      "createdAt": "2026-10-22T09:30:00"
+    },
+    {
+      "id": "offer_006",
+      "productId": "product_002",
+      "buyerName": "Halil Manav & Toptan Ticaret",
+      "buyerPhone": "+90 551 777 66 55",
+      "requestedQuantity": 700.0,
+      "note": "Birim fiyat 20 TL/kg olursa tüm partiyi yarın alabiliriz. (Maliyetin altında teklif verildiği için reddedildi).",
+      "status": "rejected",
+      "createdAt": "2026-10-21T17:45:00"
+    },
+    {
+      "id": "offer_c01",
+      "productId": "product_006",
+      "buyerName": "Hüsnü Çoban",
+      "buyerPhone": "+90 555 012 34 56",
+      "requestedQuantity": 15.0,
+      "note": "Marmaris çam balı için 15 kg numune alımı yapmak istiyoruz. Analiz ve kaliteden memnun kalırsak düzenli sipariş vereceğiz.",
+      "status": "pending",
+      "createdAt": "2026-10-24T17:15:00"
+    },
+    {
+      "id": "offer_c02",
+      "productId": "product_005",
+      "buyerName": "Hüsnü Çoban",
+      "buyerPhone": "+90 555 012 34 56",
+      "requestedQuantity": 30.0,
+      "note": "Köy bakkalımız ve yerel aile tüketimi için kaliteli kuru kayısı siparişi.",
+      "status": "accepted",
+      "createdAt": "2026-10-23T14:00:00"
+    },
+    {
+      "id": "offer_c03",
+      "productId": "product_004",
+      "buyerName": "Hüsnü Çoban",
+      "buyerPhone": "+90 555 012 34 56",
+      "requestedQuantity": 150.0,
+      "note": "Birim fiyat 20 TL/kg olursa 150 kg alabiliriz.",
+      "status": "rejected",
+      "createdAt": "2026-10-22T16:20:00"
+    }
+  ],
   "animals": [
     {
       "id": "animal_001",
@@ -61,21 +272,49 @@
       "species": "Koyun",
       "lastVaccinationDate": "2026-09-01",
       "pregnancyStatus": "not_pregnant"
+    },
+    {
+      "id": "animal_003",
+      "earTag": "TR-KNY-042",
+      "species": "Holstein İnek",
+      "lastVaccinationDate": "2026-10-10",
+      "pregnancyStatus": "pregnant"
+    },
+    {
+      "id": "animal_004",
+      "earTag": "TR-KNY-043",
+      "species": "Simental Düve",
+      "lastVaccinationDate": "2026-08-20",
+      "pregnancyStatus": "not_pregnant"
+    },
+    {
+      "id": "animal_005",
+      "earTag": "TR-KNY-044",
+      "species": "Merinos Koç",
+      "lastVaccinationDate": "2026-09-28",
+      "pregnancyStatus": "unknown"
     }
   ],
   "greenhouses": [
     {
       "id": "greenhouse_001",
-      "name": "Fidanlık Serası",
+      "name": "Topraksız Çilek Serası 1",
       "temperatureC": 24.5,
-      "humidityPercent": 61.0,
+      "humidityPercent": 62.0,
       "updatedAt": "2026-10-24T09:00:00"
     },
     {
       "id": "greenhouse_002",
-      "name": "Sebze Serası",
+      "name": "Akıllı Domates Serası 2",
       "temperatureC": 23.1,
-      "humidityPercent": 65.0,
+      "humidityPercent": 68.0,
+      "updatedAt": "2026-10-24T09:00:00"
+    },
+    {
+      "id": "greenhouse_003",
+      "name": "Fide & Yeşillik Serası 3",
+      "temperatureC": 21.8,
+      "humidityPercent": 74.0,
       "updatedAt": "2026-10-24T09:00:00"
     }
   ],
@@ -86,26 +325,53 @@
       "type": "veterinary",
       "city": "İstanbul",
       "district": "Şile",
-      "phone": "",
-      "description": "Gerçek işletme bilgisi değil, sunum amaçlı örnek kayıttır."
+      "phone": "+90 532 100 20 30",
+      "description": "7/24 mobil veteriner, ultrason gebelik kontrolü ve acil tarla müdahalesi."
     },
     {
       "id": "provider_002",
-      "name": "Demo Hasat Makinesi",
+      "name": "Demo Hasat Makinesi & Biçerdöver",
       "type": "harvester",
       "city": "Konya",
       "district": "Çumra",
-      "phone": "",
-      "description": "Örnek biçerdöver kiralama sağlayıcısı."
+      "phone": "+90 533 200 30 40",
+      "description": "Modern biçerdöver filosu ile buğday, mısır ve ayçiçeğinde dane kayıpsız hasat."
     },
     {
       "id": "provider_003",
-      "name": "Demo Tarla Lojistik",
+      "name": "Demo Tarla & Soğuk Zincir Lojistik",
       "type": "logistics",
       "city": "Balıkesir",
       "district": "Gönen",
-      "phone": "",
-      "description": "Örnek nakliye sağlayıcısı."
+      "phone": "+90 535 300 40 50",
+      "description": "Soğutmalı kasalı kamyon ve kamyonetlerle tarladan hallere taze sebze-meyve nakliyesi."
+    },
+    {
+      "id": "provider_004",
+      "name": "Anadolu Dron Zirai İlaçlama",
+      "type": "harvester",
+      "city": "Konya",
+      "district": "Selçuklu",
+      "phone": "+90 536 400 50 60",
+      "description": "Termal kameralı tarla analizi ve %40 su tasarruflu hassas otonom dron ilaçlama."
+    },
+    {
+      "id": "provider_005",
+      "name": "Polatlı Bölge Veteriner Kliniği & Hayvan Sağlığı",
+      "type": "veterinary",
+      "city": "Ankara",
+      "district": "Polatlı",
+      "phone": "+90 537 500 60 70",
+      "description": "Büyükbaş ve küçükbaş aşı takibi, gebelik ultrasonu ve 7/24 acil mobil müdahale servisi."
+    },
+    {
+      "id": "provider_006",
+      "name": "Anadolu Traktör Filosu & Tarla Sürüm",
+      "type": "tractor",
+      "city": "Konya",
+      "district": "Çumra",
+      "phone": "+90 538 600 70 80",
+      "description": "Son model 110 HP 4x4 traktör filosu, lazerli tesviye ve derin toprak işleme desteği."
     }
   ]
 }

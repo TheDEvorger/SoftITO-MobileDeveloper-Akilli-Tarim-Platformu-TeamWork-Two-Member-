@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
 import '../controllers/animal_controller.dart';
 
 class AddAnimalSheet extends StatefulWidget {
@@ -43,15 +44,16 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
   }
 
   Future<void> _pickDate() async {
+    final tr = AppTranslations.of(context);
     final now = DateTime.now();
     final picked = await showDatePicker(
       context: context,
       initialDate: now,
       firstDate: DateTime(2020),
       lastDate: now,
-      helpText: 'Son Aşı Tarihini Seçin',
-      cancelText: 'Vazgeç',
-      confirmText: 'Seç',
+      helpText: tr.pickDateHelp,
+      cancelText: tr.cancel,
+      confirmText: tr.selectBtn,
     );
     if (picked != null) {
       final y = picked.year.toString().padLeft(4, '0');
@@ -84,7 +86,7 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Hayvan ${_earTagController.text.trim()} başarıyla kaydedildi.'),
+              '${_earTagController.text.trim()} OK'),
           backgroundColor: FarmColors.forest,
         ),
       );
@@ -98,6 +100,8 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -127,12 +131,16 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Yeni Hayvan Kaydı',
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.w800,
-                      color: FarmColors.ink,
+                  Expanded(
+                    child: Text(
+                      tr.newAnimalTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.w800,
+                        color: FarmColors.ink,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -157,7 +165,7 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          _errorMessage!,
+                          tr.translateValidationError(_errorMessage!),
                           style: const TextStyle(
                             color: FarmColors.alert,
                             fontWeight: FontWeight.w600,
@@ -170,9 +178,9 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                 ),
                 const SizedBox(height: 14),
               ],
-              const Text(
-                'Küpe Numarası *',
-                style: TextStyle(
+              Text(
+                tr.earTagLabel,
+                style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: FarmColors.ink),
@@ -181,15 +189,15 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
               TextField(
                 controller: _earTagController,
                 textCapitalization: TextCapitalization.characters,
-                decoration: const InputDecoration(
-                  hintText: 'Örn: TR-06-A-9921',
-                  prefixIcon: Icon(Icons.tag_rounded, color: FarmColors.forest),
+                decoration: InputDecoration(
+                  hintText: tr.earTagHint,
+                  prefixIcon: const Icon(Icons.tag_rounded, color: FarmColors.forest),
                 ),
               ),
               const SizedBox(height: 14),
-              const Text(
-                'Hayvan Türü / Irkı *',
-                style: TextStyle(
+              Text(
+                tr.speciesLabel,
+                style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: FarmColors.ink),
@@ -202,16 +210,16 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                       Icon(Icons.pets_rounded, color: FarmColors.forest),
                 ),
                 items: _speciesOptions
-                    .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                    .map((s) => DropdownMenuItem(value: s, child: Text(tr.translateSpecies(s))))
                     .toList(),
                 onChanged: (val) {
                   if (val != null) setState(() => _selectedSpecies = val);
                 },
               ),
               const SizedBox(height: 14),
-              const Text(
-                'Son Aşı Tarihi (Opsiyonel)',
-                style: TextStyle(
+              Text(
+                tr.lastVaccineDateLabel,
+                style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: FarmColors.ink),
@@ -222,7 +230,7 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                 readOnly: true,
                 onTap: _pickDate,
                 decoration: InputDecoration(
-                  hintText: 'YYYY-AA-GG (Seçmek için dokunun)',
+                  hintText: 'YYYY-MM-DD',
                   prefixIcon: const Icon(Icons.calendar_today_rounded,
                       color: FarmColors.forest),
                   suffixIcon: IconButton(
@@ -232,9 +240,9 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                 ),
               ),
               const SizedBox(height: 14),
-              const Text(
-                'Gebelik Durumu',
-                style: TextStyle(
+              Text(
+                tr.pregnancyStatusLabel,
+                style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     color: FarmColors.ink),
@@ -242,11 +250,11 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  _buildPregnancyOption('unknown', 'Bilinmiyor'),
+                  _buildPregnancyOption('unknown', tr.pregnancyBadgeLabel('unknown')),
                   const SizedBox(width: 8),
-                  _buildPregnancyOption('pregnant', 'Gebe'),
+                  _buildPregnancyOption('pregnant', tr.pregnancyBadgeLabel('pregnant')),
                   const SizedBox(width: 8),
-                  _buildPregnancyOption('not_pregnant', 'Gebe Değil'),
+                  _buildPregnancyOption('not_pregnant', tr.pregnancyBadgeLabel('not_pregnant')),
                 ],
               ),
               const SizedBox(height: 24),
@@ -261,7 +269,7 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                           child: CircularProgressIndicator(
                               strokeWidth: 2, color: Colors.white),
                         )
-                      : const Text('Kaydet ve Sürüye Ekle'),
+                      : Text(tr.saveBtn),
                 ),
               ),
             ],

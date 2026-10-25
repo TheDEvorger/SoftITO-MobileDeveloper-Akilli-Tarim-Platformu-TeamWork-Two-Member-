@@ -95,7 +95,7 @@ class OfferFormController extends ChangeNotifier {
 
     final parsedQty = double.parse(rawQuantity.replaceAll(',', '.').trim());
     final newId =
-        'offer_${DateTime.now().millisecondsSinceEpoch}_${buyerName.hashCode.abs()}';
+        'offer_c_${DateTime.now().millisecondsSinceEpoch}_${buyerName.hashCode.abs()}';
 
     final offer = Offer(
       id: newId,

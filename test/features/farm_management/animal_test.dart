@@ -95,5 +95,34 @@ void main() {
       expect(controller.totalCount, 1);
       expect(controller.animals.any((a) => a.id == 'a1'), isFalse);
     });
+
+    test('Hayvan bilgileri başarıyla güncellenebilir', () async {
+      final result = await controller.updateAnimal(
+        id: 'a2',
+        earTag: 'TR-06-002',
+        species: 'Koyun (Küçükbaş)',
+        lastVaccinationDate: '2026-05-20',
+        pregnancyStatus: 'pregnant',
+      );
+      expect(result.isValid, isTrue);
+      final updated = controller.animals.firstWhere((a) => a.id == 'a2');
+      expect(updated.species, 'Koyun (Küçükbaş)');
+      expect(updated.lastVaccinationDate, '2026-05-20');
+      expect(updated.pregnancyStatus, 'pregnant');
+      expect(controller.pregnantCount, 2);
+    });
+
+    test('Hayvan güncellenirken başka bir hayvanın küpe numarası ile çakışamaz',
+        () async {
+      final result = await controller.updateAnimal(
+        id: 'a2',
+        earTag: 'TR-06-001', // a1'in küpe numarası
+        species: 'Koyun',
+        lastVaccinationDate: '-',
+        pregnancyStatus: 'unknown',
+      );
+      expect(result.isValid, isFalse);
+      expect(result.errorMessage, contains('zaten mevcut'));
+    });
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
 import 'rustic_ornament.dart';
 
 class FarmSummaryHeader extends StatelessWidget {
@@ -19,6 +20,8 @@ class FarmSummaryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       padding: const EdgeInsets.all(20),
@@ -42,64 +45,70 @@ class FarmSummaryHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: FarmColors.gold.withAlpha(45),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: FarmColors.gold.withAlpha(100)),
-                    ),
-                    child: const Icon(
-                      Icons.agriculture_rounded,
-                      color: Color(0xFFFFDF9E),
-                      size: 26,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Bereket Çiftliği',
-                        style: TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.w800,
-                          color: FarmColors.milk,
-                          letterSpacing: 0.3,
-                        ),
-                      ),
-                      Text(
-                        'Sürü & Sera Operasyon Merkezi',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Color(0xFFD4E3D8),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              FilledButton.icon(
-                onPressed: onAddAnimalPressed,
-                style: FilledButton.styleFrom(
-                  backgroundColor: FarmColors.gold,
-                  foregroundColor: FarmColors.ink,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  elevation: 2,
+              Container(
+                padding: const EdgeInsets.all(9),
+                decoration: BoxDecoration(
+                  color: FarmColors.gold.withAlpha(45),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: FarmColors.gold.withAlpha(100)),
                 ),
-                icon: const Icon(Icons.add_rounded, size: 18),
-                label: const Text(
-                  'Hayvan Ekle',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                child: const Icon(
+                  Icons.agriculture_rounded,
+                  color: Color(0xFFFFDF9E),
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tr.farmName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: FarmColors.milk,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                    Text(
+                      tr.farmCenterSubtitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 11.5,
+                        color: Color(0xFFD4E3D8),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: FilledButton.icon(
+                  onPressed: onAddAnimalPressed,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: FarmColors.gold,
+                    foregroundColor: FarmColors.ink,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 11, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 2,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  icon: const Icon(Icons.add_rounded, size: 16),
+                  label: Text(
+                    tr.addAnimalBtn,
+                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12),
+                  ),
                 ),
               ),
             ],
@@ -119,8 +128,8 @@ class FarmSummaryHeader extends StatelessWidget {
               Expanded(
                 child: _buildMetricItem(
                   icon: Icons.pets_rounded,
-                  label: 'Kayıtlı Sürü',
-                  value: '$animalCount Baş',
+                  label: tr.registeredHerdLabel,
+                  value: '$animalCount ${tr.unitHead}',
                   color: const Color(0xFFFFE0A3),
                 ),
               ),
@@ -132,8 +141,8 @@ class FarmSummaryHeader extends StatelessWidget {
               Expanded(
                 child: _buildMetricItem(
                   icon: Icons.medical_services_outlined,
-                  label: 'Aşı Kaydı',
-                  value: '$vaccinatedCount Hayvan',
+                  label: tr.vaccinationRecordsLabel,
+                  value: '$vaccinatedCount ${tr.unitHead}',
                   color: const Color(0xFFA5D6A7),
                 ),
               ),
@@ -145,8 +154,8 @@ class FarmSummaryHeader extends StatelessWidget {
               Expanded(
                 child: _buildMetricItem(
                   icon: Icons.wb_sunny_outlined,
-                  label: 'Aktif Sera',
-                  value: '$greenhouseCount Ünite',
+                  label: tr.activeGreenhousesLabel,
+                  value: '$greenhouseCount ${tr.unitUnit}',
                   color: const Color(0xFF80DEEA),
                 ),
               ),
@@ -164,28 +173,35 @@ class FarmSummaryHeader extends StatelessWidget {
     required Color color,
   }) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 14, color: color),
-            const SizedBox(width: 4),
-            Text(
-              value,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w800,
-                fontSize: 14,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 14, color: color),
+              const SizedBox(width: 3),
+              Text(
+                value,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 13.5,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: 3),
         Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.center,
           style: TextStyle(
             color: Colors.white.withAlpha(190),
-            fontSize: 11,
+            fontSize: 10.5,
             fontWeight: FontWeight.w500,
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_translations.dart';
 import '../../../../app/app_theme.dart';
 import '../controllers/services_controller.dart';
 
@@ -13,6 +14,7 @@ class ServiceCityFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
@@ -34,20 +36,22 @@ class ServiceCityFilter extends StatelessWidget {
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       isExpanded: true,
-                      value: selectedCity,
+                      value: (selectedCity == 'all' || cities.contains(selectedCity))
+                          ? selectedCity
+                          : 'all',
                       icon: const Icon(Icons.arrow_drop_down_rounded,
                           color: FarmColors.forest),
                       items: [
-                        const DropdownMenuItem(
+                        DropdownMenuItem(
                           value: 'all',
                           child: Row(
                             children: [
-                              Icon(Icons.map_outlined,
+                              const Icon(Icons.map_outlined,
                                   size: 18, color: FarmColors.forest),
-                              SizedBox(width: 8),
-                              Text('Tüm Şehirler / Bölgeler',
+                              const SizedBox(width: 8),
+                              Text(tr.servicesAllCities,
                                   style:
-                                      TextStyle(fontWeight: FontWeight.w600)),
+                                      const TextStyle(fontWeight: FontWeight.w600)),
                             ],
                           ),
                         ),
@@ -79,7 +83,7 @@ class ServiceCityFilter extends StatelessWidget {
                   controller.searchQuery.isNotEmpty) ...[
                 const SizedBox(width: 8),
                 IconButton.filledTonal(
-                  tooltip: 'Filtreleri Sıfırla',
+                  tooltip: tr.filterResetBtn,
                   style: IconButton.styleFrom(
                     backgroundColor: const Color(0xFFECE7DA),
                     foregroundColor: FarmColors.ink,

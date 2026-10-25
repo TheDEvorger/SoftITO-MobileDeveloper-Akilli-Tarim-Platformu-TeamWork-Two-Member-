@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_translations.dart';
 import '../../../../app/app_theme.dart';
 import '../controllers/services_controller.dart';
 
@@ -11,12 +12,12 @@ class ServiceCategoryFilter extends StatelessWidget {
 
   final ServicesController controller;
 
-  static const List<(String, String, IconData)> _categories = [
-    ('all', 'Tümü', Icons.apps_rounded),
-    ('veterinary', 'Veteriner', Icons.medical_services_rounded),
-    ('tractor', 'Traktör', Icons.agriculture_rounded),
-    ('harvester', 'Biçerdöver', Icons.precision_manufacturing_rounded),
-    ('logistics', 'Lojistik', Icons.local_shipping_rounded),
+  static const List<(String, IconData)> _categories = [
+    ('all', Icons.apps_rounded),
+    ('veterinary', Icons.medical_services_rounded),
+    ('tractor', Icons.agriculture_rounded),
+    ('harvester', Icons.precision_manufacturing_rounded),
+    ('logistics', Icons.local_shipping_rounded),
   ];
 
   @override
@@ -24,6 +25,7 @@ class ServiceCategoryFilter extends StatelessWidget {
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
+        final tr = AppTranslations.of(context);
         final currentType = controller.selectedType;
 
         return SingleChildScrollView(
@@ -31,7 +33,8 @@ class ServiceCategoryFilter extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: _categories.map((cat) {
-              final (typeKey, label, icon) = cat;
+              final (typeKey, icon) = cat;
+              final label = tr.serviceCategoryLabel(typeKey);
               final isSelected =
                   currentType.toLowerCase() == typeKey.toLowerCase();
 

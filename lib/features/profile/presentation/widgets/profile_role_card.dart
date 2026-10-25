@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_scope.dart';
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
+import '../../../../app/language_controller.dart';
 import '../../../../app/role_controller.dart';
 import '../../../../core/models/user_role.dart';
 
@@ -14,9 +17,20 @@ class ProfileRoleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppLanguageController? langController;
+    try {
+      langController = AppScope.of(context).languageController;
+    } catch (_) {
+      langController = null;
+    }
+
     return ListenableBuilder(
-      listenable: roleController,
+      listenable: Listenable.merge([
+        roleController,
+        if (langController != null) langController,
+      ]),
       builder: (context, _) {
+        final tr = AppTranslations.of(context);
         final isProducer = roleController.isProducer;
 
         return Container(
@@ -44,49 +58,50 @@ class ProfileRoleCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(30),
-                          shape: BoxShape.circle,
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withAlpha(30),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      isProducer
+                          ? Icons.agriculture_rounded
+                          : Icons.shopping_basket_rounded,
+                      color: Colors.white,
+                      size: 26,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tr.activeRoleMode,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Color(0xFFE2EFE7),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                        child: Icon(
+                        Text(
                           isProducer
-                              ? Icons.agriculture_rounded
-                              : Icons.shopping_basket_rounded,
-                          color: Colors.white,
-                          size: 26,
+                              ? tr.producerModeTitle
+                              : tr.consumerModeTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Aktif Kullanım Modu',
-                            style: TextStyle(
-                              color: Color(0xFFE2EFE7),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          Text(
-                            isProducer
-                                ? 'Üretici (Çiftçi) Modu'
-                                : 'Tüketici (Alıcı) Modu',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -100,13 +115,13 @@ class ProfileRoleCard extends StatelessWidget {
                 child: Row(
                   children: [
                     _buildRoleOption(
-                      title: 'Üretici Modu',
+                      title: tr.producerTab,
                       icon: Icons.grass_rounded,
                       isSelected: isProducer,
                       onTap: () => roleController.setRole(UserRole.producer),
                     ),
                     _buildRoleOption(
-                      title: 'Tüketici Modu',
+                      title: tr.consumerTab,
                       icon: Icons.store_mall_directory_rounded,
                       isSelected: !isProducer,
                       onTap: () => roleController.setRole(UserRole.consumer),
@@ -117,8 +132,8 @@ class ProfileRoleCard extends StatelessWidget {
               const SizedBox(height: 14),
               Text(
                 isProducer
-                    ? '🌾 Üretici modu açık: Sürü yönetimi, sera sensörleri, hasat ilanı verme ve gelen teklifleri yanıtlama yetkilerine sahipsiniz.'
-                    : '🛒 Tüketici modu açık: Doğrudan üreticilerden taze ürün arama, talep/teklif oluşturma ve tarımsal hizmetleri inceleme yetkilerine sahipsiniz.',
+                    ? tr.producerRoleDesc
+                    : tr.consumerRoleDesc,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
@@ -148,26 +163,30 @@ class ProfileRoleCard extends StatelessWidget {
             color: isSelected ? Colors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 16,
-                color:
-                    isSelected ? FarmColors.ink : Colors.white.withAlpha(190),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    icon,
+                    size: 16,
+                    color: isSelected ? FarmColors.ink : const Color(0xFFD7E8DC),
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                      color: isSelected ? FarmColors.ink : const Color(0xFFE2EFE7),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 6),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w800,
-                  color:
-                      isSelected ? FarmColors.ink : Colors.white.withAlpha(220),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),

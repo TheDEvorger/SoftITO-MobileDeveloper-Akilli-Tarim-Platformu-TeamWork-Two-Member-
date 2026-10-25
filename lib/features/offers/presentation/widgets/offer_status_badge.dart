@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/app_translations.dart';
 import '../../../../app/app_theme.dart';
 
 class OfferStatusBadge extends StatelessWidget {
@@ -10,18 +11,19 @@ class OfferStatusBadge extends StatelessWidget {
 
   final String status;
 
-  (String, Color, Color, IconData) _getInfo(String status) {
+  (String, Color, Color, IconData) _getInfo(
+      String status, AppTranslations tr) {
     switch (status.toLowerCase()) {
       case 'accepted':
         return (
-          'Kabul Edildi',
+          tr.offerStatusAccepted,
           const Color(0xFF2E7D32),
           const Color(0xFFE8F5E9),
           Icons.check_circle_outline_rounded
         );
       case 'rejected':
         return (
-          'Reddedildi',
+          tr.offerStatusRejected,
           FarmColors.alert,
           const Color(0xFFFFEBEE),
           Icons.cancel_outlined
@@ -29,9 +31,9 @@ class OfferStatusBadge extends StatelessWidget {
       case 'pending':
       default:
         return (
-          'Cevap Bekliyor',
-          const Color(0xFFB88422),
-          const Color(0xFFFFF8E1),
+          tr.offerStatusPending,
+          const Color(0xFF7A4F01),
+          const Color(0xFFFFF6DF),
           Icons.hourglass_empty_rounded
         );
     }
@@ -39,7 +41,8 @@ class OfferStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (label, textColor, bgColor, icon) = _getInfo(status);
+    final tr = AppTranslations.of(context);
+    final (label, textColor, bgColor, icon) = _getInfo(status, tr);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

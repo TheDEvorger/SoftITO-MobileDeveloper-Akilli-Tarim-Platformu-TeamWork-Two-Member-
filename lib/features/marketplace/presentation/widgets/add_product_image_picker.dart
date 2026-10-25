@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:akilli_tarim_platformu/app/app_theme.dart';
+import 'package:akilli_tarim_platformu/app/app_translations.dart';
 import 'package:akilli_tarim_platformu/app/widgets/farm_card.dart';
 
 class AddProductImagePicker extends StatelessWidget {
@@ -19,6 +20,8 @@ class AddProductImagePicker extends StatelessWidget {
   final VoidCallback onClearImage;
 
   void _showSourceSheet(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: FarmColors.milk,
@@ -32,7 +35,7 @@ class AddProductImagePicker extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Ürün Fotoğrafı Ekle',
+                tr.addProductPhotoTitle,
                 style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -41,7 +44,7 @@ class AddProductImagePicker extends StatelessWidget {
               ListTile(
                 leading: const Icon(Icons.camera_alt_outlined,
                     color: FarmColors.forest),
-                title: const Text('Kamera ile Çek'),
+                title: Text(tr.cameraCaptureOption),
                 onTap: () {
                   Navigator.pop(ctx);
                   onPickImage(ImageSource.camera);
@@ -50,7 +53,7 @@ class AddProductImagePicker extends StatelessWidget {
               ListTile(
                 leading:
                     const Icon(Icons.photo_outlined, color: FarmColors.forest),
-                title: const Text('Galeriden Seç'),
+                title: Text(tr.gallerySelectOption),
                 onTap: () {
                   Navigator.pop(ctx);
                   onPickImage(ImageSource.gallery);
@@ -65,6 +68,8 @@ class AddProductImagePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppTranslations.of(context);
+
     if (selectedImagePath != null) {
       return Stack(
         children: [
@@ -107,26 +112,26 @@ class AddProductImagePicker extends StatelessWidget {
               style: BorderStyle.solid,
             ),
           ),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(
+              const Icon(
                 Icons.add_a_photo_outlined,
                 size: 40,
                 color: FarmColors.olive,
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Text(
-                'Ürün Fotoğrafı Yükle',
-                style: TextStyle(
+                tr.uploadProductPhotoBtn,
+                style: const TextStyle(
                   fontWeight: FontWeight.w700,
                   color: FarmColors.forest,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                'Kamera veya galeriden seçin (isteğe bağlı)',
-                style: TextStyle(fontSize: 12, color: FarmColors.earth),
+                tr.uploadPhotoSubtitle,
+                style: const TextStyle(fontSize: 12, color: FarmColors.earth),
               ),
             ],
           ),

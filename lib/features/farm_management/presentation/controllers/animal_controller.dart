@@ -125,6 +125,84 @@ class AnimalController extends ChangeNotifier {
     notifyListeners();
   }
 
+  AnimalValidationResult validateAnimalUpdate({
+    required String id,
+    required String earTag,
+    required String species,
+    required String vaccinationDate,
+  }) {
+    final cleanTag = earTag.trim();
+    if (cleanTag.isEmpty) {
+      return AnimalValidationResult.failure('Küpe numarası boş bırakılamaz.');
+    }
+
+    final exists = animals.any(
+      (a) =>
+          a.id != id && a.earTag.trim().toLowerCase() == cleanTag.toLowerCase(),
+    );
+    if (exists) {
+      return AnimalValidationResult.failure(
+        'Bu küpe numarası ($cleanTag) ile kayıtlı başka bir hayvan zaten mevcut.',
+      );
+    }
+
+    if (species.trim().isEmpty) {
+      return AnimalValidationResult.failure('Lütfen hayvan türünü seçiniz.');
+    }
+
+    final cleanDate = vaccinationDate.trim();
+    if (cleanDate.isNotEmpty && cleanDate != '-') {
+      final dateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+      if (!dateRegex.hasMatch(cleanDate)) {
+        return AnimalValidationResult.failure(
+          'Geçersiz tarih biçimi! Tarih YYYY-AA-GG (örnek: 2026-05-12) olmalıdır.',
+        );
+      }
+      try {
+        final parsed = DateTime.parse(cleanDate);
+        if (parsed.isAfter(DateTime.now().add(const Duration(days: 1)))) {
+          return AnimalValidationResult.failure(
+            'Son aşı tarihi gelecekteki bir tarih olamaz.',
+          );
+        }
+      } catch (_) {
+        return AnimalValidationResult.failure(
+            'Geçerli bir takvim tarihi giriniz.');
+      }
+    }
+
+    return AnimalValidationResult.success();
+  }
+
+  Future<AnimalValidationResult> updateAnimal({
+    required String id,
+    required String earTag,
+    required String species,
+    required String lastVaccinationDate,
+    required String pregnancyStatus,
+  }) async {
+    final validation = validateAnimalUpdate(
+      id: id,
+      earTag: earTag,
+      species: species,
+      vaccinationDate: lastVaccinationDate,
+    );
+    if (!validation.isValid) return validation;
+
+    final updated = Animal(
+      id: id,
+      earTag: earTag.trim().toUpperCase(),
+      species: species.trim(),
+      lastVaccinationDate:
+          lastVaccinationDate.trim().isEmpty ? '-' : lastVaccinationDate.trim(),
+      pregnancyStatus: pregnancyStatus,
+    );
+
+    await _repository.put(updated);
+    notifyListeners();
+    return AnimalValidationResult.success();
+  }
+
   @override
   void dispose() {
     _listenable.removeListener(_onStorageChanged);

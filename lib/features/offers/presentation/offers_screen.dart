@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/app_scope.dart';
 import '../../../../app/app_theme.dart';
+import '../../../../app/app_translations.dart';
+import '../../../../app/language_controller.dart';
 import '../../../../app/role_controller.dart';
 import '../../../../core/storage/app_storage.dart';
 import 'controllers/offers_controller.dart';
@@ -12,10 +14,12 @@ class OffersScreen extends StatefulWidget {
     super.key,
     this.storage,
     this.roleController,
+    this.languageController,
   });
 
   final AppStorage? storage;
   final RoleController? roleController;
+  final AppLanguageController? languageController;
 
   @override
   State<OffersScreen> createState() => _OffersScreenState();
@@ -23,12 +27,16 @@ class OffersScreen extends StatefulWidget {
 
 class _OffersScreenState extends State<OffersScreen> {
   OffersController? _controller;
+  AppLanguageController? _languageController;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final appScope = AppScope.of(context);
+    _languageController ??=
+        widget.languageController ?? appScope.languageController;
+
     if (_controller == null) {
-      final appScope = AppScope.of(context);
       final storage = widget.storage ?? appScope.storage;
       final role = widget.roleController ?? appScope.roleController;
 
@@ -46,19 +54,17 @@ class _OffersScreenState extends State<OffersScreen> {
     super.dispose();
   }
 
-  void _handleStatusChange(
-      String offerId, String newStatus, String actionName) {
+  void _handleStatusChange(String offerId, String newStatus, String actionName,
+      AppTranslations tr) {
     showDialog<void>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Teklifi $actionName'),
-        content: Text(
-          'Bu teklif yerel olarak "$actionName" durumuna alınacaktır. Bu işlem gerçek bir ödeme veya sipariş tamamlama değildir.',
-        ),
+        title: Text(tr.offerDialogTitle(actionName)),
+        content: Text(tr.offerDialogContent(actionName)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Vazgeç'),
+            child: Text(tr.cancel),
           ),
           FilledButton(
             onPressed: () async {
@@ -67,7 +73,7 @@ class _OffersScreenState extends State<OffersScreen> {
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Teklif $actionName durumuna güncellendi.'),
+                    content: Text(tr.offerUpdatedSnackbar(actionName)),
                     backgroundColor: newStatus == 'accepted'
                         ? FarmColors.forest
                         : FarmColors.alert,
@@ -75,7 +81,7 @@ class _OffersScreenState extends State<OffersScreen> {
                 );
               }
             },
-            child: const Text('Onayla'),
+            child: Text(tr.confirm),
           ),
         ],
       ),
@@ -90,9 +96,15 @@ class _OffersScreenState extends State<OffersScreen> {
       );
     }
 
+    final listenables = <Listenable>[_controller!];
+    if (_languageController != null) {
+      listenables.add(_languageController!);
+    }
+
     return ListenableBuilder(
-      listenable: _controller!,
+      listenable: Listenable.merge(listenables),
       builder: (context, _) {
+        final tr = AppTranslations.of(context);
         final isProducer = _controller!.isProducer;
         final offers = _controller!.filteredOffers;
         final selectedFilter = _controller!.selectedStatusFilter;
@@ -100,7 +112,7 @@ class _OffersScreenState extends State<OffersScreen> {
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              isProducer ? 'Gelen Ürün Teklifleri' : 'Verilen Tekliflerim',
+              isProducer ? tr.offersProducerTitle : tr.offersConsumerTitle,
               style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
             ),
           ),
@@ -137,8 +149,8 @@ class _OffersScreenState extends State<OffersScreen> {
                       Expanded(
                         child: Text(
                           isProducer
-                              ? 'Üretici Modu: Bereket Ovası (demo_producer_001) ilanlarınıza alıcılardan gelen talepler.'
-                              : 'Tüketici Modu: Üreticilere ilettiğiniz ürün alım talepleri.',
+                              ? tr.offersProducerInfo
+                              : tr.offersConsumerInfo,
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -158,22 +170,22 @@ class _OffersScreenState extends State<OffersScreen> {
                     children: [
                       _buildFilterChip(
                           'all',
-                          'Tümü (${_controller!.roleSpecificOffers.length})',
+                          '${tr.offerFilterAll} (${_controller!.roleSpecificOffers.length})',
                           selectedFilter),
                       const SizedBox(width: 8),
                       _buildFilterChip(
                           'pending',
-                          'Bekleyen (${_controller!.pendingCount})',
+                          '${tr.offerFilterPending} (${_controller!.pendingCount})',
                           selectedFilter),
                       const SizedBox(width: 8),
                       _buildFilterChip(
                           'accepted',
-                          'Kabul Edilen (${_controller!.acceptedCount})',
+                          '${tr.offerFilterAccepted} (${_controller!.acceptedCount})',
                           selectedFilter),
                       const SizedBox(width: 8),
                       _buildFilterChip(
                           'rejected',
-                          'Reddedilen (${_controller!.rejectedCount})',
+                          '${tr.offerFilterRejected} (${_controller!.rejectedCount})',
                           selectedFilter),
                     ],
                   ),
@@ -201,9 +213,9 @@ class _OffersScreenState extends State<OffersScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                const Text(
-                                  'Kayıtlı Teklif Bulunamadı',
-                                  style: TextStyle(
+                                Text(
+                                  tr.offerNoOffers,
+                                  style: const TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w800,
                                     color: FarmColors.ink,
@@ -212,14 +224,49 @@ class _OffersScreenState extends State<OffersScreen> {
                                 const SizedBox(height: 8),
                                 Text(
                                   isProducer
-                                      ? 'İlanlarınıza henüz bu filtrede bir teklif gelmedi. Pazar yeri vitrininden ilanlarınızı kontrol edebilirsiniz.'
-                                      : 'Henüz bir üretici ilanına teklif vermediniz. Pazar yerinden ürün seçip teklif gönderebilirsiniz.',
+                                      ? tr.offerNoProducerOffersDesc
+                                      : tr.offerNoConsumerOffersDesc,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: FarmColors.ink.withAlpha(160),
                                     height: 1.4,
                                   ),
+                                ),
+                                const SizedBox(height: 20),
+                                if (selectedFilter != 'all' &&
+                                    _controller!.roleSpecificOffers.isNotEmpty)
+                                  FilledButton.icon(
+                                    onPressed: () =>
+                                        _controller!.setStatusFilter('all'),
+                                    icon: const Icon(
+                                        Icons.filter_alt_off_rounded),
+                                    label: Text(
+                                      tr.offerShowAll(
+                                          _controller!.roleSpecificOffers.length),
+                                    ),
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: FarmColors.forest,
+                                    ),
+                                  ),
+                                if (_controller!.allOffers.isEmpty) ...[
+                                  FilledButton.icon(
+                                    onPressed: () =>
+                                        _controller!.reloadDemoOffers(),
+                                    icon: const Icon(Icons.refresh_rounded),
+                                    label: Text(tr.offerLoadDemo),
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor: FarmColors.forest,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                                const SizedBox(height: 8),
+                                OutlinedButton.icon(
+                                  onPressed: () => Navigator.pushNamed(
+                                      context, '/marketplace'),
+                                  icon: const Icon(Icons.storefront_rounded),
+                                  label: Text(tr.offerGoToMarketplace),
                                 ),
                               ],
                             ),
@@ -240,9 +287,15 @@ class _OffersScreenState extends State<OffersScreen> {
                               product: product,
                               isProducer: isProducer,
                               onAccept: () => _handleStatusChange(
-                                  offer.id, 'accepted', 'Kabul Et'),
+                                  offer.id,
+                                  'accepted',
+                                  tr.offerActionAccept,
+                                  tr),
                               onReject: () => _handleStatusChange(
-                                  offer.id, 'rejected', 'Reddet'),
+                                  offer.id,
+                                  'rejected',
+                                  tr.offerActionReject,
+                                  tr),
                             );
                           },
                         ),
