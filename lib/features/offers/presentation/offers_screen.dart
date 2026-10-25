@@ -310,18 +310,25 @@ class _OffersScreenState extends State<OffersScreen> {
 
   Widget _buildFilterChip(String key, String label, String selectedKey) {
     final isSelected = key.toLowerCase() == selectedKey.toLowerCase();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
+
     return FilterChip(
       selected: isSelected,
       label: Text(label),
-      selectedColor: FarmColors.forest,
-      backgroundColor: FarmColors.milk,
+      selectedColor: activeForest,
+      backgroundColor: isDark ? FarmDarkColors.surface : FarmColors.milk,
       labelStyle: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w700,
-        color: isSelected ? Colors.white : FarmColors.ink,
+        color: isSelected
+            ? (isDark ? const Color(0xFF0C2419) : Colors.white)
+            : (isDark ? FarmDarkColors.ink : FarmColors.ink),
       ),
       side: BorderSide(
-        color: isSelected ? FarmColors.forest : const Color(0xFFD4CEC1),
+        color: isSelected
+            ? activeForest
+            : (isDark ? FarmDarkColors.border : const Color(0xFFD4CEC1)),
       ),
       onSelected: (_) => _controller!.setStatusFilter(key),
     );

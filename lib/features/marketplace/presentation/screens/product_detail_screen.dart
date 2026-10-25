@@ -27,7 +27,7 @@ class ProductDetailScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('${product.title}'),
+            Text(product.title),
             const SizedBox(height: 12),
             TextField(
               controller: qtyController,
@@ -107,6 +107,7 @@ class ProductDetailScreen extends StatelessWidget {
           body: AnimatedBuilder(
             animation: scope.roleController,
             builder: (context, _) {
+              final isDark = Theme.of(context).brightness == Brightness.dark;
               final isProducer = scope.roleController.isProducer;
               final isOwnProduct = product.sellerId == 'demo_producer_001';
 
@@ -130,23 +131,34 @@ class ProductDetailScreen extends StatelessWidget {
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 14, vertical: 10),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFEDF5EE),
+                                    color: isDark
+                                        ? FarmDarkColors.surfaceElevated
+                                        : const Color(0xFFEDF5EE),
                                     borderRadius: BorderRadius.circular(14),
                                     border: Border.all(
-                                        color: FarmColors.forest.withAlpha(60)),
+                                      color: (isDark
+                                              ? FarmDarkColors.forest
+                                              : FarmColors.forest)
+                                          .withAlpha(60),
+                                    ),
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.verified_user_rounded,
-                                          color: FarmColors.forest, size: 20),
+                                      Icon(Icons.verified_user_rounded,
+                                          color: isDark
+                                              ? FarmDarkColors.forest
+                                              : FarmColors.forest,
+                                          size: 20),
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
                                           tr.productDetailOwnListingNotice,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                             fontSize: 12.5,
                                             fontWeight: FontWeight.w700,
-                                            color: FarmColors.forest,
+                                            color: isDark
+                                                ? FarmDarkColors.forest
+                                                : FarmColors.forest,
                                           ),
                                         ),
                                       ),
@@ -162,7 +174,9 @@ class ProductDetailScreen extends StatelessWidget {
                                     .headlineSmall
                                     ?.copyWith(
                                       fontWeight: FontWeight.w800,
-                                      color: FarmColors.ink,
+                                      color: isDark
+                                          ? FarmDarkColors.ink
+                                          : FarmColors.ink,
                                     ),
                               ),
                               const SizedBox(height: 12),
@@ -179,9 +193,11 @@ class ProductDetailScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           tr.productDetailUnitPrice,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                               fontSize: 12,
-                                              color: FarmColors.earth),
+                                              color: isDark
+                                                  ? FarmDarkColors.inkMuted
+                                                  : FarmColors.earth),
                                         ),
                                         const SizedBox(height: 4),
                                         FittedBox(
@@ -189,10 +205,12 @@ class ProductDetailScreen extends StatelessWidget {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             '${product.unitPrice.toStringAsFixed(2)} ₺ / ${tr.translateUnit(product.unit)}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w900,
-                                              color: FarmColors.forest,
+                                              color: isDark
+                                                  ? FarmDarkColors.forest
+                                                  : FarmColors.forest,
                                             ),
                                           ),
                                         ),
@@ -204,9 +222,11 @@ class ProductDetailScreen extends StatelessWidget {
                                       children: [
                                         Text(
                                           tr.productDetailAvailableQty,
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                               fontSize: 12,
-                                              color: FarmColors.earth),
+                                              color: isDark
+                                                  ? FarmDarkColors.inkMuted
+                                                  : FarmColors.earth),
                                         ),
                                         const SizedBox(height: 4),
                                         FittedBox(
@@ -214,10 +234,12 @@ class ProductDetailScreen extends StatelessWidget {
                                           alignment: Alignment.centerRight,
                                           child: Text(
                                             '${product.quantity.toStringAsFixed(0)} ${tr.translateUnit(product.unit)}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w800,
-                                              color: FarmColors.olive,
+                                              color: isDark
+                                                  ? FarmDarkColors.gold
+                                                  : FarmColors.olive,
                                             ),
                                           ),
                                         ),
@@ -242,10 +264,14 @@ class ProductDetailScreen extends StatelessWidget {
                                   children: [
                                     ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading: const CircleAvatar(
-                                        backgroundColor: Color(0xFFE8EFE5),
+                                      leading: CircleAvatar(
+                                        backgroundColor: isDark
+                                            ? FarmDarkColors.surfaceElevated
+                                            : const Color(0xFFE8EFE5),
                                         child: Icon(Icons.location_on,
-                                            color: FarmColors.forest),
+                                            color: isDark
+                                                ? FarmDarkColors.forest
+                                                : FarmColors.forest),
                                       ),
                                       title: Text(tr.productDetailLocationTitle),
                                       subtitle: Text(
@@ -254,10 +280,14 @@ class ProductDetailScreen extends StatelessWidget {
                                     const Divider(height: 16),
                                     ListTile(
                                       contentPadding: EdgeInsets.zero,
-                                      leading: const CircleAvatar(
-                                        backgroundColor: Color(0xFFF7EBD3),
+                                      leading: CircleAvatar(
+                                        backgroundColor: isDark
+                                            ? FarmDarkColors.surfaceElevated
+                                            : const Color(0xFFF7EBD3),
                                         child: Icon(Icons.badge_outlined,
-                                            color: FarmColors.gold),
+                                            color: isDark
+                                                ? FarmDarkColors.gold
+                                                : FarmColors.gold),
                                       ),
                                       title: Text(tr.productDetailProducerCodeTitle),
                                       subtitle: Text(

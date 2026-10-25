@@ -65,6 +65,9 @@ class _MarketplaceFilterBarState extends State<MarketplaceFilterBar> {
         widget.filter.city != 'Tümü' ||
         widget.filter.searchQuery.isNotEmpty;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -76,7 +79,7 @@ class _MarketplaceFilterBarState extends State<MarketplaceFilterBar> {
           },
           decoration: InputDecoration(
             hintText: tr.searchHint,
-            prefixIcon: const Icon(Icons.search, color: FarmColors.forest),
+            prefixIcon: Icon(Icons.search, color: activeForest),
             suffixIcon: _searchController.text.isNotEmpty
                 ? IconButton(
                     icon: const Icon(Icons.clear, size: 20),
@@ -88,7 +91,7 @@ class _MarketplaceFilterBarState extends State<MarketplaceFilterBar> {
                   )
                 : null,
             filled: true,
-            fillColor: FarmColors.milk,
+            fillColor: isDark ? FarmDarkColors.surface : FarmColors.milk,
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           ),
@@ -105,11 +108,13 @@ class _MarketplaceFilterBarState extends State<MarketplaceFilterBar> {
                     label: Text(tr.translateCategory(cat)),
                     selected: widget.filter.category == cat,
                     onSelected: (_) => widget.onCategorySelected(cat),
-                    selectedColor: const Color(0xFFD3E2CF),
+                    selectedColor: isDark
+                        ? FarmDarkColors.forest.withAlpha(50)
+                        : const Color(0xFFD3E2CF),
                     labelStyle: TextStyle(
                       color: widget.filter.category == cat
-                          ? FarmColors.forest
-                          : FarmColors.ink,
+                          ? activeForest
+                          : (isDark ? FarmDarkColors.ink : FarmColors.ink),
                       fontWeight: widget.filter.category == cat
                           ? FontWeight.w700
                           : FontWeight.w500,
@@ -122,19 +127,27 @@ class _MarketplaceFilterBarState extends State<MarketplaceFilterBar> {
         const SizedBox(height: 10),
         Row(
           children: [
-            const Icon(Icons.location_on_outlined,
-                size: 20, color: FarmColors.earth),
+            Icon(Icons.location_on_outlined,
+                size: 20,
+                color: isDark ? FarmDarkColors.earth : FarmColors.earth),
             const SizedBox(width: 8),
             Expanded(
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 decoration: BoxDecoration(
-                  color: FarmColors.milk,
+                  color: isDark ? FarmDarkColors.surface : FarmColors.milk,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFFD9D6C8)),
+                  border: Border.all(
+                    color: isDark
+                        ? FarmDarkColors.border
+                        : const Color(0xFFD9D6C8),
+                  ),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
+                    dropdownColor: isDark
+                        ? FarmDarkColors.surfaceElevated
+                        : FarmColors.milk,
                     value: widget.cities.contains(widget.filter.city)
                         ? widget.filter.city
                         : 'Tümü',

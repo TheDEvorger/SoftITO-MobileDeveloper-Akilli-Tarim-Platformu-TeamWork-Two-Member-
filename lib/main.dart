@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'app/app.dart';
 import 'app/language_controller.dart';
 import 'app/role_controller.dart';
+import 'app/theme_controller.dart';
 import 'core/storage/app_storage.dart';
 
 Future<void> main() async {
@@ -11,10 +12,12 @@ Future<void> main() async {
     final storage = await AppStorage.initialize();
     final roleController = RoleController(storage.settings);
     final languageController = AppLanguageController(storage.settings);
+    final themeController = AppThemeController(storage.settings);
     runApp(AkilliTarimApp(
       storage: storage,
       roleController: roleController,
       languageController: languageController,
+      themeController: themeController,
     ));
   } catch (error) {
     runApp(MaterialApp(

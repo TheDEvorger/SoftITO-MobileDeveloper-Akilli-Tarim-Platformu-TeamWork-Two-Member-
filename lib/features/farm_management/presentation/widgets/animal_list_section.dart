@@ -65,6 +65,7 @@ class _AnimalListSectionState extends State<AnimalListSection> {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ListenableBuilder(
       listenable: widget.controller,
@@ -97,10 +98,10 @@ class _AnimalListSectionState extends State<AnimalListSection> {
                     children: [
                       Text(
                         tr.registeredAnimalsTitle,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w800,
-                          color: FarmColors.ink,
+                          color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -108,15 +109,15 @@ class _AnimalListSectionState extends State<AnimalListSection> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: FarmColors.forest.withAlpha(25),
+                          color: (isDark ? FarmDarkColors.forest : FarmColors.forest).withAlpha(isDark ? 40 : 25),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           '${allAnimals.length} ${tr.unitHead}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
-                            color: FarmColors.forest,
+                            color: isDark ? FarmDarkColors.forest : FarmColors.forest,
                           ),
                         ),
                       ),
@@ -132,13 +133,13 @@ class _AnimalListSectionState extends State<AnimalListSection> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
-                  _buildChip('all', '${tr.filterAll} (${allAnimals.length})'),
+                  _buildChip('all', '${tr.filterAll} (${allAnimals.length})', isDark),
                   const SizedBox(width: 8),
                   _buildChip('pregnant',
-                      '${tr.pregnantFilter} (${widget.controller.pregnantCount})'),
+                      '${tr.pregnantFilter} (${widget.controller.pregnantCount})', isDark),
                   const SizedBox(width: 8),
                   _buildChip('vaccinated',
-                      '${tr.vaccinatedFilter} (${widget.controller.vaccinatedCount})'),
+                      '${tr.vaccinatedFilter} (${widget.controller.vaccinatedCount})', isDark),
                 ],
               ),
             ),
@@ -149,22 +150,25 @@ class _AnimalListSectionState extends State<AnimalListSection> {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
-                  color: FarmColors.milk,
+                  color: isDark ? FarmDarkColors.surface : FarmColors.milk,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: const Color(0xFFD9D6C8)),
+                  border: Border.all(
+                    color: isDark ? FarmDarkColors.border : const Color(0xFFD9D6C8),
+                  ),
                 ),
                 child: Center(
                   child: Column(
                     children: [
                       Icon(Icons.pets_outlined,
-                          size: 48, color: FarmColors.ink.withAlpha(90)),
+                          size: 48,
+                          color: (isDark ? FarmDarkColors.ink : FarmColors.ink).withAlpha(90)),
                       const SizedBox(height: 12),
                       Text(
                         tr.noAnimalsFound,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 15,
                           fontWeight: FontWeight.w700,
-                          color: FarmColors.ink,
+                          color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                         ),
                       ),
                       const SizedBox(height: 6),
@@ -173,7 +177,7 @@ class _AnimalListSectionState extends State<AnimalListSection> {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 12,
-                          color: FarmColors.ink.withAlpha(160),
+                          color: isDark ? FarmDarkColors.inkMuted : FarmColors.ink.withAlpha(160),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -207,17 +211,24 @@ class _AnimalListSectionState extends State<AnimalListSection> {
     );
   }
 
-  Widget _buildChip(String filterKey, String label) {
+  Widget _buildChip(String filterKey, String label, bool isDark) {
     final isSelected = _selectedFilter == filterKey;
     return ChoiceChip(
       selected: isSelected,
       label: Text(label),
-      selectedColor: FarmColors.forest,
-      backgroundColor: FarmColors.milk,
+      selectedColor: isDark ? FarmDarkColors.forest : FarmColors.forest,
+      backgroundColor: isDark ? FarmDarkColors.surface : FarmColors.milk,
+      side: BorderSide(
+        color: isSelected
+            ? Colors.transparent
+            : (isDark ? FarmDarkColors.border : const Color(0xFFD9D6C8)),
+      ),
       labelStyle: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w700,
-        color: isSelected ? Colors.white : FarmColors.ink,
+        color: isSelected
+            ? (isDark ? const Color(0xFF0C2419) : Colors.white)
+            : (isDark ? FarmDarkColors.ink : FarmColors.ink),
       ),
       onSelected: (_) => setState(() => _selectedFilter = filterKey),
     );

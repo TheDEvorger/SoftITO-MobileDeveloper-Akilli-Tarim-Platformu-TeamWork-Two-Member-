@@ -94,17 +94,19 @@ class ProfileActionTile extends StatelessWidget {
     final tr = AppTranslations.of(context);
     final isRestricted =
         requiredRole != null && roleController.role != requiredRole;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
       child: Material(
-        color: FarmColors.milk,
+        color: isDark ? FarmDarkColors.surface : FarmColors.milk,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18),
           side: BorderSide(
             color: isRestricted
-                ? const Color(0xFFE2DDD1)
-                : const Color(0xFFD9D6C8),
+                ? (isDark ? FarmDarkColors.borderSubtle : const Color(0xFFE2DDD1))
+                : (isDark ? FarmDarkColors.border : const Color(0xFFD9D6C8)),
           ),
         ),
         clipBehavior: Clip.antiAlias,
@@ -116,15 +118,15 @@ class ProfileActionTile extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: isRestricted
-                  ? const Color(0xFFEAE5DA)
-                  : FarmColors.forest.withAlpha(25),
+                  ? (isDark ? FarmDarkColors.surfaceElevated : const Color(0xFFEAE5DA))
+                  : activeForest.withAlpha(isDark ? 40 : 25),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(
               icon,
               color: isRestricted
-                  ? FarmColors.ink.withAlpha(120)
-                  : FarmColors.forest,
+                  ? (isDark ? FarmDarkColors.inkMuted : FarmColors.ink.withAlpha(120))
+                  : activeForest,
               size: 22,
             ),
           ),
@@ -136,8 +138,9 @@ class ProfileActionTile extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.w800,
                     fontSize: 15,
-                    color:
-                        isRestricted ? const Color(0xFF6B7280) : FarmColors.ink,
+                    color: isRestricted
+                        ? (isDark ? FarmDarkColors.inkMuted : const Color(0xFF6B7280))
+                        : (isDark ? FarmDarkColors.ink : FarmColors.ink),
                   ),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
@@ -150,10 +153,10 @@ class ProfileActionTile extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: isRestricted
-                        ? const Color(0xFFE2DDD1)
+                        ? (isDark ? FarmDarkColors.borderSubtle : const Color(0xFFE2DDD1))
                         : (requiredRole == UserRole.producer
-                            ? FarmColors.forest.withAlpha(25)
-                            : FarmColors.gold.withAlpha(35)),
+                            ? activeForest.withAlpha(isDark ? 40 : 25)
+                            : (isDark ? FarmDarkColors.gold.withAlpha(40) : FarmColors.gold.withAlpha(35))),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -162,10 +165,10 @@ class ProfileActionTile extends StatelessWidget {
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
                       color: isRestricted
-                          ? const Color(0xFF6B7280)
+                          ? (isDark ? FarmDarkColors.inkMuted : const Color(0xFF6B7280))
                           : (requiredRole == UserRole.producer
-                              ? FarmColors.forest
-                              : const Color(0xFF8A6216)),
+                              ? activeForest
+                              : (isDark ? FarmDarkColors.gold : const Color(0xFF8A6216))),
                     ),
                   ),
                 ),
@@ -174,14 +177,16 @@ class ProfileActionTile extends StatelessWidget {
           ),
           subtitle: Text(
             subtitle,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
-              color: Color(0xFF4B5563),
+              color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF4B5563),
             ),
           ),
           trailing: Icon(
             Icons.chevron_right_rounded,
-            color: isRestricted ? const Color(0xFFB5AF9F) : FarmColors.forest,
+            color: isRestricted
+                ? (isDark ? FarmDarkColors.border : const Color(0xFFB5AF9F))
+                : activeForest,
           ),
         ),
       ),

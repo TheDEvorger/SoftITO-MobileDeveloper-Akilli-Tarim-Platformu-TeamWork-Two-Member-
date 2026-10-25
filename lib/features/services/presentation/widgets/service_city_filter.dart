@@ -21,6 +21,11 @@ class ServiceCityFilter extends StatelessWidget {
         final cities = controller.availableCities;
         final selectedCity = controller.selectedCity;
 
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
+        final activeEarth = isDark ? FarmDarkColors.earth : FarmColors.earth;
+        final activeInk = isDark ? FarmDarkColors.ink : FarmColors.ink;
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
@@ -29,29 +34,45 @@ class ServiceCityFilter extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   decoration: BoxDecoration(
-                    color: FarmColors.milk,
+                    color: isDark ? FarmDarkColors.surface : FarmColors.milk,
                     borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFD4CEC1)),
+                    border: Border.all(
+                      color: isDark
+                          ? FarmDarkColors.border
+                          : const Color(0xFFD4CEC1),
+                    ),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       isExpanded: true,
+                      dropdownColor: isDark
+                          ? FarmDarkColors.surfaceElevated
+                          : FarmColors.milk,
+                      style: TextStyle(
+                        color: activeInk,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                      ),
                       value: (selectedCity == 'all' || cities.contains(selectedCity))
                           ? selectedCity
                           : 'all',
-                      icon: const Icon(Icons.arrow_drop_down_rounded,
-                          color: FarmColors.forest),
+                      icon: Icon(Icons.arrow_drop_down_rounded,
+                          color: activeForest),
                       items: [
                         DropdownMenuItem(
                           value: 'all',
                           child: Row(
                             children: [
-                              const Icon(Icons.map_outlined,
-                                  size: 18, color: FarmColors.forest),
+                              Icon(Icons.map_outlined,
+                                  size: 18, color: activeForest),
                               const SizedBox(width: 8),
-                              Text(tr.servicesAllCities,
-                                  style:
-                                      const TextStyle(fontWeight: FontWeight.w600)),
+                              Text(
+                                tr.servicesAllCities,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: activeInk,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -60,12 +81,16 @@ class ServiceCityFilter extends StatelessWidget {
                             value: c,
                             child: Row(
                               children: [
-                                const Icon(Icons.location_on_outlined,
-                                    size: 18, color: FarmColors.earth),
+                                Icon(Icons.location_on_outlined,
+                                    size: 18, color: activeEarth),
                                 const SizedBox(width: 8),
-                                Text(c,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600)),
+                                Text(
+                                  c,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: activeInk,
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -85,8 +110,11 @@ class ServiceCityFilter extends StatelessWidget {
                 IconButton.filledTonal(
                   tooltip: tr.filterResetBtn,
                   style: IconButton.styleFrom(
-                    backgroundColor: const Color(0xFFECE7DA),
-                    foregroundColor: FarmColors.ink,
+                    backgroundColor: isDark
+                        ? FarmDarkColors.surfaceElevated
+                        : const Color(0xFFECE7DA),
+                    foregroundColor:
+                        isDark ? FarmDarkColors.ink : FarmColors.ink,
                   ),
                   onPressed: () => controller.resetFilters(),
                   icon: const Icon(Icons.filter_alt_off_rounded, size: 18),

@@ -101,6 +101,7 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -108,9 +109,10 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
       ),
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 14, 20, 24),
-        decoration: const BoxDecoration(
-          color: FarmColors.milk,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        decoration: BoxDecoration(
+          color: isDark ? FarmDarkColors.surfaceElevated : FarmColors.milk,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+          border: isDark ? const Border(top: BorderSide(color: FarmDarkColors.border)) : null,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -122,7 +124,7 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                   width: 44,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD4CEC1),
+                    color: isDark ? FarmDarkColors.border : const Color(0xFFD4CEC1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -136,38 +138,38 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                       tr.newAnimalTitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 19,
                         fontWeight: FontWeight.w800,
-                        color: FarmColors.ink,
+                        color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                       ),
                     ),
                   ),
                   IconButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close_rounded),
+                    icon: Icon(Icons.close_rounded,
+                        color: isDark ? FarmDarkColors.inkMuted : null),
                   ),
                 ],
               ),
-              const SizedBox(height: 14),
-              if (_errorMessage != null) ...[
+                         if (_errorMessage != null) ...[
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFECE5),
+                    color: isDark ? FarmDarkColors.alert.withAlpha(35) : const Color(0xFFFFECE5),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: FarmColors.alert),
+                    border: Border.all(color: FarmDarkColors.alert),
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.error_outline_rounded,
-                          color: FarmColors.alert, size: 20),
+                          color: FarmDarkColors.alert, size: 20),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           tr.translateValidationError(_errorMessage!),
                           style: const TextStyle(
-                            color: FarmColors.alert,
+                            color: FarmDarkColors.alert,
                             fontWeight: FontWeight.w600,
                             fontSize: 12,
                           ),
@@ -180,10 +182,10 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
               ],
               Text(
                 tr.earTagLabel,
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: FarmColors.ink),
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
               const SizedBox(height: 6),
               TextField(
@@ -191,23 +193,24 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                 textCapitalization: TextCapitalization.characters,
                 decoration: InputDecoration(
                   hintText: tr.earTagHint,
-                  prefixIcon: const Icon(Icons.tag_rounded, color: FarmColors.forest),
+                  prefixIcon: Icon(Icons.tag_rounded,
+                      color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                 ),
               ),
               const SizedBox(height: 14),
               Text(
                 tr.speciesLabel,
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: FarmColors.ink),
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
               const SizedBox(height: 6),
               DropdownButtonFormField<String>(
                 initialValue: _selectedSpecies,
-                decoration: const InputDecoration(
-                  prefixIcon:
-                      Icon(Icons.pets_rounded, color: FarmColors.forest),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.pets_rounded,
+                      color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                 ),
                 items: _speciesOptions
                     .map((s) => DropdownMenuItem(value: s, child: Text(tr.translateSpecies(s))))
@@ -219,10 +222,10 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
               const SizedBox(height: 14),
               Text(
                 tr.lastVaccineDateLabel,
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: FarmColors.ink),
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
               const SizedBox(height: 6),
               TextField(
@@ -231,8 +234,8 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
                 onTap: _pickDate,
                 decoration: InputDecoration(
                   hintText: 'YYYY-MM-DD',
-                  prefixIcon: const Icon(Icons.calendar_today_rounded,
-                      color: FarmColors.forest),
+                  prefixIcon: Icon(Icons.calendar_today_rounded,
+                      color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.clear_rounded, size: 18),
                     onPressed: () => _vaccinationDateController.clear(),
@@ -242,19 +245,19 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
               const SizedBox(height: 14),
               Text(
                 tr.pregnancyStatusLabel,
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: FarmColors.ink),
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
-                  _buildPregnancyOption('unknown', tr.pregnancyBadgeLabel('unknown')),
+                  _buildPregnancyOption('unknown', tr.pregnancyBadgeLabel('unknown'), isDark),
                   const SizedBox(width: 8),
-                  _buildPregnancyOption('pregnant', tr.pregnancyBadgeLabel('pregnant')),
+                  _buildPregnancyOption('pregnant', tr.pregnancyBadgeLabel('pregnant'), isDark),
                   const SizedBox(width: 8),
-                  _buildPregnancyOption('not_pregnant', tr.pregnancyBadgeLabel('not_pregnant')),
+                  _buildPregnancyOption('not_pregnant', tr.pregnancyBadgeLabel('not_pregnant'), isDark),
                 ],
               ),
               const SizedBox(height: 24),
@@ -279,8 +282,10 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
     );
   }
 
-  Widget _buildPregnancyOption(String value, String label) {
+  Widget _buildPregnancyOption(String value, String label, bool isDark) {
     final isSelected = _pregnancyStatus == value;
+    final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
+
     return Expanded(
       child: InkWell(
         onTap: () => setState(() => _pregnancyStatus = value),
@@ -288,10 +293,14 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? FarmColors.forest : const Color(0xFFF0EBE0),
+            color: isSelected
+                ? activeForest
+                : (isDark ? FarmDarkColors.surface : const Color(0xFFF0EBE0)),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? FarmColors.forest : const Color(0xFFD4CEC1),
+              color: isSelected
+                  ? activeForest
+                  : (isDark ? FarmDarkColors.border : const Color(0xFFD4CEC1)),
             ),
           ),
           alignment: Alignment.center,
@@ -300,7 +309,9 @@ class _AddAnimalSheetState extends State<AddAnimalSheet> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w700,
-              color: isSelected ? Colors.white : FarmColors.ink,
+              color: isSelected
+                  ? (isDark ? const Color(0xFF0C2419) : Colors.white)
+                  : (isDark ? FarmDarkColors.ink : FarmColors.ink),
             ),
           ),
         ),

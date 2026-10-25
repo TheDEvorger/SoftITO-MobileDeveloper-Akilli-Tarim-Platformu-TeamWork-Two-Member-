@@ -35,6 +35,7 @@ class OfferCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final targetProduct = product;
     final unit = targetProduct?.unit ?? 'Birim';
     final price = targetProduct?.unitPrice;
@@ -68,20 +69,26 @@ class OfferCard extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 product!.title,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w800,
-                                  color: FarmColors.forest,
+                                  color: isDark
+                                      ? FarmDarkColors.forest
+                                      : FarmColors.forest,
                                   decoration: TextDecoration.underline,
-                                  decorationColor: FarmColors.forest,
+                                  decorationColor: isDark
+                                      ? FarmDarkColors.forest
+                                      : FarmColors.forest,
                                 ),
                               ),
                             ),
                             const SizedBox(width: 4),
-                            const Icon(
+                            Icon(
                               Icons.arrow_outward_rounded,
                               size: 15,
-                              color: FarmColors.forest,
+                              color: isDark
+                                  ? FarmDarkColors.forest
+                                  : FarmColors.forest,
                             ),
                           ],
                         ),
@@ -89,10 +96,10 @@ class OfferCard extends StatelessWidget {
                     else
                       Text(
                         tr.offerRemovedProduct(offer.productId),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
-                          color: FarmColors.ink,
+                          color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                         ),
                       ),
                     const SizedBox(height: 2),
@@ -100,7 +107,9 @@ class OfferCard extends StatelessWidget {
                       '${tr.offerDatePrefix} ${_formatDate(offer.createdAt)}',
                       style: TextStyle(
                         fontSize: 11,
-                        color: FarmColors.ink.withAlpha(160),
+                        color: isDark
+                            ? FarmDarkColors.inkMuted
+                            : FarmColors.ink.withAlpha(160),
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -114,9 +123,13 @@ class OfferCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFF7F4EC),
+              color: isDark
+                  ? FarmDarkColors.surfaceElevated
+                  : const Color(0xFFF7F4EC),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: const Color(0xFFE2DDD1)),
+              border: Border.all(
+                color: isDark ? FarmDarkColors.border : const Color(0xFFE2DDD1),
+              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,7 +142,9 @@ class OfferCard extends StatelessWidget {
                         tr.offerRequestedQty,
                         style: TextStyle(
                           fontSize: 11,
-                          color: FarmColors.ink.withAlpha(160),
+                          color: isDark
+                              ? FarmDarkColors.inkMuted
+                              : FarmColors.ink.withAlpha(160),
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -139,10 +154,12 @@ class OfferCard extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: Text(
                           '${offer.requestedQuantity.toStringAsFixed(1)} $unit',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w800,
-                            color: FarmColors.forest,
+                            color: isDark
+                                ? FarmDarkColors.forest
+                                : FarmColors.forest,
                           ),
                         ),
                       ),
@@ -159,7 +176,9 @@ class OfferCard extends StatelessWidget {
                           tr.offerEstimatedAmount,
                           style: TextStyle(
                             fontSize: 11,
-                            color: FarmColors.ink.withAlpha(160),
+                            color: isDark
+                                ? FarmDarkColors.inkMuted
+                                : FarmColors.ink.withAlpha(160),
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -169,10 +188,12 @@ class OfferCard extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: Text(
                             '₺${totalEstimated.toStringAsFixed(2)}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
-                              color: FarmColors.gold,
+                              color: isDark
+                                  ? FarmDarkColors.gold
+                                  : FarmColors.gold,
                             ),
                           ),
                         ),
@@ -193,15 +214,18 @@ class OfferCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.person_outline_rounded,
-                        size: 16, color: FarmColors.forest),
+                    Icon(Icons.person_outline_rounded,
+                        size: 16,
+                        color: isDark
+                            ? FarmDarkColors.forest
+                            : FarmColors.forest),
                     const SizedBox(width: 6),
                     Text(
                       '${tr.offerBuyerPrefix} ${offer.buyerName}',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: FarmColors.ink,
+                        color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                       ),
                     ),
                   ],
@@ -210,14 +234,19 @@ class OfferCard extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.phone_outlined,
-                          size: 14, color: FarmColors.earth),
+                      Icon(Icons.phone_outlined,
+                          size: 14,
+                          color: isDark
+                              ? FarmDarkColors.inkMuted
+                              : FarmColors.earth),
                       const SizedBox(width: 4),
                       Text(
                         offer.buyerPhone,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: FarmColors.earth,
+                          color: isDark
+                              ? FarmDarkColors.inkMuted
+                              : FarmColors.earth,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -228,15 +257,18 @@ class OfferCard extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.storefront_outlined,
-                          size: 15, color: FarmColors.forest),
+                      Icon(Icons.storefront_outlined,
+                          size: 15,
+                          color: isDark
+                              ? FarmDarkColors.forest
+                              : FarmColors.forest),
                       const SizedBox(width: 5),
                       Text(
                         '${tr.offerProducerPrefix} ${targetProduct.city} / ${targetProduct.district}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w700,
-                          color: FarmColors.ink,
+                          color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                         ),
                       ),
                     ],
@@ -245,14 +277,19 @@ class OfferCard extends StatelessWidget {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.phone_outlined,
-                            size: 14, color: FarmColors.earth),
+                        Icon(Icons.phone_outlined,
+                            size: 14,
+                            color: isDark
+                                ? FarmDarkColors.inkMuted
+                                : FarmColors.earth),
                         const SizedBox(width: 4),
                         Text(
                           targetProduct.sellerPhone,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: FarmColors.earth,
+                            color: isDark
+                                ? FarmDarkColors.inkMuted
+                                : FarmColors.earth,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -262,14 +299,19 @@ class OfferCard extends StatelessWidget {
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.account_circle_outlined,
-                        size: 15, color: Color(0xFF6B7280)),
+                    Icon(Icons.account_circle_outlined,
+                        size: 15,
+                        color: isDark
+                            ? FarmDarkColors.inkMuted
+                            : const Color(0xFF6B7280)),
                     const SizedBox(width: 4),
                     Text(
                       tr.offerBuyerYou(offer.buyerName),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 12,
-                        color: Color(0xFF6B7280),
+                        color: isDark
+                            ? FarmDarkColors.inkMuted
+                            : const Color(0xFF6B7280),
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -283,14 +325,19 @@ class OfferCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: const Color(0xFFF9F7F1),
+                color: isDark
+                    ? FarmDarkColors.surfaceElevated
+                    : const Color(0xFFF9F7F1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.format_quote_rounded,
-                      size: 16, color: FarmColors.gold),
+                  Icon(Icons.format_quote_rounded,
+                      size: 16,
+                      color: isDark
+                          ? FarmDarkColors.gold
+                          : FarmColors.gold),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
@@ -298,7 +345,9 @@ class OfferCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 12,
                         fontStyle: FontStyle.italic,
-                        color: FarmColors.ink.withAlpha(190),
+                        color: isDark
+                            ? FarmDarkColors.ink
+                            : FarmColors.ink.withAlpha(190),
                       ),
                     ),
                   ),

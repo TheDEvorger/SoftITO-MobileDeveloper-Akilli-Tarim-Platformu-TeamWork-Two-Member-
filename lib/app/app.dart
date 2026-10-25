@@ -7,6 +7,7 @@ import 'app_scope.dart';
 import 'app_theme.dart';
 import 'language_controller.dart';
 import 'role_controller.dart';
+import 'theme_controller.dart';
 
 class AkilliTarimApp extends StatefulWidget {
   const AkilliTarimApp({
@@ -14,11 +15,13 @@ class AkilliTarimApp extends StatefulWidget {
     required this.storage,
     required this.roleController,
     this.languageController,
+    this.themeController,
   });
 
   final AppStorage storage;
   final RoleController roleController;
   final AppLanguageController? languageController;
+  final AppThemeController? themeController;
 
   @override
   State<AkilliTarimApp> createState() => _AkilliTarimAppState();
@@ -26,7 +29,9 @@ class AkilliTarimApp extends StatefulWidget {
 
 class _AkilliTarimAppState extends State<AkilliTarimApp> {
   late final AppLanguageController _languageController;
-  bool _createdOwnController = false;
+  late final AppThemeController _themeController;
+  bool _createdOwnLangController = false;
+  bool _createdOwnThemeController = false;
 
   @override
   void initState() {
@@ -35,14 +40,24 @@ class _AkilliTarimAppState extends State<AkilliTarimApp> {
       _languageController = widget.languageController!;
     } else {
       _languageController = AppLanguageController(widget.storage.settings);
-      _createdOwnController = true;
+      _createdOwnLangController = true;
+    }
+
+    if (widget.themeController != null) {
+      _themeController = widget.themeController!;
+    } else {
+      _themeController = AppThemeController(widget.storage.settings);
+      _createdOwnThemeController = true;
     }
   }
 
   @override
   void dispose() {
-    if (_createdOwnController) {
+    if (_createdOwnLangController) {
       _languageController.dispose();
+    }
+    if (_createdOwnThemeController) {
+      _themeController.dispose();
     }
     super.dispose();
   }
@@ -52,17 +67,21 @@ class _AkilliTarimAppState extends State<AkilliTarimApp> {
     return AnimatedBuilder(
       animation: Listenable.merge([
         _languageController,
+        _themeController,
         widget.roleController,
       ]),
       builder: (context, _) => AppScope(
         storage: widget.storage,
         roleController: widget.roleController,
         languageController: _languageController,
+        themeController: _themeController,
         currentLanguage: _languageController.language,
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Bereket Ovası | Akıllı Tarım',
           theme: FarmTheme.light,
+          darkTheme: FarmTheme.dark,
+          themeMode: _themeController.themeMode,
           locale: _languageController.locale,
           supportedLocales: AppLanguage.values.map((l) => l.locale),
           localizationsDelegates: const [

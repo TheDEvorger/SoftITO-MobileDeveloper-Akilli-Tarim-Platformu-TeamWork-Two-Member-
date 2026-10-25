@@ -15,28 +15,36 @@ class AnimalCard extends StatelessWidget {
   final Animal animal;
   final VoidCallback onTap;
 
-  (String, Color, Color, IconData) _getPregnancyBadge(String status, AppTranslations tr) {
+  (String, Color, Color, IconData) _getPregnancyBadge(
+    String status,
+    AppTranslations tr,
+    bool isDark,
+  ) {
     switch (status) {
       case 'pregnant':
         return (
           tr.pregnancyBadgeLabel(status),
-          const Color(0xFFC05621),
-          const Color(0xFFFEEBC8),
+          isDark ? const Color(0xFFFBD38D) : const Color(0xFFC05621),
+          isDark
+              ? const Color(0xFFC05621).withAlpha(55)
+              : const Color(0xFFFEEBC8),
           Icons.favorite_rounded
         );
       case 'not_pregnant':
         return (
           tr.pregnancyBadgeLabel(status),
-          const Color(0xFF2C5282),
-          const Color(0xFFBEE3F8),
+          isDark ? const Color(0xFF90CDF4) : const Color(0xFF2C5282),
+          isDark
+              ? const Color(0xFF2C5282).withAlpha(55)
+              : const Color(0xFFBEE3F8),
           Icons.remove_circle_outline_rounded
         );
       case 'unknown':
       default:
         return (
           tr.pregnancyBadgeLabel(status),
-          const Color(0xFF4A5568),
-          const Color(0xFFE2E8F0),
+          isDark ? FarmDarkColors.inkMuted : const Color(0xFF4A5568),
+          isDark ? FarmDarkColors.surfaceElevated : const Color(0xFFE2E8F0),
           Icons.help_outline_rounded
         );
     }
@@ -76,8 +84,9 @@ class AnimalCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final (label, textColor, bgColor, icon) =
-        _getPregnancyBadge(animal.pregnancyStatus, tr);
+        _getPregnancyBadge(animal.pregnancyStatus, tr, isDark);
 
     return InkWell(
       onTap: onTap,
@@ -96,15 +105,15 @@ class AnimalCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: FarmColors.forest.withAlpha(25),
+                          color: (isDark ? FarmDarkColors.forest : FarmColors.forest).withAlpha(isDark ? 40 : 25),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: FarmColors.forest.withAlpha(60),
+                            color: (isDark ? FarmDarkColors.forest : FarmColors.forest).withAlpha(60),
                           ),
                         ),
                         child: Icon(
                           _getSpeciesIcon(animal.species),
-                          color: FarmColors.forest,
+                          color: isDark ? FarmDarkColors.forest : FarmColors.forest,
                           size: 22,
                         ),
                       ),
@@ -117,10 +126,10 @@ class AnimalCard extends StatelessWidget {
                               animal.earTag,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
-                                color: FarmColors.ink,
+                                color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -129,9 +138,9 @@ class AnimalCard extends StatelessWidget {
                               tr.translateSpecies(animal.species),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 13,
-                                color: FarmColors.earth,
+                                color: isDark ? FarmDarkColors.inkMuted : FarmColors.earth,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -175,23 +184,23 @@ class AnimalCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFF0EBE0),
+                color: isDark ? FarmDarkColors.surfaceElevated : const Color(0xFFF0EBE0),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.event_available_rounded,
                     size: 16,
-                    color: FarmColors.olive,
+                    color: isDark ? FarmDarkColors.gold : FarmColors.olive,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     tr.lastVaccineLabel,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: FarmColors.ink,
+                      color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -209,15 +218,15 @@ class AnimalCard extends StatelessWidget {
                         color: animal.lastVaccinationDate.isEmpty ||
                                 animal.lastVaccinationDate == '-'
                             ? FarmColors.alert
-                            : FarmColors.forest,
+                            : (isDark ? FarmDarkColors.forest : FarmColors.forest),
                       ),
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right_rounded,
                     size: 18,
-                    color: Color(0xFF888577),
+                    color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF888577),
                   ),
                 ],
               ),

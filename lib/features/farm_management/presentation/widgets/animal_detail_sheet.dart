@@ -19,12 +19,14 @@ class AnimalDetailSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-      decoration: const BoxDecoration(
-        color: FarmColors.milk,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: isDark ? FarmDarkColors.surfaceElevated : FarmColors.milk,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        border: isDark ? const Border(top: BorderSide(color: FarmDarkColors.border)) : null,
       ),
       child: SafeArea(
         top: false,
@@ -38,7 +40,7 @@ class AnimalDetailSheet extends StatelessWidget {
                   width: 44,
                   height: 5,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFD4CEC1),
+                    color: isDark ? FarmDarkColors.border : const Color(0xFFD4CEC1),
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
@@ -55,10 +57,10 @@ class AnimalDetailSheet extends StatelessWidget {
                           animal.earTag,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
-                            color: FarmColors.ink,
+                            color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -66,9 +68,9 @@ class AnimalDetailSheet extends StatelessWidget {
                           '${tr.animalDetailsTitle} · ${tr.translateSpecies(animal.species)}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: FarmColors.earth,
+                            color: isDark ? FarmDarkColors.earth : FarmColors.earth,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -86,13 +88,13 @@ class AnimalDetailSheet extends StatelessWidget {
                             Navigator.of(context).pop();
                             onEdit!();
                           },
-                          icon: const Icon(Icons.edit_outlined,
-                              color: FarmColors.forest),
+                          icon: Icon(Icons.edit_outlined,
+                              color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                         ),
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.close_rounded,
-                            color: FarmColors.ink),
+                        icon: Icon(Icons.close_rounded,
+                            color: isDark ? FarmDarkColors.inkMuted : FarmColors.ink),
                       ),
                     ],
                   ),
@@ -100,18 +102,21 @@ class AnimalDetailSheet extends StatelessWidget {
               ),
             const SizedBox(height: 20),
             _buildDetailRow(
+              context: context,
               icon: Icons.tag_rounded,
               title: tr.earTagLabel.replaceAll('*', '').trim(),
               value: animal.earTag,
             ),
             const SizedBox(height: 12),
             _buildDetailRow(
+              context: context,
               icon: Icons.pets_rounded,
               title: tr.speciesLabel.replaceAll('*', '').trim(),
               value: tr.translateSpecies(animal.species),
             ),
             const SizedBox(height: 12),
             _buildDetailRow(
+              context: context,
               icon: Icons.event_note_rounded,
               title: tr.lastVaccineDateLabel,
               value: animal.lastVaccinationDate.isEmpty ||
@@ -123,6 +128,7 @@ class AnimalDetailSheet extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             _buildDetailRow(
+              context: context,
               icon: Icons.favorite_border_rounded,
               title: tr.pregnancyStatusLabel,
               value: tr.pregnancyBadgeLabel(animal.pregnancyStatus),
@@ -131,21 +137,23 @@ class AnimalDetailSheet extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFFFFF7E6),
+                color: isDark ? FarmDarkColors.surface : const Color(0xFFFFF7E6),
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: FarmColors.gold.withAlpha(90)),
+                border: Border.all(
+                  color: isDark ? FarmDarkColors.border : FarmColors.gold.withAlpha(90),
+                ),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.info_outline_rounded,
-                      color: FarmColors.gold, size: 20),
+                  Icon(Icons.info_outline_rounded,
+                      color: isDark ? FarmDarkColors.gold : FarmColors.gold, size: 20),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       tr.vaccineScheduleNotice,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
-                        color: Color(0xFF6B4E17),
+                        color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF6B4E17),
                         height: 1.35,
                       ),
                     ),
@@ -164,8 +172,8 @@ class AnimalDetailSheet extends StatelessWidget {
                       onDelete();
                     },
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: FarmColors.alert,
-                      side: const BorderSide(color: FarmColors.alert),
+                      foregroundColor: FarmDarkColors.alert,
+                      side: const BorderSide(color: FarmDarkColors.alert),
                     ),
                     icon: const Icon(Icons.delete_outline_rounded, size: 18),
                     label: Text(tr.deleteBtn),
@@ -181,7 +189,8 @@ class AnimalDetailSheet extends StatelessWidget {
                         onEdit!();
                       },
                       style: FilledButton.styleFrom(
-                        backgroundColor: FarmColors.forest,
+                        backgroundColor: isDark ? FarmDarkColors.forest : FarmColors.forest,
+                        foregroundColor: isDark ? const Color(0xFF0C2419) : Colors.white,
                       ),
                       icon: const Icon(Icons.edit_note_rounded, size: 18),
                       label: FittedBox(
@@ -195,6 +204,10 @@ class AnimalDetailSheet extends StatelessWidget {
                   Expanded(
                     child: FilledButton(
                       onPressed: () => Navigator.of(context).pop(),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: isDark ? FarmDarkColors.forest : FarmColors.forest,
+                        foregroundColor: isDark ? const Color(0xFF0C2419) : Colors.white,
+                      ),
                       child: Text(tr.confirm),
                     ),
                   ),
@@ -209,29 +222,35 @@ class AnimalDetailSheet extends StatelessWidget {
 }
 
   Widget _buildDetailRow({
+    required BuildContext context,
     required IconData icon,
     required String title,
     required String value,
     bool highlight = false,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F4EC),
+        color: isDark ? FarmDarkColors.surface : const Color(0xFFF7F4EC),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE2DDD1)),
+        border: Border.all(
+          color: isDark ? FarmDarkColors.border : const Color(0xFFE2DDD1),
+        ),
       ),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: FarmColors.forest),
+          Icon(icon, size: 18, color: activeForest),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: FarmColors.ink,
+                color: isDark ? FarmDarkColors.inkMuted : FarmColors.ink,
               ),
             ),
           ),
@@ -243,7 +262,9 @@ class AnimalDetailSheet extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
-                color: highlight ? FarmColors.forest : FarmColors.ink,
+                color: highlight
+                    ? activeForest
+                    : (isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
             ),
           ),

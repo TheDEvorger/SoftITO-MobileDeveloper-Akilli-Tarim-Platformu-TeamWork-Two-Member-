@@ -75,18 +75,22 @@ class ProfileScreen extends StatelessWidget {
     final activeController =
         roleController ?? AppScope.of(context).roleController;
     final langController = AppScope.of(context).languageController;
+    final themeController = AppScope.of(context).themeController;
 
     return AnimatedBuilder(
       animation: Listenable.merge([
         activeController,
         if (langController != null) langController,
+        if (themeController != null) themeController,
       ]),
       builder: (context, _) {
         final tr = AppTranslations.of(context);
         final isProducer = activeController.isProducer;
 
+        final isDark = themeController?.isDark ??
+            Theme.of(context).brightness == Brightness.dark;
+
         return Scaffold(
-          backgroundColor: FarmColors.canvas,
           appBar: AppBar(
             title: Text(
               isProducer
@@ -95,6 +99,14 @@ class ProfileScreen extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 18),
             ),
             actions: [
+              IconButton(
+                icon: Icon(
+                  isDark ? Icons.light_mode_rounded : Icons.dark_mode_outlined,
+                  color: isDark ? FarmDarkColors.gold : FarmColors.forest,
+                ),
+                tooltip: tr.themeToggleTooltip,
+                onPressed: () => themeController?.toggleTheme(),
+              ),
               IconButton(
                 icon: const Icon(Icons.logout_rounded, color: FarmColors.alert),
                 tooltip: tr.logoutTooltip,
@@ -130,10 +142,10 @@ class ProfileScreen extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(18, 14, 18, 6),
                     child: Text(
                       tr.quickModuleAccessTitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: FarmColors.ink,
+                        color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                       ),
                     ),
                   ),

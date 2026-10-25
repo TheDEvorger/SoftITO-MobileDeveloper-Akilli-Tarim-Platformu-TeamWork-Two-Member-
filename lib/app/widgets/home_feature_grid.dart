@@ -71,24 +71,30 @@ class HomeFeatureGrid extends StatelessWidget {
       children: [
         Row(
           children: [
-            Expanded(child: _buildTile(items[0])),
+            Expanded(child: _buildTile(context, items[0])),
             const SizedBox(width: 12),
-            Expanded(child: _buildTile(items[1])),
+            Expanded(child: _buildTile(context, items[1])),
           ],
         ),
         const SizedBox(height: 12),
         Row(
           children: [
-            Expanded(child: _buildTile(items[2])),
+            Expanded(child: _buildTile(context, items[2])),
             const SizedBox(width: 12),
-            Expanded(child: _buildTile(items[3])),
+            Expanded(child: _buildTile(context, items[3])),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildTile((IconData, String, String, Color) item) {
+  Widget _buildTile(
+    BuildContext context,
+    (IconData, String, String, Color) item,
+  ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final iconColor = isDark ? _adaptColor(item.$4) : item.$4;
+
     return Semantics(
       button: true,
       child: InkWell(
@@ -99,7 +105,7 @@ class HomeFeatureGrid extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(item.$1, color: item.$4, size: 32),
+              Icon(item.$1, color: iconColor, size: 32),
               const SizedBox(height: 11),
               Text(
                 item.$2,
@@ -108,11 +114,23 @@ class HomeFeatureGrid extends StatelessWidget {
                 style: const TextStyle(fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 5),
-              const Icon(Icons.arrow_forward, size: 16),
+              Icon(
+                Icons.arrow_forward,
+                size: 16,
+                color: isDark ? FarmDarkColors.inkMuted : null,
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Color _adaptColor(Color c) {
+    if (c == FarmColors.forest) return FarmDarkColors.forest;
+    if (c == FarmColors.gold) return FarmDarkColors.gold;
+    if (c == FarmColors.olive) return FarmDarkColors.olive;
+    if (c == FarmColors.earth) return FarmDarkColors.earth;
+    return c;
   }
 }

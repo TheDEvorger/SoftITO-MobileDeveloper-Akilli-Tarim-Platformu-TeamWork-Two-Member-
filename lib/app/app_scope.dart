@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import '../core/storage/app_storage.dart';
 import 'language_controller.dart';
 import 'role_controller.dart';
+import 'theme_controller.dart';
 
 /// Feature ekranları ortak servisleri buradan alır; ikinci Hive altyapısı kurmayın.
 class AppScope extends InheritedWidget {
@@ -12,12 +13,14 @@ class AppScope extends InheritedWidget {
     required this.storage,
     required this.roleController,
     this.languageController,
+    this.themeController,
     this.currentLanguage,
   });
 
   final AppStorage storage;
   final RoleController roleController;
   final AppLanguageController? languageController;
+  final AppThemeController? themeController;
   final AppLanguage? currentLanguage;
 
   AppLanguage get effectiveLanguage =>
@@ -34,5 +37,6 @@ class AppScope extends InheritedWidget {
       storage != oldWidget.storage ||
       roleController != oldWidget.roleController ||
       languageController != oldWidget.languageController ||
+      themeController != oldWidget.themeController ||
       effectiveLanguage != oldWidget.effectiveLanguage;
 }

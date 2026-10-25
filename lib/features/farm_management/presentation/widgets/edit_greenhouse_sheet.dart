@@ -114,11 +114,13 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+      decoration: BoxDecoration(
+        color: isDark ? FarmDarkColors.surfaceElevated : Colors.white,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        border: isDark ? const Border(top: BorderSide(color: FarmDarkColors.border)) : null,
       ),
       padding: EdgeInsets.fromLTRB(20, 12, 20, 20 + bottomInset),
       child: SingleChildScrollView(
@@ -131,7 +133,7 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
                 width: 44,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: isDark ? FarmDarkColors.border : Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -143,18 +145,18 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
                 Expanded(
                   child: Row(
                     children: [
-                      const Icon(Icons.edit_note_rounded,
-                          color: FarmColors.forest, size: 26),
+                      Icon(Icons.edit_note_rounded,
+                          color: isDark ? FarmDarkColors.forest : FarmColors.forest, size: 26),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           tr.editGreenhouseTitle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w800,
-                            color: FarmColors.ink,
+                            color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                           ),
                         ),
                       ),
@@ -163,7 +165,8 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
                 ),
                 const SizedBox(width: 8),
                 IconButton(
-                  icon: const Icon(Icons.close_rounded),
+                  icon: Icon(Icons.close_rounded,
+                      color: isDark ? FarmDarkColors.inkMuted : null),
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ],
@@ -171,7 +174,10 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
             const SizedBox(height: 4),
             Text(
               'ID: ${widget.greenhouse.id}',
-              style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)),
+              style: TextStyle(
+                fontSize: 12,
+                color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF9CA3AF),
+              ),
             ),
             const SizedBox(height: 16),
             if (_errorMessage != null)
@@ -179,14 +185,14 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
                 margin: const EdgeInsets.only(bottom: 14),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFDE8E8),
+                  color: isDark ? FarmDarkColors.alert.withAlpha(35) : const Color(0xFFFDE8E8),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: FarmColors.alert),
+                  border: Border.all(color: FarmDarkColors.alert),
                 ),
                 child: Text(
                   _errorMessage!,
                   style: const TextStyle(
-                    color: FarmColors.alert,
+                    color: FarmDarkColors.alert,
                     fontSize: 12.5,
                     fontWeight: FontWeight.w600,
                   ),
@@ -194,23 +200,31 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
               ),
             Text(
               tr.greenhouseNameLabel,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
-                color: FarmColors.ink,
+                color: isDark ? FarmDarkColors.ink : FarmColors.ink,
               ),
             ),
             const SizedBox(height: 6),
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
-                prefixIcon:
-                    const Icon(Icons.eco_outlined, color: FarmColors.forest),
+                prefixIcon: Icon(Icons.eco_outlined,
+                    color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                 filled: true,
-                fillColor: const Color(0xFFF9F7F1),
+                fillColor: isDark ? FarmDarkColors.surface : const Color(0xFFF9F7F1),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: const BorderSide(color: Color(0xFFE2DDD1)),
+                  borderSide: BorderSide(
+                    color: isDark ? FarmDarkColors.border : const Color(0xFFE2DDD1),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(14),
+                  borderSide: BorderSide(
+                    color: isDark ? FarmDarkColors.border : const Color(0xFFE2DDD1),
+                  ),
                 ),
               ),
             ),
@@ -220,18 +234,18 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
               children: [
                 Text(
                   tr.initialTempLabel,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: FarmColors.ink,
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                   ),
                 ),
                 Text(
                   '${_temperature.toStringAsFixed(1)} °C',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
-                    color: FarmColors.forest,
+                    color: isDark ? FarmDarkColors.forest : FarmColors.forest,
                   ),
                 ),
               ],
@@ -241,7 +255,7 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
               min: 10.0,
               max: 40.0,
               divisions: 60,
-              activeColor: FarmColors.forest,
+              activeColor: isDark ? FarmDarkColors.forest : FarmColors.forest,
               label: '${_temperature.toStringAsFixed(1)} °C',
               onChanged: (val) => setState(() => _temperature = val),
             ),
@@ -251,18 +265,18 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
               children: [
                 Text(
                   tr.initialHumLabel,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: FarmColors.ink,
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                   ),
                 ),
                 Text(
                   '%${_humidity.toStringAsFixed(1)}',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF0277BD),
+                    color: isDark ? const Color(0xFF4FC3F7) : const Color(0xFF0277BD),
                   ),
                 ),
               ],
@@ -272,7 +286,7 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
               min: 20.0,
               max: 95.0,
               divisions: 75,
-              activeColor: const Color(0xFF0277BD),
+              activeColor: isDark ? const Color(0xFF4FC3F7) : const Color(0xFF0277BD),
               label: '%${_humidity.toStringAsFixed(1)}',
               onChanged: (val) => setState(() => _humidity = val),
             ),
@@ -284,8 +298,8 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
                   child: OutlinedButton.icon(
                     onPressed: _isLoading ? null : _confirmDelete,
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: FarmColors.alert,
-                      side: const BorderSide(color: FarmColors.alert),
+                      foregroundColor: FarmDarkColors.alert,
+                      side: const BorderSide(color: FarmDarkColors.alert),
                       minimumSize: const Size(40, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),
@@ -302,7 +316,8 @@ class _EditGreenhouseSheetState extends State<EditGreenhouseSheet> {
                   child: FilledButton.icon(
                     onPressed: _isLoading ? null : _update,
                     style: FilledButton.styleFrom(
-                      backgroundColor: FarmColors.forest,
+                      backgroundColor: isDark ? FarmDarkColors.forest : FarmColors.forest,
+                      foregroundColor: isDark ? const Color(0xFF0C2419) : Colors.white,
                       minimumSize: const Size(40, 48),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(14),

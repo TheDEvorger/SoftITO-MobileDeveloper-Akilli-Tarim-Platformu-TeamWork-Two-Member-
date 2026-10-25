@@ -10,14 +10,17 @@ class RoleExplanationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: FarmColors.milk,
+        color: isDark ? FarmDarkColors.surface : FarmColors.milk,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: FarmColors.gold.withAlpha(90)),
+        border: Border.all(
+          color: isDark ? FarmDarkColors.border : FarmColors.gold.withAlpha(90),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,11 +30,16 @@ class RoleExplanationCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: FarmColors.gold.withAlpha(30),
+                  color: isDark
+                      ? FarmDarkColors.gold.withAlpha(40)
+                      : FarmColors.gold.withAlpha(30),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.info_outline_rounded,
-                    color: Color(0xFF8A6216), size: 18),
+                child: Icon(
+                  Icons.info_outline_rounded,
+                  color: isDark ? FarmDarkColors.gold : const Color(0xFF8A6216),
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -39,10 +47,10 @@ class RoleExplanationCard extends StatelessWidget {
                   tr.roleExplanationHeader,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
-                    color: FarmColors.ink,
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                   ),
                 ),
               ),
@@ -53,7 +61,9 @@ class RoleExplanationCard extends StatelessWidget {
             tr.roleExplanationBody,
             style: TextStyle(
               fontSize: 12,
-              color: FarmColors.ink.withAlpha(190),
+              color: isDark
+                  ? FarmDarkColors.inkMuted
+                  : FarmColors.ink.withAlpha(190),
               height: 1.4,
             ),
           ),
@@ -63,7 +73,9 @@ class RoleExplanationCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: FarmColors.ink.withAlpha(170),
+              color: isDark
+                  ? FarmDarkColors.inkMuted
+                  : FarmColors.ink.withAlpha(170),
               height: 1.45,
             ),
           ),
@@ -72,7 +84,9 @@ class RoleExplanationCard extends StatelessWidget {
             height: 10,
             width: double.infinity,
             child: CustomPaint(
-              painter: WheatCornicePainter(color: FarmColors.gold),
+              painter: WheatCornicePainter(
+                color: isDark ? FarmDarkColors.gold : FarmColors.gold,
+              ),
             ),
           ),
         ],

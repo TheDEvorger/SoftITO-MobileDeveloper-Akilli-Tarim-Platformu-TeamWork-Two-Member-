@@ -18,6 +18,7 @@ class ProductDetailHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Stack(
       children: [
@@ -33,9 +34,11 @@ class ProductDetailHero extends StatelessWidget {
           top: MediaQuery.of(context).padding.top + 8,
           left: 16,
           child: CircleAvatar(
-            backgroundColor: FarmColors.milk.withValues(alpha: 0.9),
+            backgroundColor: (isDark ? FarmDarkColors.surfaceElevated : FarmColors.milk)
+                .withValues(alpha: 0.9),
             child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: FarmColors.ink),
+              icon: Icon(Icons.arrow_back,
+                  color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               onPressed: onBack,
             ),
           ),
@@ -46,7 +49,7 @@ class ProductDetailHero extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: FarmColors.forest,
+              color: isDark ? FarmDarkColors.forest : FarmColors.forest,
               borderRadius: BorderRadius.circular(16),
               boxShadow: const [
                 BoxShadow(
@@ -58,8 +61,8 @@ class ProductDetailHero extends StatelessWidget {
             ),
             child: Text(
               tr.translateCategory(product.category),
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: isDark ? const Color(0xFF0C2419) : Colors.white,
                 fontWeight: FontWeight.w700,
                 fontSize: 13,
               ),

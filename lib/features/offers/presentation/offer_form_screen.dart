@@ -106,6 +106,7 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
     }
 
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final product = _controller!.product;
 
     if (product == null) {
@@ -122,16 +123,16 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                 const SizedBox(height: 16),
                 Text(
                   tr.productNotFoundTitle,
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
-                      color: FarmColors.ink),
+                      color: isDark ? FarmDarkColors.ink : FarmColors.ink),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   tr.productNotFoundDesc,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: FarmColors.ink),
+                  style: TextStyle(color: isDark ? FarmDarkColors.inkMuted : FarmColors.ink),
                 ),
                 const SizedBox(height: 20),
                 FilledButton(
@@ -171,11 +172,11 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: FarmColors.forest.withAlpha(25),
+                        color: (isDark ? FarmDarkColors.forest : FarmColors.forest).withAlpha(isDark ? 40 : 25),
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      child: const Icon(Icons.inventory_2_outlined,
-                          color: FarmColors.forest, size: 28),
+                      child: Icon(Icons.inventory_2_outlined,
+                          color: isDark ? FarmDarkColors.forest : FarmColors.forest, size: 28),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -184,18 +185,18 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                         children: [
                           Text(
                             product.title,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w800,
-                              color: FarmColors.ink,
+                              color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             '${tr.availableStockLabel} ${product.quantity.toStringAsFixed(1)} ${tr.translateUnit(product.unit)} · ₺${product.unitPrice.toStringAsFixed(2)}/${tr.translateUnit(product.unit)}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: FarmColors.earth,
+                              color: isDark ? FarmDarkColors.inkMuted : FarmColors.earth,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -210,7 +211,9 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFFECE5),
+                    color: isDark
+                        ? FarmColors.alert.withAlpha(40)
+                        : const Color(0xFFFFECE5),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: FarmColors.alert),
                   ),
@@ -236,10 +239,10 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
               ],
               Text(
                 tr.buyerNameLabel,
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: FarmColors.ink),
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
               const SizedBox(height: 6),
               TextField(
@@ -249,18 +252,18 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                     setState(() => _errorMessage = null);
                   }
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person_outline_rounded,
-                      color: FarmColors.forest),
+                      color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                 ),
               ),
               const SizedBox(height: 14),
               Text(
                 tr.buyerPhoneLabel,
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: FarmColors.ink),
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
               const SizedBox(height: 6),
               TextField(
@@ -271,18 +274,19 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                     setState(() => _errorMessage = null);
                   }
                 },
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   prefixIcon:
-                      Icon(Icons.phone_outlined, color: FarmColors.forest),
+                      Icon(Icons.phone_outlined,
+                          color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                 ),
               ),
               const SizedBox(height: 14),
               Text(
                 '${tr.offerQtyLabel} (${tr.translateUnit(product.unit)})',
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: FarmColors.ink),
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
               const SizedBox(height: 6),
               TextField(
@@ -298,7 +302,8 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                   hintText:
                       'max. ${product.quantity.toStringAsFixed(1)} ${tr.translateUnit(product.unit)}',
                   prefixIcon:
-                      const Icon(Icons.scale_rounded, color: FarmColors.forest),
+                      Icon(Icons.scale_rounded,
+                          color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                 ),
               ),
               if (estimatedTotal != null && estimatedTotal > 0) ...[
@@ -307,10 +312,10 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
                   padding: const EdgeInsets.only(left: 4),
                   child: Text(
                     '${tr.estimatedTotalLabel}: ₺${estimatedTotal.toStringAsFixed(2)}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: FarmColors.gold,
+                      color: isDark ? FarmDarkColors.gold : FarmColors.gold,
                     ),
                   ),
                 ),
@@ -318,10 +323,10 @@ class _OfferFormScreenState extends State<OfferFormScreen> {
               const SizedBox(height: 14),
               Text(
                 tr.offerNoteLabel,
-                style: const TextStyle(
+                style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
-                    color: FarmColors.ink),
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink),
               ),
               const SizedBox(height: 6),
               TextField(

@@ -14,26 +14,49 @@ class ServiceProviderCard extends StatelessWidget {
 
   final ServiceProvider provider;
 
-  (String, IconData, Color) _getTypeInfo(String type, AppTranslations tr) {
+  (String, IconData, Color) _getTypeInfo(
+      String type, AppTranslations tr, bool isDark) {
     final label = tr.serviceTypeLabel(type);
     switch (type.toLowerCase()) {
       case 'veterinary':
-        return (label, Icons.medical_services_rounded, const Color(0xFF2E7D32));
+        return (
+          label,
+          Icons.medical_services_rounded,
+          isDark ? const Color(0xFF81C784) : const Color(0xFF2E7D32)
+        );
       case 'tractor':
-        return (label, Icons.agriculture_rounded, const Color(0xFFB88422));
+        return (
+          label,
+          Icons.agriculture_rounded,
+          isDark ? FarmDarkColors.gold : const Color(0xFFB88422)
+        );
       case 'harvester':
-        return (label, Icons.precision_manufacturing_rounded, const Color(0xFF75503B));
+        return (
+          label,
+          Icons.precision_manufacturing_rounded,
+          isDark ? const Color(0xFFBCAAA4) : const Color(0xFF75503B)
+        );
       case 'logistics':
-        return (label, Icons.local_shipping_rounded, const Color(0xFF1565C0));
+        return (
+          label,
+          Icons.local_shipping_rounded,
+          isDark ? const Color(0xFF90CAF9) : const Color(0xFF1565C0)
+        );
       default:
-        return (label, Icons.build_circle_rounded, FarmColors.forest);
+        return (
+          label,
+          Icons.build_circle_rounded,
+          isDark ? FarmDarkColors.forest : FarmColors.forest
+        );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
-    final (typeLabel, typeIcon, typeColor) = _getTypeInfo(provider.type, tr);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final (typeLabel, typeIcon, typeColor) =
+        _getTypeInfo(provider.type, tr, isDark);
     final hasPhone = provider.phone.trim().isNotEmpty;
 
     return FarmCard(
@@ -51,9 +74,10 @@ class ServiceProviderCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: typeColor.withAlpha(25),
+                        color: typeColor.withAlpha(isDark ? 35 : 25),
                         borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: typeColor.withAlpha(80)),
+                        border: Border.all(
+                            color: typeColor.withAlpha(isDark ? 90 : 80)),
                       ),
                       child: Icon(typeIcon, color: typeColor, size: 22),
                     ),
@@ -66,26 +90,31 @@ class ServiceProviderCard extends StatelessWidget {
                             provider.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w800,
-                              color: FarmColors.ink,
+                              color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Row(
                             children: [
                               Icon(Icons.location_on_outlined,
-                                  size: 14, color: FarmColors.earth),
+                                  size: 14,
+                                  color: isDark
+                                      ? FarmDarkColors.inkMuted
+                                      : FarmColors.earth),
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
                                   '${provider.city} / ${provider.district}',
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 12,
-                                    color: FarmColors.earth,
+                                    color: isDark
+                                        ? FarmDarkColors.inkMuted
+                                        : FarmColors.earth,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -103,9 +132,10 @@ class ServiceProviderCard extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  color: typeColor.withAlpha(20),
+                  color: typeColor.withAlpha(isDark ? 30 : 20),
                   borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: typeColor.withAlpha(70)),
+                  border: Border.all(
+                      color: typeColor.withAlpha(isDark ? 80 : 70)),
                 ),
                 child: Text(
                   typeLabel,
@@ -124,7 +154,9 @@ class ServiceProviderCard extends StatelessWidget {
               provider.description,
               style: TextStyle(
                 fontSize: 13,
-                color: FarmColors.ink.withAlpha(200),
+                color: isDark
+                    ? FarmDarkColors.inkMuted
+                    : FarmColors.ink.withAlpha(200),
                 height: 1.35,
               ),
             ),
@@ -139,8 +171,10 @@ class ServiceProviderCard extends StatelessWidget {
                       Icons.phone_outlined,
                       size: 15,
                       color: hasPhone
-                          ? FarmColors.forest
-                          : FarmColors.ink.withAlpha(120),
+                          ? (isDark ? FarmDarkColors.forest : FarmColors.forest)
+                          : (isDark
+                              ? FarmDarkColors.inkMuted
+                              : FarmColors.ink.withAlpha(120)),
                     ),
                     const SizedBox(width: 6),
                     Flexible(
@@ -152,8 +186,10 @@ class ServiceProviderCard extends StatelessWidget {
                           fontSize: 12.5,
                           fontWeight: FontWeight.w600,
                           color: hasPhone
-                              ? FarmColors.ink
-                              : FarmColors.ink.withAlpha(120),
+                              ? (isDark ? FarmDarkColors.ink : FarmColors.ink)
+                              : (isDark
+                                  ? FarmDarkColors.inkMuted
+                                  : FarmColors.ink.withAlpha(120)),
                         ),
                       ),
                     ),
@@ -169,17 +205,19 @@ class ServiceProviderCard extends StatelessWidget {
                           ServiceCallHelper.callPhone(context, provider.phone)
                       : null,
                   style: FilledButton.styleFrom(
-                    backgroundColor: FarmColors.forest,
-                    disabledBackgroundColor: const Color(0xFFD4CEC1),
+                    backgroundColor:
+                        isDark ? FarmDarkColors.forest : FarmColors.forest,
+                    foregroundColor:
+                        isDark ? const Color(0xFF0C2419) : Colors.white,
+                    disabledBackgroundColor: isDark
+                        ? FarmDarkColors.surfaceElevated
+                        : const Color(0xFFD4CEC1),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 12, vertical: 8),
                     minimumSize: const Size(40, 36),
                   ),
                   icon: const Icon(Icons.call_rounded, size: 15),
-                  label: Text(
-                    tr.servicesCallNow,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
-                  ),
+                  label: Text(tr.servicesCallNow),
                 ),
               ),
             ],

@@ -278,6 +278,38 @@ class AppTranslations {
         AppLanguage.de => 'Konto- & Sicherheitseinstellungen',
       };
 
+  String get themeDarkTitle => switch (language) {
+        AppLanguage.tr => 'Karanlık Tema',
+        AppLanguage.en => 'Dark Theme',
+        AppLanguage.de => 'Dunkles Design',
+      };
+
+  String get themeDarkSubtitle => switch (language) {
+        AppLanguage.tr =>
+          'Doğal koyu yeşil ve antrasit tarım tonları (Göz dostu)',
+        AppLanguage.en =>
+          'Natural dark green and anthracite farm tones (Eye-friendly)',
+        AppLanguage.de =>
+          'Natürliche dunkelgrüne und anthrazitfarbene Töne (Augenfreundlich)',
+      };
+
+  String get themeToggleTooltip => switch (language) {
+        AppLanguage.tr => 'Temayı Değiştir (Açık/Karanlık)',
+        AppLanguage.en => 'Toggle Theme (Light/Dark)',
+        AppLanguage.de => 'Design umschalten (Hell/Dunkel)',
+      };
+
+  String themeUpdatedMessage(bool isDark) => switch (language) {
+        AppLanguage.tr => isDark
+            ? 'Karanlık tema etkinleştirildi.'
+            : 'Açık tema etkinleştirildi.',
+        AppLanguage.en =>
+          isDark ? 'Dark theme enabled.' : 'Light theme enabled.',
+        AppLanguage.de =>
+          isDark ? 'Dunkles Design aktiviert.' : 'Helles Design aktiviert.',
+      };
+
+
   String get notificationsTitle => switch (language) {
         AppLanguage.tr => 'Anlık Mahsul & Teklif Bildirimleri',
         AppLanguage.en => 'Instant Crop & Offer Notifications',

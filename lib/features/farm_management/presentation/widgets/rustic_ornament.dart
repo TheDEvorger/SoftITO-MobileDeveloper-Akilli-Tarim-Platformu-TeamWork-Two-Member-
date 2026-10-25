@@ -21,17 +21,25 @@ class RusticFarmBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final effectiveBadgeColor = isDark && badgeColor == FarmColors.forest
+        ? FarmDarkColors.forest
+        : badgeColor;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: FarmColors.milk,
+        color: isDark ? FarmDarkColors.surface : FarmColors.milk,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: FarmColors.gold.withAlpha(90), width: 1.2),
-        boxShadow: const [
+        border: Border.all(
+          color: (isDark ? FarmDarkColors.gold : FarmColors.gold).withAlpha(isDark ? 80 : 90),
+          width: 1.2,
+        ),
+        boxShadow: [
           BoxShadow(
-            color: Color(0x0F214A3D),
+            color: isDark ? Colors.black.withAlpha(40) : const Color(0x0F214A3D),
             blurRadius: 10,
-            offset: Offset(0, 3),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -41,10 +49,10 @@ class RusticFarmBadge extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: badgeColor.withAlpha(35),
+              color: effectiveBadgeColor.withAlpha(isDark ? 50 : 35),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 16, color: badgeColor),
+            child: Icon(icon, size: 16, color: effectiveBadgeColor),
           ),
           const SizedBox(width: 8),
           Column(
@@ -53,10 +61,10 @@ class RusticFarmBadge extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: FarmColors.ink,
+                  color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                   letterSpacing: 0.2,
                 ),
               ),
@@ -66,7 +74,7 @@ class RusticFarmBadge extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w500,
-                    color: FarmColors.ink.withAlpha(160),
+                    color: isDark ? FarmDarkColors.inkMuted : FarmColors.ink.withAlpha(160),
                   ),
                 ),
             ],

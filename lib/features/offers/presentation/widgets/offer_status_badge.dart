@@ -12,28 +12,28 @@ class OfferStatusBadge extends StatelessWidget {
   final String status;
 
   (String, Color, Color, IconData) _getInfo(
-      String status, AppTranslations tr) {
+      String status, AppTranslations tr, bool isDark) {
     switch (status.toLowerCase()) {
       case 'accepted':
         return (
           tr.offerStatusAccepted,
-          const Color(0xFF2E7D32),
-          const Color(0xFFE8F5E9),
+          isDark ? const Color(0xFF81C784) : const Color(0xFF2E7D32),
+          isDark ? const Color(0xFF2E7D32).withAlpha(50) : const Color(0xFFE8F5E9),
           Icons.check_circle_outline_rounded
         );
       case 'rejected':
         return (
           tr.offerStatusRejected,
-          FarmColors.alert,
-          const Color(0xFFFFEBEE),
+          isDark ? const Color(0xFFEF9A9A) : FarmColors.alert,
+          isDark ? FarmColors.alert.withAlpha(50) : const Color(0xFFFFEBEE),
           Icons.cancel_outlined
         );
       case 'pending':
       default:
         return (
           tr.offerStatusPending,
-          const Color(0xFF7A4F01),
-          const Color(0xFFFFF6DF),
+          isDark ? FarmDarkColors.gold : const Color(0xFF7A4F01),
+          isDark ? FarmDarkColors.gold.withAlpha(45) : const Color(0xFFFFF6DF),
           Icons.hourglass_empty_rounded
         );
     }
@@ -42,7 +42,8 @@ class OfferStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
-    final (label, textColor, bgColor, icon) = _getInfo(status, tr);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final (label, textColor, bgColor, icon) = _getInfo(status, tr, isDark);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),

@@ -181,27 +181,40 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
                         AppScope.of(context).roleController.isProducer;
                     if (isProducer) return const SizedBox.shrink();
 
+                    final isDark =
+                        Theme.of(context).brightness == Brightness.dark;
                     return Container(
                       margin: const EdgeInsets.fromLTRB(16, 8, 16, 12),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFFFF9ED),
+                        color: isDark
+                            ? FarmDarkColors.surfaceElevated
+                            : const Color(0xFFFFF9ED),
                         borderRadius: BorderRadius.circular(14),
-                        border:
-                            Border.all(color: FarmColors.gold.withAlpha(90)),
+                        border: Border.all(
+                          color: (isDark ? FarmDarkColors.gold : FarmColors.gold)
+                              .withAlpha(isDark ? 90 : 90),
+                        ),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.info_outline_rounded,
-                              color: Color(0xFF8A6216), size: 20),
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: isDark
+                                ? FarmDarkColors.gold
+                                : const Color(0xFF8A6216),
+                            size: 20,
+                          ),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
                               tr.consumerFarmNotice,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: FarmColors.ink,
+                                color: isDark
+                                    ? FarmDarkColors.ink
+                                    : FarmColors.ink,
                               ),
                             ),
                           ),
@@ -230,7 +243,9 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFECE7DA),
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? FarmDarkColors.surfaceElevated
+                          : const Color(0xFFECE7DA),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Row(
@@ -267,6 +282,8 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
 
   Widget _buildTabButton(int index, String title) {
     final isSelected = _selectedTabIndex == index;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Expanded(
       child: InkWell(
         onTap: () => setState(() => _selectedTabIndex = index),
@@ -274,7 +291,9 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? FarmColors.forest : Colors.transparent,
+            color: isSelected
+                ? (isDark ? FarmDarkColors.forest : FarmColors.forest)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
@@ -288,7 +307,9 @@ class _FarmDashboardScreenState extends State<FarmDashboardScreen> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: isSelected ? Colors.white : FarmColors.ink,
+                  color: isSelected
+                      ? (isDark ? const Color(0xFF0C2419) : Colors.white)
+                      : (isDark ? FarmDarkColors.ink : FarmColors.ink),
                 ),
               ),
             ),

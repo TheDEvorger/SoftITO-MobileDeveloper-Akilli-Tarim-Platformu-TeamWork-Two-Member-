@@ -48,6 +48,7 @@ class ProductDetailActionBar extends StatelessWidget {
     final hasPhone = product.sellerPhone.trim().isNotEmpty;
     final isOwnProduct = product.sellerId == 'demo_producer_001';
     final isProducer = role == UserRole.producer;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       padding: EdgeInsets.fromLTRB(
@@ -56,14 +57,18 @@ class ProductDetailActionBar extends StatelessWidget {
         16,
         MediaQuery.of(context).padding.bottom + 12,
       ),
-      decoration: const BoxDecoration(
-        color: FarmColors.milk,
-        border: Border(top: BorderSide(color: Color(0xFFD9D6C8))),
+      decoration: BoxDecoration(
+        color: isDark ? FarmDarkColors.surface : FarmColors.milk,
+        border: Border(
+          top: BorderSide(
+            color: isDark ? FarmDarkColors.border : const Color(0xFFD9D6C8),
+          ),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Color(0x0F214A3D),
+            color: isDark ? const Color(0x33000000) : const Color(0x0F214A3D),
             blurRadius: 16,
-            offset: Offset(0, -4),
+            offset: const Offset(0, -4),
           ),
         ],
       ),

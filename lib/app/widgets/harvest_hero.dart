@@ -11,6 +11,7 @@ class HarvestHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ClipRRect(
         borderRadius: BorderRadius.circular(23),
@@ -112,8 +113,12 @@ class HarvestHero extends StatelessWidget {
                             icon: const Icon(Icons.arrow_forward),
                             label: Text(tr.harvestHeroAction),
                             style: FilledButton.styleFrom(
-                              backgroundColor: const Color(0xFFF7E8BD),
-                              foregroundColor: FarmColors.ink,
+                              backgroundColor: isDark
+                                  ? FarmDarkColors.gold
+                                  : const Color(0xFFF7E8BD),
+                              foregroundColor: isDark
+                                  ? const Color(0xFF1E2420)
+                                  : FarmColors.ink,
                             ),
                           ),
                         ],

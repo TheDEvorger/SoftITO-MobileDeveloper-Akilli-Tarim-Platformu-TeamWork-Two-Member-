@@ -118,12 +118,14 @@ class ProfileRoleCard extends StatelessWidget {
                       title: tr.producerTab,
                       icon: Icons.grass_rounded,
                       isSelected: isProducer,
+                      isDark: Theme.of(context).brightness == Brightness.dark,
                       onTap: () => roleController.setRole(UserRole.producer),
                     ),
                     _buildRoleOption(
                       title: tr.consumerTab,
                       icon: Icons.store_mall_directory_rounded,
                       isSelected: !isProducer,
+                      isDark: Theme.of(context).brightness == Brightness.dark,
                       onTap: () => roleController.setRole(UserRole.consumer),
                     ),
                   ],
@@ -151,6 +153,7 @@ class ProfileRoleCard extends StatelessWidget {
     required String title,
     required IconData icon,
     required bool isSelected,
+    required bool isDark,
     required VoidCallback onTap,
   }) {
     return Expanded(
@@ -160,7 +163,9 @@ class ProfileRoleCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? Colors.white : Colors.transparent,
+            color: isSelected
+                ? (isDark ? FarmDarkColors.surfaceElevated : Colors.white)
+                : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
           child: FittedBox(
@@ -173,7 +178,9 @@ class ProfileRoleCard extends StatelessWidget {
                   Icon(
                     icon,
                     size: 16,
-                    color: isSelected ? FarmColors.ink : const Color(0xFFD7E8DC),
+                    color: isSelected
+                        ? (isDark ? FarmDarkColors.ink : FarmColors.ink)
+                        : const Color(0xFFD7E8DC),
                   ),
                   const SizedBox(width: 6),
                   Text(
@@ -181,7 +188,9 @@ class ProfileRoleCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w800,
-                      color: isSelected ? FarmColors.ink : const Color(0xFFE2EFE7),
+                      color: isSelected
+                          ? (isDark ? FarmDarkColors.ink : FarmColors.ink)
+                          : const Color(0xFFE2EFE7),
                     ),
                   ),
                 ],

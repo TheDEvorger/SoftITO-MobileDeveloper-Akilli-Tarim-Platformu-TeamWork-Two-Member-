@@ -185,6 +185,7 @@ class ProfileStatsRow extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildStatCard(
+                  context,
                   icon: stats[0].$1,
                   value: stats[0].$2,
                   label: stats[0].$3,
@@ -194,6 +195,7 @@ class ProfileStatsRow extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildStatCard(
+                  context,
                   icon: stats[1].$1,
                   value: stats[1].$2,
                   label: stats[1].$3,
@@ -202,11 +204,12 @@ class ProfileStatsRow extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
                 child: _buildStatCard(
+                  context,
                   icon: stats[2].$1,
                   value: stats[2].$2,
                   label: stats[2].$3,
@@ -216,6 +219,7 @@ class ProfileStatsRow extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: _buildStatCard(
+                  context,
                   icon: stats[3].$1,
                   value: stats[3].$2,
                   label: stats[3].$3,
@@ -229,21 +233,30 @@ class ProfileStatsRow extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard({
+  Widget _buildStatCard(
+    BuildContext context, {
     required IconData icon,
     required String value,
     required String label,
     required Color color,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeColor = isDark ? _adaptColor(color) : color;
+
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? FarmDarkColors.surface : Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color.withAlpha(45), width: 1.2),
+        border: Border.all(
+          color: isDark
+              ? FarmDarkColors.border
+              : activeColor.withAlpha(45),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
-            color: color.withAlpha(15),
+            color: isDark ? const Color(0x33000000) : activeColor.withAlpha(15),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -254,10 +267,10 @@ class ProfileStatsRow extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: color.withAlpha(25),
+              color: activeColor.withAlpha(isDark ? 45 : 25),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, size: 18, color: color),
+            child: Icon(icon, size: 18, color: activeColor),
           ),
           const SizedBox(height: 6),
           Text(
@@ -265,7 +278,7 @@ class ProfileStatsRow extends StatelessWidget {
             style: TextStyle(
               fontSize: 15.5,
               fontWeight: FontWeight.w900,
-              color: color,
+              color: activeColor,
             ),
           ),
           const SizedBox(height: 2),
@@ -274,14 +287,24 @@ class ProfileStatsRow extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10.5,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF6B7280),
+              color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF6B7280),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Color _adaptColor(Color c) {
+    if (c == FarmColors.forest) return FarmDarkColors.forest;
+    if (c == FarmColors.gold) return FarmDarkColors.gold;
+    if (c == FarmColors.olive) return FarmDarkColors.olive;
+    if (c == FarmColors.earth) return FarmDarkColors.earth;
+    if (c == FarmColors.alert) return FarmDarkColors.alert;
+    if (c == const Color(0xFF2E7D32)) return const Color(0xFF66BB6A);
+    return c;
   }
 }

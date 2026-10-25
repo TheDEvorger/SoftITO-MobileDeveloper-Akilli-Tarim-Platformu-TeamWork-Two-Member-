@@ -21,10 +21,11 @@ class AddProductImagePicker extends StatelessWidget {
 
   void _showSourceSheet(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet<void>(
       context: context,
-      backgroundColor: FarmColors.milk,
+      backgroundColor: isDark ? FarmDarkColors.surfaceElevated : FarmColors.milk,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -38,22 +39,33 @@ class AddProductImagePicker extends StatelessWidget {
                 tr.addProductPhotoTitle,
                 style: Theme.of(ctx).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
+                      color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                     ),
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(Icons.camera_alt_outlined,
-                    color: FarmColors.forest),
-                title: Text(tr.cameraCaptureOption),
+                leading: Icon(Icons.camera_alt_outlined,
+                    color: isDark ? FarmDarkColors.forest : FarmColors.forest),
+                title: Text(
+                  tr.cameraCaptureOption,
+                  style: TextStyle(
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink,
+                  ),
+                ),
                 onTap: () {
                   Navigator.pop(ctx);
                   onPickImage(ImageSource.camera);
                 },
               ),
               ListTile(
-                leading:
-                    const Icon(Icons.photo_outlined, color: FarmColors.forest),
-                title: Text(tr.gallerySelectOption),
+                leading: Icon(Icons.photo_outlined,
+                    color: isDark ? FarmDarkColors.forest : FarmColors.forest),
+                title: Text(
+                  tr.gallerySelectOption,
+                  style: TextStyle(
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink,
+                  ),
+                ),
                 onTap: () {
                   Navigator.pop(ctx);
                   onPickImage(ImageSource.gallery);
@@ -69,6 +81,7 @@ class AddProductImagePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     if (selectedImagePath != null) {
       return Stack(
@@ -108,30 +121,34 @@ class AddProductImagePicker extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: FarmColors.olive.withValues(alpha: 0.4),
+              color: (isDark ? FarmDarkColors.gold : FarmColors.olive)
+                  .withValues(alpha: 0.4),
               style: BorderStyle.solid,
             ),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.add_a_photo_outlined,
                 size: 40,
-                color: FarmColors.olive,
+                color: isDark ? FarmDarkColors.gold : FarmColors.olive,
               ),
               const SizedBox(height: 10),
               Text(
                 tr.uploadProductPhotoBtn,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w700,
-                  color: FarmColors.forest,
+                  color: isDark ? FarmDarkColors.forest : FarmColors.forest,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 tr.uploadPhotoSubtitle,
-                style: const TextStyle(fontSize: 12, color: FarmColors.earth),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: isDark ? FarmDarkColors.inkMuted : FarmColors.earth,
+                ),
               ),
             ],
           ),

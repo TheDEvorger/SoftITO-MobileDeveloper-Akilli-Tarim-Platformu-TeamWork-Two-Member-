@@ -66,6 +66,7 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
       listenable: Listenable.merge(listenables),
       builder: (context, _) {
         final tr = AppTranslations.of(context);
+        final isDark = Theme.of(context).brightness == Brightness.dark;
 
         return Scaffold(
           appBar: AppBar(
@@ -88,8 +89,8 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
                     },
                     decoration: InputDecoration(
                       hintText: tr.servicesSearchHint,
-                      prefixIcon: const Icon(Icons.search_rounded,
-                          color: FarmColors.forest),
+                      prefixIcon: Icon(Icons.search_rounded,
+                          color: isDark ? FarmDarkColors.forest : FarmColors.forest),
                       suffixIcon: _searchController.text.isNotEmpty
                           ? IconButton(
                               icon: const Icon(Icons.clear_rounded, size: 18),
@@ -125,22 +126,22 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(18),
                                   decoration: BoxDecoration(
-                                    color: FarmColors.forest.withAlpha(20),
+                                    color: (isDark ? FarmDarkColors.forest : FarmColors.forest).withAlpha(isDark ? 40 : 20),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(
+                                  child: Icon(
                                     Icons.search_off_rounded,
                                     size: 48,
-                                    color: FarmColors.forest,
+                                    color: isDark ? FarmDarkColors.forest : FarmColors.forest,
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
                                   tr.servicesEmptyTitle,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w800,
-                                    color: FarmColors.ink,
+                                    color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -149,7 +150,7 @@ class _ServiceProvidersScreenState extends State<ServiceProvidersScreen> {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 13,
-                                    color: FarmColors.ink.withAlpha(170),
+                                    color: isDark ? FarmDarkColors.inkMuted : FarmColors.ink.withAlpha(170),
                                     height: 1.4,
                                   ),
                                 ),

@@ -28,6 +28,9 @@ class ServiceCategoryFilter extends StatelessWidget {
         final tr = AppTranslations.of(context);
         final currentType = controller.selectedType;
 
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
+
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -45,20 +48,26 @@ class ServiceCategoryFilter extends StatelessWidget {
                   avatar: Icon(
                     icon,
                     size: 16,
-                    color: isSelected ? Colors.white : FarmColors.forest,
+                    color: isSelected
+                        ? (isDark ? const Color(0xFF0C2419) : Colors.white)
+                        : activeForest,
                   ),
                   label: Text(label),
-                  selectedColor: FarmColors.forest,
-                  backgroundColor: FarmColors.milk,
+                  selectedColor: activeForest,
+                  backgroundColor:
+                      isDark ? FarmDarkColors.surface : FarmColors.milk,
                   labelStyle: TextStyle(
+                    inherit: false,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: isSelected ? Colors.white : FarmColors.ink,
+                    color: isSelected
+                        ? (isDark ? const Color(0xFF0C2419) : Colors.white)
+                        : (isDark ? FarmDarkColors.ink : FarmColors.ink),
                   ),
                   side: BorderSide(
                     color: isSelected
-                        ? FarmColors.forest
-                        : const Color(0xFFD4CEC1),
+                        ? activeForest
+                        : (isDark ? FarmDarkColors.border : const Color(0xFFD4CEC1)),
                   ),
                   onSelected: (_) => controller.setSelectedType(typeKey),
                 ),

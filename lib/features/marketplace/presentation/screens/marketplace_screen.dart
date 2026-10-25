@@ -89,6 +89,8 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                 return AnimatedBuilder(
                   animation: _controller,
                   builder: (context, _) {
+                    final isDark =
+                        Theme.of(context).brightness == Brightness.dark;
                     final filtered = _controller.apply(roleProducts);
 
                     return ListView(
@@ -98,6 +100,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                           isProducer: isProducer,
                           count: roleProducts.length,
                           tr: tr,
+                          isDark: isDark,
                         ),
                         const SizedBox(height: 12),
                         MarketplaceFilterBar(
@@ -115,17 +118,22 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                           FarmCard(
                             child: Column(
                               children: [
-                                const Icon(Icons.search_off,
-                                    size: 48, color: FarmColors.earth),
+                                Icon(Icons.search_off,
+                                    size: 48,
+                                    color: isDark
+                                        ? FarmDarkColors.gold
+                                        : FarmColors.earth),
                                 const SizedBox(height: 12),
                                 Text(
                                   isProducer
                                       ? tr.noProducerProducts
                                       : tr.marketNoResults,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontWeight: FontWeight.w700,
-                                    color: FarmColors.ink,
+                                    color: isDark
+                                        ? FarmDarkColors.ink
+                                        : FarmColors.ink,
                                     fontSize: 15,
                                   ),
                                 ),
@@ -135,8 +143,11 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                                       ? tr.marketProducerBannerDesc
                                       : tr.marketConsumerBannerDesc,
                                   textAlign: TextAlign.center,
-                                  style:
-                                      const TextStyle(color: Color(0xFF4B5563)),
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? FarmDarkColors.inkMuted
+                                        : const Color(0xFF4B5563),
+                                  ),
                                 ),
                                 const SizedBox(height: 14),
                                 if (isProducer)
@@ -203,30 +214,36 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     required bool isProducer,
     required int count,
     required AppTranslations tr,
+    required bool isDark,
   }) {
     if (isProducer) {
       return Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: const Color(0xFFEDF5EE),
+          color: isDark ? FarmDarkColors.surfaceElevated : const Color(0xFFEDF5EE),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: FarmColors.forest.withAlpha(50)),
+          border: Border.all(
+            color: isDark ? FarmDarkColors.border : FarmColors.forest.withAlpha(50),
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const Icon(Icons.storefront_rounded,
-                    color: FarmColors.forest, size: 20),
+                Icon(
+                  Icons.storefront_rounded,
+                  color: isDark ? FarmDarkColors.forest : FarmColors.forest,
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     tr.marketProducerBannerTitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 14,
-                      color: FarmColors.forest,
+                      color: isDark ? FarmDarkColors.forest : FarmColors.forest,
                     ),
                   ),
                 ),
@@ -234,13 +251,13 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                   decoration: BoxDecoration(
-                    color: FarmColors.forest,
+                    color: isDark ? FarmDarkColors.forest : FarmColors.forest,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
                     '$count ${tr.unitAd}',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: isDark ? const Color(0xFF0C2419) : Colors.white,
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
                     ),
@@ -251,7 +268,10 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             const SizedBox(height: 6),
             Text(
               tr.marketProducerBannerDesc,
-              style: const TextStyle(fontSize: 12, color: Color(0xFF4B5563)),
+              style: TextStyle(
+                fontSize: 12,
+                color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF4B5563),
+              ),
             ),
           ],
         ),
@@ -261,9 +281,11 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF9ED),
+        color: isDark ? FarmDarkColors.surfaceElevated : const Color(0xFFFFF9ED),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: FarmColors.gold.withAlpha(80)),
+        border: Border.all(
+          color: isDark ? FarmDarkColors.border : FarmColors.gold.withAlpha(80),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,8 +293,11 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.shopping_basket_rounded,
-                  color: Color(0xFFB88422), size: 20),
+              Icon(
+                Icons.shopping_basket_rounded,
+                color: isDark ? FarmDarkColors.gold : const Color(0xFFB88422),
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -280,16 +305,19 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                   children: [
                     Text(
                       tr.marketConsumerBannerTitle,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 14,
-                        color: FarmColors.ink,
+                        color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       tr.marketConsumerBannerDesc,
-                      style: const TextStyle(fontSize: 12, color: Color(0xFF4B5563)),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF4B5563),
+                      ),
                     ),
                   ],
                 ),
@@ -297,13 +325,15 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFB88422),
+                  color: isDark
+                      ? FarmDarkColors.gold.withAlpha(50)
+                      : const Color(0xFFB88422),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
                   '$count ${tr.unitFirm}',
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isDark ? FarmDarkColors.gold : Colors.white,
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
                   ),

@@ -11,14 +11,21 @@ class ProfileHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? FarmDarkColors.surface : Colors.white,
         borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: isDark ? FarmDarkColors.border : Colors.transparent,
+        ),
         boxShadow: [
           BoxShadow(
-            color: FarmColors.forest.withAlpha(20),
+            color: isDark
+                ? const Color(0x33000000)
+                : FarmColors.forest.withAlpha(20),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -160,12 +167,12 @@ class ProfileHeaderCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Column(
               children: [
-                const Text(
+                Text(
                   'Hüsnü Çoban',
                   style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
-                    color: FarmColors.ink,
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                     letterSpacing: -0.3,
                   ),
                 ),
@@ -175,13 +182,21 @@ class ProfileHeaderCard extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                   decoration: BoxDecoration(
                     color: isProducer
-                        ? FarmColors.forest.withAlpha(20)
-                        : FarmColors.gold.withAlpha(25),
+                        ? (isDark
+                            ? FarmDarkColors.forest.withAlpha(35)
+                            : FarmColors.forest.withAlpha(20))
+                        : (isDark
+                            ? FarmDarkColors.gold.withAlpha(35)
+                            : FarmColors.gold.withAlpha(25)),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: isProducer
-                          ? FarmColors.forest.withAlpha(60)
-                          : FarmColors.gold.withAlpha(90),
+                          ? (isDark
+                              ? FarmDarkColors.forest.withAlpha(80)
+                              : FarmColors.forest.withAlpha(60))
+                          : (isDark
+                              ? FarmDarkColors.gold.withAlpha(120)
+                              : FarmColors.gold.withAlpha(90)),
                       width: 1,
                     ),
                   ),
@@ -194,8 +209,12 @@ class ProfileHeaderCard extends StatelessWidget {
                             : Icons.shopping_bag_outlined,
                         size: 14,
                         color: isProducer
-                            ? FarmColors.forest
-                            : const Color(0xFF8A6216),
+                            ? (isDark
+                                ? FarmDarkColors.forest
+                                : FarmColors.forest)
+                            : (isDark
+                                ? FarmDarkColors.gold
+                                : const Color(0xFF8A6216)),
                       ),
                       const SizedBox(width: 6),
                       Flexible(
@@ -208,8 +227,12 @@ class ProfileHeaderCard extends StatelessWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: isProducer
-                                ? FarmColors.forest
-                                : const Color(0xFF8A6216),
+                                ? (isDark
+                                    ? FarmDarkColors.forest
+                                    : FarmColors.forest)
+                                : (isDark
+                                    ? FarmDarkColors.gold
+                                    : const Color(0xFF8A6216)),
                           ),
                         ),
                       ),
@@ -217,12 +240,14 @@ class ProfileHeaderCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
+                Text(
                   'admin@bereketovasi.com  •  +90 (555) 012 34 56',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 12.5,
-                    color: Color(0xFF4B5563),
+                    color: isDark
+                        ? FarmDarkColors.inkMuted
+                        : const Color(0xFF4B5563),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -230,8 +255,11 @@ class ProfileHeaderCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.location_on_rounded,
-                        size: 15, color: FarmColors.earth),
+                    Icon(Icons.location_on_rounded,
+                        size: 15,
+                        color: isDark
+                            ? FarmDarkColors.earth
+                            : FarmColors.earth),
                     const SizedBox(width: 4),
                     Flexible(
                       child: Text(
@@ -239,10 +267,12 @@ class ProfileHeaderCard extends StatelessWidget {
                             ? tr.producerLocation
                             : tr.consumerLocation,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: FarmColors.earth,
+                          color: isDark
+                              ? FarmDarkColors.earth
+                              : FarmColors.earth,
                         ),
                       ),
                     ),

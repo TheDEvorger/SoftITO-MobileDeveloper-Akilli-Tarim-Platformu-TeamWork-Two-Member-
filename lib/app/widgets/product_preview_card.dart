@@ -106,35 +106,47 @@ class ProductPreviewCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 6),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                '${product.unitPrice.toStringAsFixed(2)} ₺ / ${tr.translateUnit(product.unit)}',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: isProducer
-                                      ? FarmColors.forest
-                                      : const Color(0xFFB88422),
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 13,
+                        Builder(
+                          builder: (context) {
+                            final isDark =
+                                Theme.of(context).brightness == Brightness.dark;
+                            final activeForest = isDark
+                                ? FarmDarkColors.forest
+                                : FarmColors.forest;
+                            final activeGold = isDark
+                                ? FarmDarkColors.gold
+                                : const Color(0xFFB88422);
+                            final color = isProducer ? activeForest : activeGold;
+
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    '${product.unitPrice.toStringAsFixed(2)} ₺ / ${tr.translateUnit(product.unit)}',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: color,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 13,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              isProducer ? tr.actionEdit : tr.actionMakeOffer,
-                              style: TextStyle(
-                                color: isProducer
-                                    ? FarmColors.forest
-                                    : const Color(0xFFB88422),
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
+                                const SizedBox(width: 6),
+                                Text(
+                                  isProducer
+                                      ? tr.actionEdit
+                                      : tr.actionMakeOffer,
+                                  style: TextStyle(
+                                    color: color,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ],
                     ),

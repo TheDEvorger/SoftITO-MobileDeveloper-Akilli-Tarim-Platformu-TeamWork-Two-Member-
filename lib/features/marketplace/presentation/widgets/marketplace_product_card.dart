@@ -21,6 +21,9 @@ class MarketplaceProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
+    final activeGold = isDark ? FarmDarkColors.gold : FarmColors.gold;
 
     return Semantics(
       button: true,
@@ -162,7 +165,9 @@ class MarketplaceProductCard extends StatelessWidget {
                                 .titleMedium
                                 ?.copyWith(
                                   fontWeight: FontWeight.w800,
-                                  color: FarmColors.ink,
+                                  color: isDark
+                                      ? FarmDarkColors.ink
+                                      : FarmColors.ink,
                                 ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -173,10 +178,10 @@ class MarketplaceProductCard extends StatelessWidget {
                           fit: BoxFit.scaleDown,
                           child: Text(
                             '${product.unitPrice.toStringAsFixed(2)} ₺',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w900,
-                              color: FarmColors.forest,
+                              color: activeForest,
                             ),
                           ),
                         ),
@@ -185,10 +190,12 @@ class MarketplaceProductCard extends StatelessWidget {
                     const SizedBox(height: 6),
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.location_on_outlined,
                           size: 15,
-                          color: FarmColors.earth,
+                          color: isDark
+                              ? FarmDarkColors.earth
+                              : FarmColors.earth,
                         ),
                         const SizedBox(width: 4),
                         Expanded(
@@ -196,7 +203,9 @@ class MarketplaceProductCard extends StatelessWidget {
                             '${tr.translateCity(product.city)}, ${product.district}',
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: const Color(0xFF4B5563),
+                                      color: isDark
+                                          ? FarmDarkColors.inkMuted
+                                          : const Color(0xFF4B5563),
                                       fontWeight: FontWeight.w500,
                                     ),
                             maxLines: 1,
@@ -208,10 +217,12 @@ class MarketplaceProductCard extends StatelessWidget {
                           fit: BoxFit.scaleDown,
                           child: Text(
                             '${tr.stock}: ${product.quantity.toStringAsFixed(0)} ${tr.translateUnit(product.unit)}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
-                              color: FarmColors.olive,
+                              color: isDark
+                                  ? FarmDarkColors.olive
+                                  : FarmColors.olive,
                             ),
                           ),
                         ),
@@ -224,13 +235,17 @@ class MarketplaceProductCard extends StatelessWidget {
                           horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
                         color: isProducer
-                            ? const Color(0xFFEDF5EF)
-                            : const Color(0xFFFFF7E8),
+                            ? (isDark
+                                ? activeForest.withAlpha(35)
+                                : const Color(0xFFEDF5EF))
+                            : (isDark
+                                ? activeGold.withAlpha(35)
+                                : const Color(0xFFFFF7E8)),
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
                           color: isProducer
-                              ? FarmColors.forest.withAlpha(60)
-                              : FarmColors.gold.withAlpha(90),
+                              ? activeForest.withAlpha(isDark ? 80 : 60)
+                              : activeGold.withAlpha(isDark ? 100 : 90),
                         ),
                       ),
                       child: Row(
@@ -240,9 +255,7 @@ class MarketplaceProductCard extends StatelessWidget {
                                 ? Icons.edit_note_rounded
                                 : Icons.handshake_outlined,
                             size: 16,
-                            color: isProducer
-                                ? FarmColors.forest
-                                : const Color(0xFFB88422),
+                            color: isProducer ? activeForest : activeGold,
                           ),
                           const SizedBox(width: 6),
                           Expanded(
@@ -256,8 +269,10 @@ class MarketplaceProductCard extends StatelessWidget {
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
                                 color: isProducer
-                                    ? FarmColors.forest
-                                    : const Color(0xFF8A5A00),
+                                    ? activeForest
+                                    : (isDark
+                                        ? activeGold
+                                        : const Color(0xFF8A5A00)),
                               ),
                             ),
                           ),
@@ -265,9 +280,7 @@ class MarketplaceProductCard extends StatelessWidget {
                           Icon(
                             Icons.arrow_forward_ios_rounded,
                             size: 13,
-                            color: isProducer
-                                ? FarmColors.forest
-                                : const Color(0xFFB88422),
+                            color: isProducer ? activeForest : activeGold,
                           ),
                         ],
                       ),

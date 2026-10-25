@@ -65,16 +65,24 @@ class ProfileBadgesCard extends StatelessWidget {
             ),
           ];
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final activeGold = isDark ? FarmDarkColors.gold : FarmColors.gold;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? FarmDarkColors.surface : Colors.white,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: FarmColors.gold.withAlpha(50), width: 1.2),
+        border: Border.all(
+          color: isDark ? FarmDarkColors.border : FarmColors.gold.withAlpha(50),
+          width: 1.2,
+        ),
         boxShadow: [
           BoxShadow(
-            color: FarmColors.gold.withAlpha(15),
+            color: isDark
+                ? const Color(0x33000000)
+                : FarmColors.gold.withAlpha(15),
             blurRadius: 14,
             offset: const Offset(0, 4),
           ),
@@ -85,8 +93,8 @@ class ProfileBadgesCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.military_tech_rounded,
-                  color: FarmColors.gold, size: 22),
+              Icon(Icons.military_tech_rounded,
+                  color: activeGold, size: 22),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -94,10 +102,10 @@ class ProfileBadgesCard extends StatelessWidget {
                       ? tr.producerBadgesTitle
                       : tr.consumerBadgesTitle,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
-                    color: FarmColors.ink,
+                    color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                   ),
                 ),
               ),
@@ -114,8 +122,9 @@ class ProfileBadgesCard extends StatelessWidget {
                     child: _buildBadge(
                       icon: icon,
                       title: title,
-                      color: color,
+                      color: isDark ? _adaptBadgeColor(color) : color,
                       description: desc,
+                      isDark: isDark,
                     ),
                   ),
               ],
@@ -131,15 +140,16 @@ class ProfileBadgesCard extends StatelessWidget {
     required String title,
     required Color color,
     required String description,
+    required bool isDark,
   }) {
     return Tooltip(
       message: description,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: color.withAlpha(20),
+          color: color.withAlpha(isDark ? 40 : 20),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: color.withAlpha(80), width: 1),
+          border: Border.all(color: color.withAlpha(isDark ? 120 : 80), width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -158,5 +168,13 @@ class ProfileBadgesCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Color _adaptBadgeColor(Color c) {
+    if (c == FarmColors.gold) return FarmDarkColors.gold;
+    if (c == FarmColors.forest) return FarmDarkColors.forest;
+    if (c == const Color(0xFF2E7D32)) return const Color(0xFF66BB6A);
+    if (c == const Color(0xFFD81B60)) return const Color(0xFFF06292);
+    return c;
   }
 }

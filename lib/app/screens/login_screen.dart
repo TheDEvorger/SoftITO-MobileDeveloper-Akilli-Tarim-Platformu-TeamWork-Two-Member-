@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_router.dart';
+import '../app_scope.dart';
 import '../app_theme.dart';
 import '../app_translations.dart';
 
@@ -105,9 +106,9 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     final tr = AppTranslations.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: FarmColors.canvas,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -124,8 +125,31 @@ class _LoginScreenState extends State<LoginScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                      // Fantastik Çiftçi Avatarı & Dairesi
-                      Center(
+                        // Hızlı Tema Değiştirme Butonu
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: IconButton(
+                            tooltip: tr.themeToggleTooltip,
+                            icon: Icon(
+                              isDark
+                                  ? Icons.light_mode_rounded
+                                  : Icons.dark_mode_outlined,
+                              color: isDark
+                                  ? FarmDarkColors.gold
+                                  : FarmColors.forest,
+                            ),
+                            onPressed: () {
+                              try {
+                                AppScope.of(context)
+                                    .themeController
+                                    ?.toggleTheme();
+                              } catch (_) {}
+                            },
+                          ),
+                        ),
+
+                        // Fantastik Çiftçi Avatarı & Dairesi
+                        Center(
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
@@ -265,9 +289,15 @@ class _LoginScreenState extends State<LoginScreen>
                               horizontal: 14, vertical: 12),
                           prefixIcon: const Icon(Icons.person_outline_rounded),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor:
+                              isDark ? FarmDarkColors.surface : Colors.white,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: isDark
+                                  ? FarmDarkColors.border
+                                  : const Color(0xFFD9D6C8),
+                            ),
                           ),
                         ),
                         validator: (val) {
@@ -304,9 +334,15 @@ class _LoginScreenState extends State<LoginScreen>
                             },
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor:
+                              isDark ? FarmDarkColors.surface : Colors.white,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: isDark
+                                  ? FarmDarkColors.border
+                                  : const Color(0xFFD9D6C8),
+                            ),
                           ),
                         ),
                         validator: (val) {
@@ -354,10 +390,14 @@ class _LoginScreenState extends State<LoginScreen>
                       Container(
                         padding: const EdgeInsets.fromLTRB(12, 10, 12, 8),
                         decoration: BoxDecoration(
-                          color: FarmColors.gold.withAlpha(20),
+                          color: isDark
+                              ? FarmDarkColors.surface
+                              : FarmColors.gold.withAlpha(20),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: FarmColors.gold.withAlpha(100),
+                            color: isDark
+                                ? FarmDarkColors.border
+                                : FarmColors.gold.withAlpha(100),
                             width: 1,
                           ),
                         ),
@@ -366,16 +406,21 @@ class _LoginScreenState extends State<LoginScreen>
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.key_rounded,
-                                    size: 15, color: FarmColors.gold),
+                                Icon(Icons.key_rounded,
+                                    size: 15,
+                                    color: isDark
+                                        ? FarmDarkColors.gold
+                                        : FarmColors.gold),
                                 const SizedBox(width: 5),
                                 Expanded(
                                   child: Text(
                                     tr.demoLoginInfoTitle,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12.5,
-                                      color: FarmColors.ink,
+                                      color: isDark
+                                          ? FarmDarkColors.ink
+                                          : FarmColors.ink,
                                     ),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -385,10 +430,12 @@ class _LoginScreenState extends State<LoginScreen>
                             const SizedBox(height: 6),
                             Text(
                               tr.demoCredentialsHint,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: FarmColors.ink,
+                                color: isDark
+                                    ? FarmDarkColors.ink
+                                    : FarmColors.ink,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -398,15 +445,19 @@ class _LoginScreenState extends State<LoginScreen>
                                 fit: BoxFit.scaleDown,
                                 child: TextButton.icon(
                                   onPressed: _fillDemoCredentials,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.flash_on_rounded,
                                     size: 15,
-                                    color: FarmColors.gold,
+                                    color: isDark
+                                        ? FarmDarkColors.gold
+                                        : FarmColors.gold,
                                   ),
                                   label: Text(
                                     tr.quickDemoLogin,
-                                    style: const TextStyle(
-                                      color: FarmColors.gold,
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? FarmDarkColors.gold
+                                          : FarmColors.gold,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
                                     ),

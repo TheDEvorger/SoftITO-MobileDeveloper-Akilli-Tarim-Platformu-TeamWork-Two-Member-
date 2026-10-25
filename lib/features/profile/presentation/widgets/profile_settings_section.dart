@@ -4,6 +4,7 @@ import '../../../../app/app_scope.dart';
 import '../../../../app/app_theme.dart';
 import '../../../../app/app_translations.dart';
 import '../../../../app/language_controller.dart';
+import '../../../../app/theme_controller.dart';
 
 class ProfileSettingsSection extends StatefulWidget {
   const ProfileSettingsSection({super.key});
@@ -23,11 +24,12 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
   ) {
     if (controller == null) return;
     final currentLang = controller.language;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? FarmDarkColors.surfaceElevated : Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -45,7 +47,9 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
                     width: 44,
                     height: 5,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: isDark
+                          ? FarmDarkColors.border
+                          : Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -56,7 +60,7 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF0288D1).withAlpha(20),
+                        color: const Color(0xFF0288D1).withAlpha(25),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -72,18 +76,22 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
                         children: [
                           Text(
                             tr.selectLanguageTitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 16.5,
                               fontWeight: FontWeight.w800,
-                              color: FarmColors.ink,
+                              color: isDark
+                                  ? FarmDarkColors.ink
+                                  : FarmColors.ink,
                             ),
                           ),
                           const SizedBox(height: 2),
                           Text(
                             tr.languageSelectSubtitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12,
-                              color: Color(0xFF6B7280),
+                              color: isDark
+                                  ? FarmDarkColors.inkMuted
+                                  : const Color(0xFF6B7280),
                             ),
                           ),
                         ],
@@ -98,6 +106,7 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
                     controller: controller,
                     language: lang,
                     isSelected: currentLang == lang,
+                    isDark: isDark,
                   ),
                   if (lang != AppLanguage.values.last)
                     const SizedBox(height: 8),
@@ -115,8 +124,11 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
     required AppLanguageController controller,
     required AppLanguage language,
     required bool isSelected,
+    required bool isDark,
   }) {
     final tr = AppTranslations.of(ctx);
+    final activeForest = isDark ? FarmDarkColors.forest : FarmColors.forest;
+
     return InkWell(
       onTap: () async {
         Navigator.pop(ctx);
@@ -128,7 +140,7 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
             content: Text(newTr.languageUpdatedMessage(language.displayName)),
             duration: const Duration(seconds: 2),
             behavior: SnackBarBehavior.floating,
-            backgroundColor: FarmColors.forest,
+            backgroundColor: activeForest,
           ),
         );
       },
@@ -136,10 +148,18 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFE8F5E9) : const Color(0xFFF9FAFB),
+          color: isSelected
+              ? (isDark
+                  ? FarmDarkColors.forest.withAlpha(45)
+                  : const Color(0xFFE8F5E9))
+              : (isDark
+                  ? FarmDarkColors.surface
+                  : const Color(0xFFF9FAFB)),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? FarmColors.forest : Colors.grey.shade300,
+            color: isSelected
+                ? activeForest
+                : (isDark ? FarmDarkColors.border : Colors.grey.shade300),
             width: isSelected ? 1.8 : 1.0,
           ),
         ),
@@ -157,7 +177,9 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
                       fontSize: 15,
                       fontWeight:
                           isSelected ? FontWeight.w800 : FontWeight.w600,
-                      color: isSelected ? FarmColors.forest : FarmColors.ink,
+                      color: isSelected
+                          ? activeForest
+                          : (isDark ? FarmDarkColors.ink : FarmColors.ink),
                     ),
                   ),
                   Text(
@@ -169,23 +191,25 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
                     style: TextStyle(
                       fontSize: 11.5,
                       color: isSelected
-                          ? FarmColors.forest.withAlpha(200)
-                          : const Color(0xFF6B7280),
+                          ? activeForest.withAlpha(200)
+                          : (isDark
+                              ? FarmDarkColors.inkMuted
+                              : const Color(0xFF6B7280)),
                     ),
                   ),
                 ],
               ),
             ),
             if (isSelected)
-              const Icon(
+              Icon(
                 Icons.check_circle_rounded,
-                color: FarmColors.forest,
+                color: activeForest,
                 size: 22,
               )
             else
-              const Icon(
+              Icon(
                 Icons.radio_button_unchecked_rounded,
-                color: Color(0xFF9CA3AF),
+                color: isDark ? FarmDarkColors.border : const Color(0xFF9CA3AF),
                 size: 22,
               ),
           ],
@@ -197,44 +221,62 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
   @override
   Widget build(BuildContext context) {
     AppLanguageController? langController;
+    AppThemeController? themeController;
     try {
-      langController = AppScope.of(context).languageController;
+      final scope = AppScope.of(context);
+      langController = scope.languageController;
+      themeController = scope.themeController;
     } catch (_) {
       langController = null;
+      themeController = null;
     }
 
-    if (langController != null) {
+    final listenables = <Listenable>[
+      if (langController != null) langController,
+      if (themeController != null) themeController,
+    ];
+
+    if (listenables.isNotEmpty) {
       return AnimatedBuilder(
-        animation: langController,
-        builder: (context, _) => _buildCard(context, langController, AppTranslations.of(context)),
+        animation: Listenable.merge(listenables),
+        builder: (context, _) =>
+            _buildCard(context, langController, themeController, AppTranslations.of(context)),
       );
     }
 
-    return _buildCard(context, null, AppTranslations.of(context));
+    return _buildCard(context, null, null, AppTranslations.of(context));
   }
 
   Widget _buildCard(
     BuildContext context,
     AppLanguageController? langController,
+    AppThemeController? themeController,
     AppTranslations tr,
   ) {
+    final isDark = themeController?.isDark ??
+        Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
-            color: Color(0x0C000000),
+            color: isDark ? const Color(0x33000000) : const Color(0x0C000000),
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Material(
-        color: Colors.white,
+        color: isDark ? FarmDarkColors.surface : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: Colors.black.withAlpha(15)),
+          side: BorderSide(
+            color: isDark
+                ? FarmDarkColors.border
+                : Colors.black.withAlpha(15),
+          ),
         ),
         clipBehavior: Clip.antiAlias,
         child: Column(
@@ -244,16 +286,67 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 4),
               child: Text(
                 tr.accountSettingsHeader,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w800,
-                  color: FarmColors.ink,
+                  color: isDark ? FarmDarkColors.ink : FarmColors.ink,
                 ),
               ),
             ),
+
+            // Karanlık Tema Toggle Switch (Anında Değiştirilebilir ve Hive Kalıcı)
             SwitchListTile(
-              secondary: const Icon(Icons.notifications_active_outlined,
-                  color: FarmColors.forest),
+              key: const Key('theme_dark_switch_tile'),
+              secondary: Icon(
+                isDark ? Icons.dark_mode_rounded : Icons.light_mode_outlined,
+                color: isDark ? FarmDarkColors.gold : FarmColors.forest,
+              ),
+              title: Text(
+                tr.themeDarkTitle,
+                style: const TextStyle(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              subtitle: Text(
+                tr.themeDarkSubtitle,
+                style: TextStyle(
+                  fontSize: 11.5,
+                  color: isDark
+                      ? FarmDarkColors.inkMuted
+                      : const Color(0xFF6B7280),
+                ),
+              ),
+              value: isDark,
+              activeThumbColor: FarmDarkColors.forest,
+              onChanged: (val) async {
+                if (themeController != null) {
+                  await themeController
+                      .setThemeMode(val ? ThemeMode.dark : ThemeMode.light);
+                }
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(tr.themeUpdatedMessage(val)),
+                    duration: const Duration(seconds: 1),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              },
+            ),
+            Divider(
+              height: 1,
+              indent: 16,
+              endIndent: 16,
+              color: isDark ? FarmDarkColors.border : null,
+            ),
+
+            // Bildirimler
+            SwitchListTile(
+              secondary: Icon(
+                Icons.notifications_active_outlined,
+                color: isDark ? FarmDarkColors.forest : FarmColors.forest,
+              ),
               title: Text(
                 tr.notificationsTitle,
                 style: const TextStyle(
@@ -261,11 +354,16 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
               ),
               subtitle: Text(
                 tr.notificationsSubtitle,
-                style:
-                    const TextStyle(fontSize: 11.5, color: Color(0xFF6B7280)),
+                style: TextStyle(
+                  fontSize: 11.5,
+                  color: isDark
+                      ? FarmDarkColors.inkMuted
+                      : const Color(0xFF6B7280),
+                ),
               ),
               value: _notificationsEnabled,
-              activeThumbColor: FarmColors.forest,
+              activeThumbColor:
+                  isDark ? FarmDarkColors.forest : FarmColors.forest,
               onChanged: (val) {
                 setState(() => _notificationsEnabled = val);
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -278,10 +376,19 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
                 );
               },
             ),
-            const Divider(height: 1, indent: 16, endIndent: 16),
+            Divider(
+              height: 1,
+              indent: 16,
+              endIndent: 16,
+              color: isDark ? FarmDarkColors.border : null,
+            ),
+
+            // İki Adımlı Giriş (2FA)
             SwitchListTile(
-              secondary:
-                  const Icon(Icons.security_rounded, color: FarmColors.gold),
+              secondary: Icon(
+                Icons.security_rounded,
+                color: isDark ? FarmDarkColors.gold : FarmColors.gold,
+              ),
               title: Text(
                 tr.twoFactorTitle,
                 style: const TextStyle(
@@ -289,16 +396,27 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
               ),
               subtitle: Text(
                 tr.twoFactorSubtitle,
-                style:
-                    const TextStyle(fontSize: 11.5, color: Color(0xFF6B7280)),
+                style: TextStyle(
+                  fontSize: 11.5,
+                  color: isDark
+                      ? FarmDarkColors.inkMuted
+                      : const Color(0xFF6B7280),
+                ),
               ),
               value: _twoFactorEnabled,
-              activeThumbColor: FarmColors.gold,
+              activeThumbColor: isDark ? FarmDarkColors.gold : FarmColors.gold,
               onChanged: (val) {
                 setState(() => _twoFactorEnabled = val);
               },
             ),
-            const Divider(height: 1, indent: 16, endIndent: 16),
+            Divider(
+              height: 1,
+              indent: 16,
+              endIndent: 16,
+              color: isDark ? FarmDarkColors.border : null,
+            ),
+
+            // Uygulama Dili
             ListTile(
               leading:
                   const Icon(Icons.language_rounded, color: Color(0xFF0288D1)),
@@ -312,16 +430,18 @@ class _ProfileSettingsSectionState extends State<ProfileSettingsSection> {
                 children: [
                   Text(
                     langController?.labelWithFlag ?? '🇹🇷 Türkçe (TR)',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      color: FarmColors.forest,
+                      color: isDark ? FarmDarkColors.forest : FarmColors.forest,
                     ),
                   ),
                   const SizedBox(width: 4),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right_rounded,
-                    color: Color(0xFF9CA3AF),
+                    color: isDark
+                        ? FarmDarkColors.inkMuted
+                        : const Color(0xFF9CA3AF),
                     size: 20,
                   ),
                 ],

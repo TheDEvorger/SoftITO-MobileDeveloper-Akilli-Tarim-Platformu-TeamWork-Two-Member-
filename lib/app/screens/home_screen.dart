@@ -47,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final listenables = <Listenable>[
       scope.roleController,
       if (scope.languageController != null) scope.languageController!,
+      if (scope.themeController != null) scope.themeController!,
     ];
 
     return AnimatedBuilder(
@@ -173,8 +174,26 @@ class HomeFeedView extends StatelessWidget {
         actions: [
           AnimatedBuilder(
             animation: Listenable.merge([
+              if (scope.themeController != null) scope.themeController!,
+            ]),
+            builder: (context, _) {
+              final isDark = scope.themeController?.isDark ??
+                  Theme.of(context).brightness == Brightness.dark;
+              return IconButton(
+                tooltip: tr.themeToggleTooltip,
+                icon: Icon(
+                  isDark ? Icons.light_mode_rounded : Icons.dark_mode_outlined,
+                  color: isDark ? FarmDarkColors.gold : FarmColors.forest,
+                ),
+                onPressed: () => scope.themeController?.toggleTheme(),
+              );
+            },
+          ),
+          AnimatedBuilder(
+            animation: Listenable.merge([
               scope.roleController,
               if (scope.languageController != null) scope.languageController!,
+              if (scope.themeController != null) scope.themeController!,
             ]),
             builder: (context, _) {
               final activeTr = AppTranslations.of(context);
@@ -200,10 +219,14 @@ class HomeFeedView extends StatelessWidget {
           animation: Listenable.merge([
             scope.roleController,
             if (scope.languageController != null) scope.languageController!,
+            if (scope.themeController != null) scope.themeController!,
           ]),
           builder: (context, _) {
+            final isDark = Theme.of(context).brightness == Brightness.dark;
             final isProducer = scope.roleController.isProducer;
             final activeTr = AppTranslations.of(context);
+            final activeForest =
+                isDark ? FarmDarkColors.forest : FarmColors.forest;
 
             return ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
@@ -222,14 +245,18 @@ class HomeFeedView extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: isProducer
-                        ? const Color(0xFFEDF5EE)
-                        : const Color(0xFFFFF9ED),
+                    color: isDark
+                        ? FarmDarkColors.surfaceElevated
+                        : (isProducer
+                            ? const Color(0xFFEDF5EE)
+                            : const Color(0xFFFFF9ED)),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isProducer
-                          ? FarmColors.forest.withAlpha(50)
-                          : FarmColors.gold.withAlpha(90),
+                      color: isDark
+                          ? FarmDarkColors.border
+                          : (isProducer
+                              ? FarmColors.forest.withAlpha(50)
+                              : FarmColors.gold.withAlpha(90)),
                     ),
                   ),
                   child: Column(
@@ -242,8 +269,8 @@ class HomeFeedView extends StatelessWidget {
                                 ? Icons.grass_rounded
                                 : Icons.shopping_bag_rounded,
                             color: isProducer
-                                ? FarmColors.forest
-                                : const Color(0xFFB88422),
+                                ? (isDark ? FarmDarkColors.forest : FarmColors.forest)
+                                : (isDark ? FarmDarkColors.gold : const Color(0xFFB88422)),
                             size: 18,
                           ),
                           const SizedBox(width: 8),
@@ -258,8 +285,8 @@ class HomeFeedView extends StatelessWidget {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w800,
                                 color: isProducer
-                                    ? FarmColors.forest
-                                    : FarmColors.ink,
+                                    ? (isDark ? FarmDarkColors.forest : FarmColors.forest)
+                                    : (isDark ? FarmDarkColors.ink : FarmColors.ink),
                               ),
                             ),
                           ),
@@ -270,9 +297,9 @@ class HomeFeedView extends StatelessWidget {
                         isProducer
                             ? activeTr.producerHomeDesc
                             : activeTr.consumerHomeDesc,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
-                          color: Color(0xFF4B5563),
+                          color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF4B5563),
                         ),
                       ),
                       const SizedBox(height: 10),
@@ -282,18 +309,18 @@ class HomeFeedView extends StatelessWidget {
                           children: isProducer
                               ? [
                                   ActionChip(
-                                    avatar: const Icon(Icons.add_circle_outline,
-                                        size: 16, color: FarmColors.forest),
+                                    avatar: Icon(Icons.add_circle_outline,
+                                        size: 16, color: activeForest),
                                     label: Text(activeTr.quickNewAd),
                                     onPressed: () => Navigator.pushNamed(
                                         context, '/add-product'),
                                   ),
                                   const SizedBox(width: 8),
                                   ActionChip(
-                                    avatar: const Icon(
+                                    avatar: Icon(
                                         Icons.markunread_mailbox_outlined,
                                         size: 16,
-                                        color: FarmColors.forest),
+                                        color: activeForest),
                                     label: Text(activeTr.quickIncomingOffers),
                                     onPressed: () {
                                       if (tabScope != null) {
@@ -305,8 +332,8 @@ class HomeFeedView extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   ActionChip(
-                                    avatar: const Icon(Icons.pets_outlined,
-                                        size: 16, color: FarmColors.forest),
+                                    avatar: Icon(Icons.pets_outlined,
+                                        size: 16, color: activeForest),
                                     label: Text(activeTr.quickHerdGreenhouse),
                                     onPressed: () {
                                       if (tabScope != null) {
@@ -319,8 +346,8 @@ class HomeFeedView extends StatelessWidget {
                                 ]
                               : [
                                   ActionChip(
-                                    avatar: const Icon(Icons.storefront,
-                                        size: 16, color: FarmColors.forest),
+                                    avatar: Icon(Icons.storefront,
+                                        size: 16, color: activeForest),
                                     label: Text(activeTr.quickExploreMarket),
                                     onPressed: () {
                                       if (tabScope != null) {
@@ -333,8 +360,8 @@ class HomeFeedView extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   ActionChip(
-                                    avatar: const Icon(Icons.receipt_long,
-                                        size: 16, color: FarmColors.forest),
+                                    avatar: Icon(Icons.receipt_long,
+                                        size: 16, color: activeForest),
                                     label: Text(activeTr.quickSentOffers),
                                     onPressed: () {
                                       if (tabScope != null) {
@@ -346,10 +373,10 @@ class HomeFeedView extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 8),
                                   ActionChip(
-                                    avatar: const Icon(
+                                    avatar: Icon(
                                         Icons.local_shipping_outlined,
                                         size: 16,
-                                        color: FarmColors.forest),
+                                        color: activeForest),
                                     label: Text(activeTr.quickLogistics),
                                     onPressed: () {
                                       if (tabScope != null) {
@@ -454,7 +481,9 @@ class HomeFeedView extends StatelessWidget {
                           isProducer
                               ? activeTr.noProducerProducts
                               : activeTr.noConsumerProducts,
-                          style: const TextStyle(color: Color(0xFF4B5563)),
+                          style: TextStyle(
+                            color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF4B5563),
+                          ),
                         ),
                       );
                     }
@@ -479,16 +508,19 @@ class HomeFeedView extends StatelessWidget {
                 FarmCard(
                   child: Row(
                     children: [
-                      const Icon(Icons.info_outline, color: FarmColors.earth),
+                      Icon(
+                        Icons.info_outline,
+                        color: isDark ? FarmDarkColors.forest : FarmColors.earth,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
                           isProducer
                               ? activeTr.producerHiveNote
                               : activeTr.consumerHiveNote,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12.5,
-                            color: Color(0xFF4B5563),
+                            color: isDark ? FarmDarkColors.inkMuted : const Color(0xFF4B5563),
                           ),
                         ),
                       ),
